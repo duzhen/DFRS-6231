@@ -2,7 +2,7 @@ package dfrs.replicamanager;
 
 import java.net.InetAddress;
 
-public class ReplicaManager {
+public class BaseRM {
 	int port;
 	InetAddress Host;
 }
