@@ -1,4 +1,4 @@
-﻿package server;
+﻿package dfrs;
 
 
 /**
@@ -8,7 +8,7 @@
 * 2016年11月16日 星期三 上午09时02分35秒 EST
 */
 
-public class _ServerInterfaceStub extends org.omg.CORBA.portable.ObjectImpl implements server.ServerInterface
+public class _ServerInterfaceStub extends org.omg.CORBA.portable.ObjectImpl implements ServerInterface
 {
 
   public String bookFlight (String currentCity, String firstName, String lastName, String address, String phoneNumber, String destination, String flightClass, String flightDate)

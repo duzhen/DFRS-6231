@@ -1,4 +1,4 @@
-﻿package server;
+﻿package dfrs;
 
 
 /**
@@ -9,7 +9,7 @@
 */
 
 public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
- implements server.ServerInterfaceOperations, org.omg.CORBA.portable.InvokeHandler
+ implements ServerInterfaceOperations, org.omg.CORBA.portable.InvokeHandler
 {
 
   // Constructors

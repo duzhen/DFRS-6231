@@ -1,4 +1,4 @@
-﻿package server;
+﻿package dfrs;
 
 /**
 * server/ServerInterfaceHolder.java .
@@ -9,30 +9,30 @@
 
 public final class ServerInterfaceHolder implements org.omg.CORBA.portable.Streamable
 {
-  public server.ServerInterface value = null;
+  public ServerInterface value = null;
 
   public ServerInterfaceHolder ()
   {
   }
 
-  public ServerInterfaceHolder (server.ServerInterface initialValue)
+  public ServerInterfaceHolder (ServerInterface initialValue)
   {
     value = initialValue;
   }
 
   public void _read (org.omg.CORBA.portable.InputStream i)
   {
-    value = server.ServerInterfaceHelper.read (i);
+    value = ServerInterfaceHelper.read (i);
   }
 
   public void _write (org.omg.CORBA.portable.OutputStream o)
   {
-    server.ServerInterfaceHelper.write (o, value);
+    ServerInterfaceHelper.write (o, value);
   }
 
   public org.omg.CORBA.TypeCode _type ()
   {
-    return server.ServerInterfaceHelper.type ();
+    return ServerInterfaceHelper.type ();
   }
 
 }
