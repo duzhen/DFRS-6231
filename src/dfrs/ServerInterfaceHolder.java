@@ -1,4 +1,4 @@
-﻿package dfrs;
+package dfrs;
 
 /**
 * server/ServerInterfaceHolder.java .
