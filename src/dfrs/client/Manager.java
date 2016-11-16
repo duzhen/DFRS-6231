@@ -1,4 +1,4 @@
-package manager;
+package dfrs.client;
 
 import java.util.Properties;
 import java.util.Scanner;
@@ -7,10 +7,10 @@ import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
-import server.ServerInterface;
-import server.ServerInterfaceHelper;
+import dfrs.ServerInterface;
+import dfrs.ServerInterfaceHelper;
 
-public class manager {
+public class Manager {
 	
 	public static String managerRecvServer = "";
 	public static String passengerRecvServer = "";

@@ -1,4 +1,4 @@
-package Sequence;
+package dfrs.sequencer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,15 +15,15 @@ import java.net.SocketException;
 import net.rudp.ReliableServerSocket;
 import net.rudp.ReliableSocketOutputStream;
 
-public class sequence extends Thread {
+public class Sequencer extends Thread {
 
         private int port;
-        public sequence(int port){
+        public Sequencer(int port){
             this.port = port;
         }
         
     	public static void main(String[] args) {
-    		sequence seq = new sequence(8888);
+    		Sequencer seq = new Sequencer(8888);
     		seq.start();
     		//open four connection with the four replica client. the address and the port should be defined.
     	}    

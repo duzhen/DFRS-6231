@@ -1,4 +1,4 @@
-package serverApp;
+package dfrs.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;

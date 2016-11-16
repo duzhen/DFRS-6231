@@ -1,8 +1,8 @@
-package serverApp;
+package dfrs.frontend;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import server.ServerInterfacePOA;
+import dfrs.ServerInterfacePOA;
 public class FEImpl  extends ServerInterfacePOA  {
 
 	public String host = "";
@@ -32,7 +32,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 	public String editFlightRecord(String currentCity, String managerID, String destination, String flightDate,
 			int economy, int business, int firstclass) {
 		
-		changeModule cM = new changeModule(host,port,currentCity,managerID,destination,flightDate,
+		ChangeModule cM = new ChangeModule(host,port,currentCity,managerID,destination,flightDate,
 				economy,business,firstclass	);
 		cM.execute();
 		return null;

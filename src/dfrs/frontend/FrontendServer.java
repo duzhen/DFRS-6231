@@ -1,4 +1,4 @@
-package serverApp;
+package dfrs.frontend;
 
 import java.util.Properties;
 
@@ -8,8 +8,8 @@ import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 
-import server.ServerInterface;
-import server.ServerInterfaceHelper;
+import dfrs.ServerInterface;
+import dfrs.ServerInterfaceHelper;
 
 public class FrontendServer {
 

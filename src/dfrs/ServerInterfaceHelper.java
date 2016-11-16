@@ -1,11 +1,11 @@
-package server;
+ï»¿package server;
 
 
 /**
 * server/ServerInterfaceHelper.java .
-* ÓÉIDL-to-Java ±àÒëÆ÷ (¿ÉÒÆÖ²), °æ±¾ "3.2"Éú³É
-* ´ÓC:/Users/nathan/workspace/COMP6231project/src/server.idl
-* 2016Äê11ÔÂ16ÈÕ ĞÇÆÚÈı ÉÏÎç09Ê±02·Ö35Ãë EST
+* ç”±IDL-to-Java ç¼–è¯‘å™¨ (å¯ç§»æ¤), ç‰ˆæœ¬ "3.2"ç”Ÿæˆ
+* ä»C:/Users/nathan/workspace/COMP6231project/src/server.idl
+* 2016å¹´11æœˆ16æ—¥ æ˜ŸæœŸä¸‰ ä¸Šåˆ09æ—¶02åˆ†35ç§’ EST
 */
 
 abstract public class ServerInterfaceHelper

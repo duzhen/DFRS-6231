@@ -1,8 +1,8 @@
-package serverApp;
+package dfrs.replicamanager;
 
 import java.net.InetAddress;
 
-public class replicaManager {
+public class ReplicaManager {
 	int port;
 	InetAddress Host;
 }

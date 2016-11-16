@@ -1,6 +1,6 @@
 
 
-package serverApp;
+package dfrs.frontend;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -10,10 +10,10 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import dfrs.ServerInterface;
+import dfrs.net.Client;
 
-import server.ServerInterface;
-
-public class changeModule {
+public class ChangeModule {
 	
 	public  String managerID = "";
 	public  String currentCity = "";
@@ -26,7 +26,7 @@ public class changeModule {
 	private int port = 0;
 	private String content;
 	//private passengerRecord pR;
-	public changeModule(String new_host,int new_port,String new_currentCity,String new_managerID,String new_destination,
+	public ChangeModule(String new_host,int new_port,String new_currentCity,String new_managerID,String new_destination,
 			String  new_flightDate,int new_economy,int new_business,int new_firstclass)
 	{
 		host=new_host;
