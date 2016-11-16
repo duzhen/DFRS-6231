@@ -1,17 +1,4 @@
-
-
 package serverApp;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Scanner;
-
-
-import server.ServerInterface;
 
 public class changeModule {
 	
@@ -42,7 +29,6 @@ public class changeModule {
 
 	public void execute()
 	{
-		 
 		content ="2"+"$"+currentCity
 				+"$"+managerID
 				+"$"+destination
@@ -51,7 +37,8 @@ public class changeModule {
 				+"$"+Integer.toString(business)
 				+"$"+Integer.toString(firstclass)+"$";
 		
-		System.out.println("client "+port+"connect string");
+		System.out.println("client "+port+" connect string");
+		System.out.println(content);
 		
         Client client = new Client("localhost", 8888, content);
         client.run();

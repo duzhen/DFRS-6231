@@ -19,7 +19,7 @@ public class manager {
 	public static Scanner keyboard = null;
 	public static ServerInterface FEImpl;
 	public static String destination ;
-	public static String flightClass;
+	//public static String flightClass;
 	public static String flightDate;
 	public static int economy ;
 	public static int business;
@@ -37,8 +37,7 @@ public class manager {
 	
 	public static void change()
 	{
-		System.out.println("Enter your edit current City:");
-		currentCity = keyboard.next();
+
 		
 		System.out.println("Enter your edit plane destination:");
 		 destination = keyboard.next();
@@ -81,6 +80,7 @@ public static void main(String[] args) {
 
 			org.omg.CORBA.Object objRef =
 			orb.resolve_initial_references("NameService");
+			
 			NamingContextExt ncRef = 
 					NamingContextExtHelper.narrow(objRef);
 			FEImpl = ServerInterfaceHelper.narrow(ncRef.resolve_str("Server"));
@@ -93,6 +93,10 @@ public static void main(String[] args) {
 		System.out.println("This is the  manager console, please write the manager ID");
 		keyboard=new Scanner(System.in);
 		managerID = keyboard.nextLine();
+		
+		System.out.println("Enter your edit current City:");
+		currentCity = keyboard.next();
+		
 		int i = 0;
 		int userChoice=0;
 		boolean out = true;

@@ -1,6 +1,4 @@
 package serverApp;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import server.ServerInterfacePOA;
 public class FEImpl  extends ServerInterfacePOA  {
@@ -24,7 +22,6 @@ public class FEImpl  extends ServerInterfacePOA  {
 	@Override
 	public String getBookedFlightCount(String currentCity, String managerID) {
 		
-		
 		return null;
 	}
 
@@ -35,7 +32,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		changeModule cM = new changeModule(host,port,currentCity,managerID,destination,flightDate,
 				economy,business,firstclass	);
 		cM.execute();
-		return null;
+		return "success send the content";
 	}
 
 	@Override
