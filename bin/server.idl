@@ -2,13 +2,13 @@ module server {
 
 	interface ServerInterface {
 	
-	string bookFlight(in string firstName,	in string lastName,in string address,
+	string bookFlight(in string currentCity ,in string firstName,	in string lastName,in string address,
 	in string phoneNumber,
 	in string destination ,in string flightClass ,in string flightDate );
 	
-	string  getBookedFlightCount (in string managerID);
+	string  getBookedFlightCount (in string currentCity ,in string managerID);
 	
-	string editFlightRecord (in string managerID,in string destination,
+	string editFlightRecord (in string currentCity ,in string managerID,in string destination,
 		in string flightDate ,in long economy ,
 	in long business ,in long firstclass );
 	

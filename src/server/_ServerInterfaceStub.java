@@ -5,17 +5,18 @@ package server;
 * server/_ServerInterfaceStub.java .
 * 由IDL-to-Java 编译器 (可移植), 版本 "3.2"生成
 * 从C:/Users/nathan/workspace/COMP6231project/src/server.idl
-* 2016年11月15日 星期二 下午02时42分26秒 EST
+* 2016年11月16日 星期三 上午09时02分35秒 EST
 */
 
 public class _ServerInterfaceStub extends org.omg.CORBA.portable.ObjectImpl implements server.ServerInterface
 {
 
-  public String bookFlight (String firstName, String lastName, String address, String phoneNumber, String destination, String flightClass, String flightDate)
+  public String bookFlight (String currentCity, String firstName, String lastName, String address, String phoneNumber, String destination, String flightClass, String flightDate)
   {
             org.omg.CORBA.portable.InputStream $in = null;
             try {
                 org.omg.CORBA.portable.OutputStream $out = _request ("bookFlight", true);
+                $out.write_string (currentCity);
                 $out.write_string (firstName);
                 $out.write_string (lastName);
                 $out.write_string (address);
@@ -31,17 +32,18 @@ public class _ServerInterfaceStub extends org.omg.CORBA.portable.ObjectImpl impl
                 String _id = $ex.getId ();
                 throw new org.omg.CORBA.MARSHAL (_id);
             } catch (org.omg.CORBA.portable.RemarshalException $rm) {
-                return bookFlight (firstName, lastName, address, phoneNumber, destination, flightClass, flightDate        );
+                return bookFlight (currentCity, firstName, lastName, address, phoneNumber, destination, flightClass, flightDate        );
             } finally {
                 _releaseReply ($in);
             }
   } // bookFlight
 
-  public String getBookedFlightCount (String managerID)
+  public String getBookedFlightCount (String currentCity, String managerID)
   {
             org.omg.CORBA.portable.InputStream $in = null;
             try {
                 org.omg.CORBA.portable.OutputStream $out = _request ("getBookedFlightCount", true);
+                $out.write_string (currentCity);
                 $out.write_string (managerID);
                 $in = _invoke ($out);
                 String $result = $in.read_string ();
@@ -51,17 +53,18 @@ public class _ServerInterfaceStub extends org.omg.CORBA.portable.ObjectImpl impl
                 String _id = $ex.getId ();
                 throw new org.omg.CORBA.MARSHAL (_id);
             } catch (org.omg.CORBA.portable.RemarshalException $rm) {
-                return getBookedFlightCount (managerID        );
+                return getBookedFlightCount (currentCity, managerID        );
             } finally {
                 _releaseReply ($in);
             }
   } // getBookedFlightCount
 
-  public String editFlightRecord (String managerID, String destination, String flightDate, int economy, int business, int firstclass)
+  public String editFlightRecord (String currentCity, String managerID, String destination, String flightDate, int economy, int business, int firstclass)
   {
             org.omg.CORBA.portable.InputStream $in = null;
             try {
                 org.omg.CORBA.portable.OutputStream $out = _request ("editFlightRecord", true);
+                $out.write_string (currentCity);
                 $out.write_string (managerID);
                 $out.write_string (destination);
                 $out.write_string (flightDate);
@@ -76,7 +79,7 @@ public class _ServerInterfaceStub extends org.omg.CORBA.portable.ObjectImpl impl
                 String _id = $ex.getId ();
                 throw new org.omg.CORBA.MARSHAL (_id);
             } catch (org.omg.CORBA.portable.RemarshalException $rm) {
-                return editFlightRecord (managerID, destination, flightDate, economy, business, firstclass        );
+                return editFlightRecord (currentCity, managerID, destination, flightDate, economy, business, firstclass        );
             } finally {
                 _releaseReply ($in);
             }

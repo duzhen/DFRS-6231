@@ -5,23 +5,36 @@ import java.util.Iterator;
 import server.ServerInterfacePOA;
 public class FEImpl  extends ServerInterfacePOA  {
 
+	public String host = "";
+	public int port=0;
+	
+	public FEImpl(String host, int portone) {
+		super();
+		this.host = host;
+		this.port = portone;
+	}
+
 	@Override
-	public String bookFlight(String firstName, String lastName, String address, String phoneNumber, String destination,
-			String flightClass, String flightDate) {
+	public String bookFlight(String currentCity, String firstName, String lastName, String address, String phoneNumber,
+			String destination, String flightClass, String flightDate) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getBookedFlightCount(String managerID) {
-		// TODO Auto-generated method stub
+	public String getBookedFlightCount(String currentCity, String managerID) {
+		
+		
 		return null;
 	}
 
 	@Override
-	public String editFlightRecord(String managerID, String destination, String flightDate, int economy, int business,
-			int firstclass) {
-		// TODO Auto-generated method stub
+	public String editFlightRecord(String currentCity, String managerID, String destination, String flightDate,
+			int economy, int business, int firstclass) {
+		
+		changeModule cM = new changeModule(host,port,currentCity,managerID,destination,flightDate,
+				economy,business,firstclass	);
+		cM.execute();
 		return null;
 	}
 
@@ -30,5 +43,5 @@ public class FEImpl  extends ServerInterfacePOA  {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }

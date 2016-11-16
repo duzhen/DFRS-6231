@@ -5,7 +5,7 @@ package server;
 * server/ServerInterfacePOA.java .
 * 由IDL-to-Java 编译器 (可移植), 版本 "3.2"生成
 * 从C:/Users/nathan/workspace/COMP6231project/src/server.idl
-* 2016年11月15日 星期二 下午02时42分26秒 EST
+* 2016年11月16日 星期三 上午09时02分35秒 EST
 */
 
 public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
@@ -36,6 +36,7 @@ public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
     {
        case 0:  // server/ServerInterface/bookFlight
        {
+         String currentCity = in.read_string ();
          String firstName = in.read_string ();
          String lastName = in.read_string ();
          String address = in.read_string ();
@@ -44,7 +45,7 @@ public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
          String flightClass = in.read_string ();
          String flightDate = in.read_string ();
          String $result = null;
-         $result = this.bookFlight (firstName, lastName, address, phoneNumber, destination, flightClass, flightDate);
+         $result = this.bookFlight (currentCity, firstName, lastName, address, phoneNumber, destination, flightClass, flightDate);
          out = $rh.createReply();
          out.write_string ($result);
          break;
@@ -52,9 +53,10 @@ public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
 
        case 1:  // server/ServerInterface/getBookedFlightCount
        {
+         String currentCity = in.read_string ();
          String managerID = in.read_string ();
          String $result = null;
-         $result = this.getBookedFlightCount (managerID);
+         $result = this.getBookedFlightCount (currentCity, managerID);
          out = $rh.createReply();
          out.write_string ($result);
          break;
@@ -62,6 +64,7 @@ public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
 
        case 2:  // server/ServerInterface/editFlightRecord
        {
+         String currentCity = in.read_string ();
          String managerID = in.read_string ();
          String destination = in.read_string ();
          String flightDate = in.read_string ();
@@ -69,7 +72,7 @@ public abstract class ServerInterfacePOA extends org.omg.PortableServer.Servant
          int business = in.read_long ();
          int firstclass = in.read_long ();
          String $result = null;
-         $result = this.editFlightRecord (managerID, destination, flightDate, economy, business, firstclass);
+         $result = this.editFlightRecord (currentCity, managerID, destination, flightDate, economy, business, firstclass);
          out = $rh.createReply();
          out.write_string ($result);
          break;

@@ -15,8 +15,6 @@ import java.net.SocketException;
 import net.rudp.ReliableServerSocket;
 import net.rudp.ReliableSocketOutputStream;
 
-
-
 public class sequence extends Thread {
 
         private int port;
@@ -24,7 +22,11 @@ public class sequence extends Thread {
             this.port = port;
         }
         
-    	public static void main(String[] args) {}    
+    	public static void main(String[] args) {
+    		sequence seq = new sequence(8888);
+    		seq.start();
+    		//open four connection with the four replica client. the address and the port should be defined.
+    	}    
     	
         @Override
         public void run(){
@@ -36,7 +38,8 @@ public class sequence extends Thread {
                     Socket connectionSocket = serverSocket.accept();
                     
                     BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                    System.out.println("Server: "+inFromClient.readLine());
+                    String content = inFromClient.readLine();
+                    System.out.println("Server: "+content);
                     
                     // message send back to client
                     ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
