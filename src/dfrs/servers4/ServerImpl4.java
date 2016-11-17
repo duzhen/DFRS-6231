@@ -7,9 +7,9 @@ public class ServerImpl4  extends ServerInterfacePOA  {
 	public static final String SERVER_WST = "Washington";
 	public static final String SERVER_NDL = "New Delhi";
 	//CORBA
-	public static final int SERVER_MTL_CORBA_PORT = 9080;
-	public static final int SERVER_WST_CORBA_PORT = 9081;
-	public static final int SERVER_NDL_CORBA_PORT = 9082;
+	public static final String SERVER_MTL_CORBA_PORT = "9080";
+	public static final String SERVER_WST_CORBA_PORT = "9081";
+	public static final String SERVER_NDL_CORBA_PORT = "9082";
 	//HEARTBEAT
 	public static final int RM_HEARTBEAT_MTL_PORT = 7241;
 	public static final int RM_HEARTBEAT_WST_PORT = 7242;

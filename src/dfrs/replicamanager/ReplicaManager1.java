@@ -12,45 +12,18 @@ public class ReplicaManager1 extends BaseRM {
 	//HEARTBEAT
 	public static final int RM_RECEIVE_HEARTBEAT_PROT = 7210;
 	
-	private ReplicaManager1 rm;
-	private Thread threadMTL;
-	private Thread threadWST;
-	private Thread threadNDL;
+	private static ReplicaManager1 rm;
 	
 	public ReplicaManager1(String[] args) {
-		threadMTL = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				initServer(new ServerImpl1(), args, ServerImpl1.SERVER_MTL, RM_HOST, ServerImpl1.SERVER_MTL_CORBA_PORT);
-			}
-		});
-		threadWST = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				initServer(new ServerImpl1(), args, ServerImpl1.SERVER_WST, RM_HOST,  ServerImpl1.SERVER_WST_CORBA_PORT);
-			}
-		});
-		threadNDL = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				initServer(new ServerImpl1(), args, ServerImpl1.SERVER_NDL, RM_HOST,  ServerImpl1.SERVER_NDL_CORBA_PORT);
-			}
-		});
+		initServer(new ServerImpl1(), args, ServerImpl1.SERVER_MTL, RM_HOST, ServerImpl1.SERVER_MTL_CORBA_PORT);
+		initServer(new ServerImpl1(), args, ServerImpl1.SERVER_WST, RM_HOST,  ServerImpl1.SERVER_WST_CORBA_PORT);
+		initServer(new ServerImpl1(), args, ServerImpl1.SERVER_NDL, RM_HOST,  ServerImpl1.SERVER_NDL_CORBA_PORT);
 	}
 
-	private void startServer() {
-		threadMTL.start();
-		threadWST.start();
-		threadNDL.start();
-		startReceiveHeartBeat();
-		startReceiveRM();
-		startReceiveSE();
-		startReceiveFE();
-	}
-	
 	public static void main(String[] args) {
-		ReplicaManager1 rm = new ReplicaManager1(args);
-		rm.startServer();
+		rm = new ReplicaManager1(args);
+		rm.startServer(new String[] {ServerImpl1.SERVER_MTL,ServerImpl1.SERVER_WST,ServerImpl1.SERVER_NDL});
+		while(true){}
 	}
 
 	@Override
@@ -75,5 +48,17 @@ public class ReplicaManager1 extends BaseRM {
 	protected int getHBport() {
 		// TODO Auto-generated method stub
 		return RM_RECEIVE_HEARTBEAT_PROT;
+	}
+
+	@Override
+	protected String getHost() {
+		// TODO Auto-generated method stub
+		return RM_HOST;
+	}
+
+	@Override
+	protected int getS2FEport() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

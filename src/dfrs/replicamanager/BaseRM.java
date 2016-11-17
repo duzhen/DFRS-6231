@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.omg.CORBA.ORB;
@@ -18,24 +18,92 @@ import org.omg.PortableServer.POA;
 import dfrs.ServerInterface;
 import dfrs.ServerInterfaceHelper;
 import dfrs.ServerInterfacePOA;
+import dfrs.servers1.ServerImpl1;
 import net.rudp.ReliableServerSocket;
+import net.rudp.ReliableSocket;
 import net.rudp.ReliableSocketOutputStream;
 
 public abstract class BaseRM {
 	private InetAddress Host;
+	private boolean isStopped = false;
 	private ClusterManager cluster;
-	private ArrayList<String> sList;
+	private HashMap<String, Server> servers;
 	public BaseRM() {
-//		sList = new ArrayList<String>();
+		servers = new HashMap<String, Server>();
 		this.cluster = new ClusterManager();
 	}
-	
+	protected abstract String getHost();
 	protected abstract int getFEport();
 	protected abstract int getSEport();
+	protected abstract int getS2FEport();
 	protected abstract int getRMport();
 	protected abstract int getHBport();
 	
-	protected void initServer(ServerInterfacePOA impl, String[] args, String server, String host, int port) {
+	protected Server getServer(String server) {
+		return servers.get(server);
+	}
+	
+	class Server extends Thread {
+		private ORB	orb;
+		
+		public Server(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
+			orb = createCorbaServer(impl, args, server, host, port);
+		}
+
+		@Override
+		public void run() {
+			super.run();
+			if(orb != null)
+				orb.run();
+		}
+
+		protected void shutdown(boolean wait_for_completion) {
+			if(orb != null) {
+				orb.shutdown(wait_for_completion);
+				orb.destroy();
+			}
+		}
+	}
+	
+	protected void initServer(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
+		isStopped = true;
+		Server s = getServer(server);
+		if(s!=null&&s.isAlive()) {
+			s.shutdown(false);
+		}
+		s = new Server(impl, args, server, host, port);
+		servers.put(server, s);
+		cluster.addCorbaClient(args, server, host, port);
+	}
+
+	protected void startServer(String[] servers) {
+		if(servers == null)
+			return;
+		for(int i=0;i<servers.length;i++) {
+			Server s = getServer(servers[i]);
+			if(s!=null)
+				s.start();
+		}
+		isStopped = false;
+		startReceiveHeartBeat();
+		startReceiveRM();
+		startReceiveSE();
+		startReceiveFE();
+	}
+	
+	protected void stopServer(String[] servers) {
+		if(servers == null)
+			return;
+		for(int i=0;i<servers.length;i++) {
+			Server s = getServer(servers[i]);
+			if(s!=null&&s.isAlive()) {
+				s.shutdown(false);
+			}
+		}
+		isStopped = true;
+	}
+	
+	private ORB createCorbaServer(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
 		try {
 			Properties props = new Properties();
 			props.put("org.omg.CORBA.ORBInitialPort", port);    
@@ -55,14 +123,12 @@ public abstract class BaseRM {
 			ncRef.rebind(path, href);
 			
 			System.out.println(server + " server ready and waiting ...");
-			orb.run();
-			//server running and save corba client to cluster
-			this.cluster.addCorbaClient(args, server, host, port);
-//			sList.add(server);
+			return orb;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	protected void startReceiveFE() {
@@ -72,7 +138,6 @@ public abstract class BaseRM {
 				try {
 		            ReliableServerSocket serverSocket = new ReliableServerSocket(getFEport());
 		            
-		            boolean isStopped = false;
 		            while(!isStopped){
 		                Socket connectionSocket = serverSocket.accept();
 		                
@@ -94,7 +159,7 @@ public abstract class BaseRM {
 
 		        } 
 			}
-		});
+		}).start();
 	}
 	//SE
 	protected void startReceiveSE() {
@@ -102,20 +167,29 @@ public abstract class BaseRM {
 			@Override
 			public void run() {
 				try {
-		            ReliableServerSocket serverSocket = new ReliableServerSocket(getRMport());
+		            ReliableServerSocket serverSocket = new ReliableServerSocket(getSEport());
 		            
-		            boolean isStopped = false;
 		            while(!isStopped){
 		                Socket connectionSocket = serverSocket.accept();
 		                
 		                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-		                System.out.println("Server: "+inFromClient.readLine());
-		                
+		                String content = inFromClient.readLine();
+		                System.out.println("Server: "+content);
+		                String[] params = content.split("\\$");
+		                for(int i=0;i<params.length;i++) {
+		                	System.out.println(i+": "+params[i]);
+		                }
+		                String reply = "failed";
+		                if(true) {//) {
+		                	reply = cluster.getCorbarClient(ServerImpl1.SERVER_MTL).editFlightRecord(params[1], params[2], params[3], params[4], Integer.valueOf(params[5]), Integer.valueOf(params[6]), Integer.valueOf(params[7]));
+		                }
 		                // message send back to client
-		                ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
-		                PrintWriter outputBuffer = new PrintWriter(outToClient);
-		                outputBuffer.println("Processed Sentence From Server");
+		                ReliableSocket clientSocket = new ReliableSocket(getHost(), getS2FEport());
+		                ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
+		                PrintWriter outputBuffer = new PrintWriter(outToServer);
+		                outputBuffer.println(reply);
 		                outputBuffer.flush();
+		                clientSocket.close();
 		                
 		                connectionSocket.close();
 		            }
@@ -126,7 +200,7 @@ public abstract class BaseRM {
 
 		        } 
 			}
-		});
+		}).start();
 	}
 	//RM
 	protected void startReceiveRM() {
@@ -136,7 +210,6 @@ public abstract class BaseRM {
 				try {
 		            ReliableServerSocket serverSocket = new ReliableServerSocket(getRMport());
 		            
-		            boolean isStopped = false;
 		            while(!isStopped){
 		                Socket connectionSocket = serverSocket.accept();
 		                
@@ -158,7 +231,7 @@ public abstract class BaseRM {
 
 		        } 
 			}
-		});
+		}).start();
 	}
 	//heartbeat
 	protected void startReceiveHeartBeat() {
@@ -168,7 +241,6 @@ public abstract class BaseRM {
 				try {
 					ReliableServerSocket serverSocket = new ReliableServerSocket(getHBport());
 
-					boolean isStopped = false;
 					while (!isStopped) {
 						Socket connectionSocket = serverSocket.accept();
 
@@ -192,6 +264,6 @@ public abstract class BaseRM {
 
 				}
 			}
-		});
+		}).start();
 	}
 }

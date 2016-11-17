@@ -7,9 +7,9 @@ public class ServerImpl1  extends ServerInterfacePOA  {
 	public static final String SERVER_WST = "Washington";
 	public static final String SERVER_NDL = "New Delhi";
 	//CORBA
-	public static final int SERVER_MTL_CORBA_PORT = 9050;
-	public static final int SERVER_WST_CORBA_PORT = 9051;
-	public static final int SERVER_NDL_CORBA_PORT = 9052;
+	public static final String SERVER_MTL_CORBA_PORT = "9050";
+	public static final String SERVER_WST_CORBA_PORT = "9051";
+	public static final String SERVER_NDL_CORBA_PORT = "9052";
 	//HEARTBEAT
 	public static final int RM_HEARTBEAT_MTL_PORT = 7211;
 	public static final int RM_HEARTBEAT_WST_PORT = 7212;
@@ -42,8 +42,8 @@ public class ServerImpl1  extends ServerInterfacePOA  {
 	@Override
 	public String editFlightRecord(String currentCity, String managerID, String destination, String flightDate,
 			int economy, int business, int firstclass) {
-
-		return null;
+		System.out.println("editFlightRecord Success");
+		return "Success";
 	}
 
 	@Override

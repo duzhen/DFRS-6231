@@ -31,4 +31,16 @@ public class ReplicaManager4 extends BaseRM {
 		// TODO Auto-generated method stub
 		return RM_RECEIVE_HEARTBEAT_PROT;
 	}
+
+	@Override
+	protected String getHost() {
+		// TODO Auto-generated method stub
+		return RM_HOST;
+	}
+
+	@Override
+	protected int getS2FEport() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

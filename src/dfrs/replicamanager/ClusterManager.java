@@ -17,11 +17,11 @@ public class ClusterManager {
 		return servers.get(server);
 	}
 	
-	public void addCorbaClient(String[] args,String server, String host, int port) {
+	public void addCorbaClient(String[] args, String server, String host, String port) {
 		servers.put(server, getCorba(args, host, port));
 	}
 
-	private ServerInterface getCorba(String[] args, String host, int port) {
+	private ServerInterface getCorba(String[] args, String host, String port) {
 		try {
 			Properties props = new Properties();
 		    props.put("org.omg.CORBA.ORBInitialPort", port);    
