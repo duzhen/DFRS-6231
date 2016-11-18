@@ -1,7 +1,5 @@
 package dfrs.replicamanager;
 
-import dfrs.servers1.ServerImpl1;
-
 public class ReplicaManager1 extends BaseRM {
 	
 	public static final String RM_HOST = "localhost";
@@ -13,17 +11,15 @@ public class ReplicaManager1 extends BaseRM {
 	public static final int RM_RECEIVE_HEARTBEAT_PROT = 7210;
 	
 	private static ReplicaManager1 rm;
-	
+	private String[] args;
 	public ReplicaManager1(String[] args) {
-		initServer(new ServerImpl1(), args, ServerImpl1.SERVER_MTL, RM_HOST, ServerImpl1.SERVER_MTL_CORBA_PORT);
-		initServer(new ServerImpl1(), args, ServerImpl1.SERVER_WST, RM_HOST,  ServerImpl1.SERVER_WST_CORBA_PORT);
-		initServer(new ServerImpl1(), args, ServerImpl1.SERVER_NDL, RM_HOST,  ServerImpl1.SERVER_NDL_CORBA_PORT);
+		this.args = args;
 	}
 
 	public static void main(String[] args) {
 		rm = new ReplicaManager1(args);
-		rm.startServer(new String[] {ServerImpl1.SERVER_MTL,ServerImpl1.SERVER_WST,ServerImpl1.SERVER_NDL});
-		while(true){}
+		rm.createServers(SERVERS);
+		rm.startServer(SERVERS);
 	}
 
 	@Override
@@ -60,5 +56,19 @@ public class ReplicaManager1 extends BaseRM {
 	protected int getS2FEport() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	protected void createServers(String[] servers) {
+		if(servers == null)
+			return;
+		for(int i=0;i<servers.length;i++) {
+			registerServer(Server.createServer(this.getClass(), servers[i], args));
+		}
+	}
+
+	@Override
+	protected String getRMName() {
+		return "RM1";
 	}
 }

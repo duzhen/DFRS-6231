@@ -7,73 +7,99 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Properties;
 
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NameComponent;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.PortableServer.POA;
-
-import dfrs.ServerInterface;
-import dfrs.ServerInterfaceHelper;
-import dfrs.ServerInterfacePOA;
-import dfrs.servers1.ServerImpl1;
 import net.rudp.ReliableServerSocket;
-import net.rudp.ReliableSocket;
 import net.rudp.ReliableSocketOutputStream;
 
 public abstract class BaseRM {
+	
+	public static final String SERVER_MTL = "Montreal";
+	public static final String SERVER_WST = "Washington";
+	public static final String SERVER_NDL = "New Delhi";
+	public static final String STATE_RUNNING = "Running";//0
+	public static final String STATE_TERMINATED = "Terminated";//1
+	public static final String STATE_RECOVERING = "Recovering";//2
+	
+	public static final String[] SERVERS = new String[] {SERVER_MTL,SERVER_WST,SERVER_NDL};
+	public static final String[] STATES = new String[] {STATE_RUNNING,STATE_TERMINATED,STATE_RECOVERING};
+	
+	private State state;
 	private InetAddress Host;
 	private boolean isStopped = false;
 	private ClusterManager cluster;
 	private HashMap<String, Server> servers;
-	public BaseRM() {
-		servers = new HashMap<String, Server>();
-		this.cluster = new ClusterManager();
+	
+	class State {
+		String state;
+		private long[] alive = new long[3];
+		public State(String state) {
+			super();
+			this.state = state;
+			for(int i=0;i<alive.length;i++) {
+				alive[i] =  System.currentTimeMillis();
+			}
+		}
+		public void setRMState(int s) {
+			if(s<0||s>2)
+				return;
+			state = STATES[s];
+		}
+
+		public String getRMState() {
+			return state;
+		}
+		
+		public void setAlive(String server) {
+			if(SERVER_MTL.equals(server)) {
+				alive[0] =  System.currentTimeMillis();
+			} else if(SERVER_WST.equals(server)) {
+				alive[1] =  System.currentTimeMillis();
+			}  else if(SERVER_NDL.equals(server)) {
+				alive[2] =  System.currentTimeMillis();
+			} 
+		}
+		//s
+		public long getAlive(String server) {
+			long now = System.currentTimeMillis();
+			long last = 0;
+			if(SERVER_MTL.equals(server)) {
+				last = alive[0];
+			} else if(SERVER_WST.equals(server)) {
+				last = alive[1];
+			}  else if(SERVER_NDL.equals(server)) {
+				last = alive[2];
+			}
+			return (now-last)/1000;
+		}
 	}
+	public BaseRM() {
+		this.servers = new HashMap<String, Server>();
+		this.cluster = new ClusterManager();
+		this.state = new State(STATE_TERMINATED);
+	}
+	protected abstract String getRMName();
 	protected abstract String getHost();
 	protected abstract int getFEport();
 	protected abstract int getSEport();
 	protected abstract int getS2FEport();
 	protected abstract int getRMport();
 	protected abstract int getHBport();
+	protected abstract void createServers(String[] servers);
 	
 	protected Server getServer(String server) {
 		return servers.get(server);
 	}
 	
-	class Server extends Thread {
-		private ORB	orb;
-		
-		public Server(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
-			orb = createCorbaServer(impl, args, server, host, port);
-		}
-
-		@Override
-		public void run() {
-			super.run();
-			if(orb != null)
-				orb.run();
-		}
-
-		protected void shutdown(boolean wait_for_completion) {
-			if(orb != null) {
-				orb.shutdown(wait_for_completion);
-				orb.destroy();
-			}
-		}
-	}
-	
-	protected void initServer(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
+	protected void registerServer(Server server) {
 		isStopped = true;
-		Server s = getServer(server);
+		Server s = getServer(server.getServerName());
 		if(s!=null&&s.isAlive()) {
 			s.shutdown(false);
 		}
-		s = new Server(impl, args, server, host, port);
-		servers.put(server, s);
-		cluster.addCorbaClient(args, server, host, port);
+		if(s!=null&&s.isCreated()) {
+			servers.put(server.getServerName(), server);
+			cluster.createCorbaClient(server.getServerArgs(), server.getServerName(), server.getServerHost(), server.getServerPort());
+		}
 	}
 
 	protected void startServer(String[] servers) {
@@ -89,71 +115,89 @@ public abstract class BaseRM {
 		startReceiveRM();
 		startReceiveSE();
 		startReceiveFE();
+		state.setRMState(0);
 	}
 	
-	protected void stopServer(String[] servers) {
-		if(servers == null)
-			return;
-		for(int i=0;i<servers.length;i++) {
-			Server s = getServer(servers[i]);
+//	protected void stopCorbaServer(String servers) {
+//		if (servers == null)
+//			return;
+//		Server s = getServer(servers);
+//		if (s != null && s.isAlive()) {
+//			s.shutdown(false);
+//		}
+//	}
+	
+	protected void stopAllServer() {
+		for(int i=0;i<SERVERS.length;i++) {
+			Server s = getServer(SERVERS[i]);
 			if(s!=null&&s.isAlive()) {
 				s.shutdown(false);
 			}
 		}
 		isStopped = true;
+		state.setRMState(1);
 	}
 	
-	private ORB createCorbaServer(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
-		try {
-			Properties props = new Properties();
-			props.put("org.omg.CORBA.ORBInitialPort", port);    
-			props.put("org.omg.CORBA.ORBInitialHost", host); 
-
-			ORB	 orb = ORB.init(args , props);
-			POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
-			rootpoa.the_POAManager().activate();
-//			FEImpl impl = new FEImpl("localhost", 8888);
-
-			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(impl);
-			ServerInterface href = ServerInterfaceHelper.narrow(ref);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			String name = "Server";
-			NameComponent path[] = ncRef.to_name(name);
-			ncRef.rebind(path, href);
-			
-			System.out.println(server + " server ready and waiting ...");
-			return orb;
+	private boolean recoveryServer() {
+		state.setRMState(2);
+		return true;
+	}
+	private String countingErrorTimes(String content) {
+//		String[] params = content.split("\\$");
+		if(getServer(SERVER_MTL).error()>=3) {
+			stopAllServer();
+			if(recoveryServer()) {
+				createServers(SERVERS);
+				startServer(SERVERS);
+			}
+		} else {
+			state.getAlive(SERVER_MTL);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		return SERVER_MTL;
+	}
+	public String processSocketRequest(String source, String content) {
+		if("RM".equals(source)) {
+			return "";
 		}
-		return null;
+		while(!state.getRMState().equals("Running")) {
+			continue;
+		}
+		if("FE".equals(source)) {
+			 String server = countingErrorTimes(content);
+		} else if("SE".equals(source)) {
+			cluster.requestCorbaServer(content, getHost(), getS2FEport());
+		} else if("HB".equals(source)) {
+			state.setAlive(content);
+			System.out.println(getRMName()+"-" + content + " alive");
+		}
+		return "";
 	}
 	
+	//FE
 	protected void startReceiveFE() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 		            ReliableServerSocket serverSocket = new ReliableServerSocket(getFEport());
-		            
-		            while(!isStopped){
+		            while (true) {
+//		            while(!isStopped){
 		                Socket connectionSocket = serverSocket.accept();
 		                
 		                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-		                System.out.println("Server: "+inFromClient.readLine());
-		                
+		                String content = inFromClient.readLine();
+		                System.out.println("FE: "+content);
+		                String reply = processSocketRequest("FE", content);
 		                // message send back to client
 		                ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
 		                PrintWriter outputBuffer = new PrintWriter(outToClient);
-		                outputBuffer.println("Processed Sentence From Server");
+		                outputBuffer.println(reply);
 		                outputBuffer.flush();
 		                
 		                connectionSocket.close();
 		            }
 		            
-		            serverSocket.close();
+//		            serverSocket.close();
 
 		        } catch (IOException ex) {
 
@@ -168,33 +212,19 @@ public abstract class BaseRM {
 			public void run() {
 				try {
 		            ReliableServerSocket serverSocket = new ReliableServerSocket(getSEport());
-		            
-		            while(!isStopped){
+		            while (true) {
+//		            while(!isStopped){
 		                Socket connectionSocket = serverSocket.accept();
 		                
 		                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 		                String content = inFromClient.readLine();
-		                System.out.println("Server: "+content);
-		                String[] params = content.split("\\$");
-		                for(int i=0;i<params.length;i++) {
-		                	System.out.println(i+": "+params[i]);
-		                }
-		                String reply = "failed";
-		                if(true) {//) {
-		                	reply = cluster.getCorbarClient(ServerImpl1.SERVER_MTL).editFlightRecord(params[1], params[2], params[3], params[4], Integer.valueOf(params[5]), Integer.valueOf(params[6]), Integer.valueOf(params[7]));
-		                }
-		                // message send back to client
-		                ReliableSocket clientSocket = new ReliableSocket(getHost(), getS2FEport());
-		                ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
-		                PrintWriter outputBuffer = new PrintWriter(outToServer);
-		                outputBuffer.println(reply);
-		                outputBuffer.flush();
-		                clientSocket.close();
+		                System.out.println("SE: "+content);
+		                processSocketRequest("SE",content);
 		                
 		                connectionSocket.close();
 		            }
 		            
-		            serverSocket.close();
+//		            serverSocket.close();
 
 		        } catch (IOException ex) {
 
@@ -209,13 +239,14 @@ public abstract class BaseRM {
 			public void run() {
 				try {
 		            ReliableServerSocket serverSocket = new ReliableServerSocket(getRMport());
-		            
-		            while(!isStopped){
+		            while (true) {
+//		            while(!isStopped){
 		                Socket connectionSocket = serverSocket.accept();
 		                
 		                BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-		                System.out.println("Server: "+inFromClient.readLine());
-		                
+		                String content = inFromClient.readLine();
+		                System.out.println("RM: "+content);
+		                processSocketRequest("RM", content);
 		                // message send back to client
 		                ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
 		                PrintWriter outputBuffer = new PrintWriter(outToClient);
@@ -225,7 +256,7 @@ public abstract class BaseRM {
 		                connectionSocket.close();
 		            }
 		            
-		            serverSocket.close();
+//		            serverSocket.close();
 
 		        } catch (IOException ex) {
 
@@ -233,35 +264,33 @@ public abstract class BaseRM {
 			}
 		}).start();
 	}
-	//heartbeat
+	//Heartbeat
 	protected void startReceiveHeartBeat() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				try {
-					ReliableServerSocket serverSocket = new ReliableServerSocket(getHBport());
-
-					while (!isStopped) {
+				int n = 0;
+				while (n++!=5) {
+					try {
+						ReliableServerSocket serverSocket = new ReliableServerSocket(getHBport());
 						Socket connectionSocket = serverSocket.accept();
-
-						BufferedReader inFromClient = new BufferedReader(
-								new InputStreamReader(connectionSocket.getInputStream()));
-						System.out.println("Server: " + inFromClient.readLine());
-
-						// message send back to client
-						ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
-								.getOutputStream();
-						PrintWriter outputBuffer = new PrintWriter(outToClient);
-						outputBuffer.println("Processed Sentence From Server");
-						outputBuffer.flush();
-
-						connectionSocket.close();
+						while (true) {
+							// while (!isStopped) {
+							try {
+								BufferedReader inFromClient = new BufferedReader(
+										new InputStreamReader(connectionSocket.getInputStream()));
+								String content = inFromClient.readLine();
+								processSocketRequest("HB", content);
+							} catch (Exception e) {
+								e.printStackTrace();
+								connectionSocket.close();
+								serverSocket.close();
+								break;
+							}
+						}
+					} catch (IOException ex) {
+						ex.printStackTrace();
 					}
-
-					serverSocket.close();
-
-				} catch (IOException ex) {
-
 				}
 			}
 		}).start();

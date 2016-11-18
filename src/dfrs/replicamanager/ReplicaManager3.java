@@ -9,6 +9,18 @@ public class ReplicaManager3 extends BaseRM {
 	//HEARTBEAT
 	public static final int RM_RECEIVE_HEARTBEAT_PROT = 7230;
 	
+	private static ReplicaManager3 rm;
+	private String[] args;
+	public ReplicaManager3(String[] args) {
+		this.args = args;
+	}
+
+	public static void main(String[] args) {
+		rm = new ReplicaManager3(args);
+		rm.createServers(SERVERS);
+		rm.startServer(SERVERS);
+	}
+	
 	@Override
 	protected int getFEport() {
 		// TODO Auto-generated method stub
@@ -43,5 +55,16 @@ public class ReplicaManager3 extends BaseRM {
 	protected int getS2FEport() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	protected void createServers(String[] servers) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected String getRMName() {
+		return "RM3";
 	}
 }
