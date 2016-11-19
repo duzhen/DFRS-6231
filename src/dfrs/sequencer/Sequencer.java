@@ -28,6 +28,7 @@ public class Sequencer extends Thread {
     public void run(){
 //    		content ="2"+"$"+currentCity
 //    				+"$"+Integer.toString(firstclass)+"$";
+    	System.out.println("Sequencer begin to run");
         try {
             ReliableServerSocket serverSocket = new ReliableServerSocket(port);//8888
             

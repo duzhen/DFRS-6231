@@ -19,7 +19,7 @@ public class FrontendServer {
 			Properties props = new Properties();
 			props.put("org.omg.CORBA.ORBInitialPort", "1050");    
 			props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
-	
+			System.out.println("begin Front end lServer ready and waiting ...");
 			ORB	 orb = ORB.init(args , props);
 			POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
 			rootpoa.the_POAManager().activate();

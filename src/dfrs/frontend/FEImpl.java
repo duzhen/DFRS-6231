@@ -18,20 +18,23 @@ public class FEImpl  extends ServerInterfacePOA  {
 	public FEServer cMServer4 ;
 	public int successCount=0,failCount=0,crashCount=0;
 	public FEImpl(String host, int portone) {
+		
 		super();
+		System.out.println("FEImpl initial ...");
 		this.host = host;
 		this.port = portone;
 		CR = new CompareResult();
-		
+		// FE reveive cluster manager
 		cMServer1 = new FEServer(8101,CR);
 		cMServer2 = new FEServer(8102,CR);
 		cMServer3 = new FEServer(8103,CR);
 		cMServer4 = new FEServer(8104,CR);
 		
-		cMServer1.run();
-		cMServer2.run();
-		cMServer3.run();
-		cMServer4.run();
+		cMServer1.start();
+		cMServer2.start();
+		cMServer3.start();
+		cMServer4.start();
+		System.out.println("FEImpl afterinitial ...");
 	}
 
 	@Override

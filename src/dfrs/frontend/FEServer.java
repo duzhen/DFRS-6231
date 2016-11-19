@@ -27,16 +27,17 @@ public class FEServer  extends Thread {
                 Socket connectionSocket = serverSocket.accept();
                 
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                System.out.println("Server: "+inFromClient.readLine());
+                String reply= inFromClient.readLine().toString();
+                System.out.println("Server: "+reply);
                 
                 if(port==8101){
-                	CR.CM[0] = inFromClient.readLine().toString();
+                	CR.CM[0] = reply;
                 }else if(port==8102){
-                	CR.CM[1] = inFromClient.readLine().toString();
+                	CR.CM[1] = reply;
                 }else if(port==8103){
-                	CR.CM[2] = inFromClient.readLine().toString();
+                	CR.CM[2] = reply;
                 }else if(port==8104){
-                	CR.CM[3]  = inFromClient.readLine().toString();
+                	CR.CM[3]  = reply;
                 }
                 // message send back to client
                 ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
