@@ -1,29 +1,7 @@
 package dfrs.servers2;
 import dfrs.ServerInterfacePOA;
-import dfrs.replicamanager.BaseRM;
 public class ServerImpl2  extends ServerInterfacePOA  {
 
-	public static final String SERVER_HOST = "localhost";
-	//CORBA
-	public static final String SERVER_MTL_CORBA_PORT = "9060";
-	public static final String SERVER_WST_CORBA_PORT = "9061";
-	public static final String SERVER_NDL_CORBA_PORT = "9062";
-	//HEARTBEAT
-//	public static final int RM_HEARTBEAT_MTL_PORT = 7221;
-//	public static final int RM_HEARTBEAT_WST_PORT = 7222;
-//	public static final int RM_HEARTBEAT_NDL_PORT = 7223;
-	
-	public static String getCorbaPort(String server) {
-		if(BaseRM.SERVER_MTL.equals(server)) {
-			return SERVER_MTL_CORBA_PORT;
-		} else if(BaseRM.SERVER_WST.equals(server)) {
-			return SERVER_WST_CORBA_PORT;
-		} else if(BaseRM.SERVER_NDL.equals(server)) {
-			return SERVER_NDL_CORBA_PORT;
-		}
-		return "";
-	}
-	
 	public String host = "";
 	public int port=0;
 	

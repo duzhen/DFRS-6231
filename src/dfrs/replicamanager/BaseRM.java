@@ -6,28 +6,23 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
 
+import dfrs.servers.BaseServerCluster;
 import net.rudp.ReliableServerSocket;
 import net.rudp.ReliableSocketOutputStream;
 
 public abstract class BaseRM {
 	
-	public static final String SERVER_MTL = "Montreal";
-	public static final String SERVER_WST = "Washington";
-	public static final String SERVER_NDL = "New Delhi";
 	public static final String STATE_RUNNING = "Running";//0
 	public static final String STATE_TERMINATED = "Terminated";//1
 	public static final String STATE_RECOVERING = "Recovering";//2
 	
-	public static final String[] SERVERS = new String[] {SERVER_MTL,SERVER_WST,SERVER_NDL};
 	public static final String[] STATES = new String[] {STATE_RUNNING,STATE_TERMINATED,STATE_RECOVERING};
 	
 	private State state;
 	private InetAddress Host;
 	private boolean isStopped = false;
 	private ClusterManager cluster;
-	private HashMap<String, Server> servers;
 	
 	class State {
 		String state;
@@ -50,11 +45,11 @@ public abstract class BaseRM {
 		}
 		
 		public void setAlive(String server) {
-			if(SERVER_MTL.equals(server)) {
+			if(BaseServerCluster.SERVER_MTL.equals(server)) {
 				alive[0] =  System.currentTimeMillis();
-			} else if(SERVER_WST.equals(server)) {
+			} else if(BaseServerCluster.SERVER_WST.equals(server)) {
 				alive[1] =  System.currentTimeMillis();
-			}  else if(SERVER_NDL.equals(server)) {
+			}  else if(BaseServerCluster.SERVER_NDL.equals(server)) {
 				alive[2] =  System.currentTimeMillis();
 			} 
 		}
@@ -62,19 +57,18 @@ public abstract class BaseRM {
 		public long getAlive(String server) {
 			long now = System.currentTimeMillis();
 			long last = 0;
-			if(SERVER_MTL.equals(server)) {
+			if(BaseServerCluster.SERVER_MTL.equals(server)) {
 				last = alive[0];
-			} else if(SERVER_WST.equals(server)) {
+			} else if(BaseServerCluster.SERVER_WST.equals(server)) {
 				last = alive[1];
-			}  else if(SERVER_NDL.equals(server)) {
+			}  else if(BaseServerCluster.SERVER_NDL.equals(server)) {
 				last = alive[2];
 			}
 			return (now-last)/1000;
 		}
 	}
-	public BaseRM() {
-		this.servers = new HashMap<String, Server>();
-		this.cluster = new ClusterManager();
+	public BaseRM(String[] args) {
+		this.cluster = new ClusterManager(this, args);
 		this.state = new State(STATE_TERMINATED);
 	}
 	protected abstract String getRMName();
@@ -84,32 +78,8 @@ public abstract class BaseRM {
 	protected abstract int getS2FEport();
 	protected abstract int getRMport();
 	protected abstract int getHBport();
-	protected abstract void createServers(String[] servers);
 	
-	protected Server getServer(String server) {
-		return servers.get(server);
-	}
-	
-	protected void registerServer(Server server) {
-		isStopped = true;
-		Server s = getServer(server.getServerName());
-		if(s!=null&&s.isAlive()) {
-			s.shutdown(false);
-		}
-		if(s!=null&&s.isCreated()) {
-			servers.put(server.getServerName(), server);
-			cluster.createCorbaClient(server.getServerArgs(), server.getServerName(), server.getServerHost(), server.getServerPort());
-		}
-	}
-
-	protected void startServer(String[] servers) {
-		if(servers == null)
-			return;
-		for(int i=0;i<servers.length;i++) {
-			Server s = getServer(servers[i]);
-			if(s!=null)
-				s.start();
-		}
+	protected void startServer() {
 		isStopped = false;
 		startReceiveHeartBeat();
 		startReceiveRM();
@@ -118,42 +88,22 @@ public abstract class BaseRM {
 		state.setRMState(0);
 	}
 	
-//	protected void stopCorbaServer(String servers) {
-//		if (servers == null)
-//			return;
-//		Server s = getServer(servers);
-//		if (s != null && s.isAlive()) {
-//			s.shutdown(false);
-//		}
-//	}
-	
-	protected void stopAllServer() {
-		for(int i=0;i<SERVERS.length;i++) {
-			Server s = getServer(SERVERS[i]);
-			if(s!=null&&s.isAlive()) {
-				s.shutdown(false);
-			}
-		}
-		isStopped = true;
-		state.setRMState(1);
-	}
-	
 	private boolean recoveryServer() {
 		state.setRMState(2);
 		return true;
 	}
 	private String countingErrorTimes(String content) {
-//		String[] params = content.split("\\$");
-		if(getServer(SERVER_MTL).error()>=3) {
-			stopAllServer();
-			if(recoveryServer()) {
-				createServers(SERVERS);
-				startServer(SERVERS);
-			}
-		} else {
-			state.getAlive(SERVER_MTL);
-		}
-		return SERVER_MTL;
+		String[] params = content.split("\\$");
+//		if(getServer(SERVER_MTL).error()>=3) {
+//			stopAllServer();
+//			if(recoveryServer()) {
+//				createServers(SERVERS);
+//				startServer(SERVERS);
+//			}
+//		} else {
+//			state.getAlive(SERVER_MTL);
+//		}
+		return BaseServerCluster.SERVER_MTL;
 	}
 	public String processSocketRequest(String source, String content) {
 		if("RM".equals(source)) {
@@ -269,27 +219,34 @@ public abstract class BaseRM {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				int n = 0;
-				while (n++!=5) {
+				ReliableServerSocket[] serverSocket = new ReliableServerSocket[1];
+				while (true) {
 					try {
-						ReliableServerSocket serverSocket = new ReliableServerSocket(getHBport());
-						Socket connectionSocket = serverSocket.accept();
+						if (serverSocket[0] == null)
+							serverSocket[0] = new ReliableServerSocket(getHBport());
+					} catch (IOException e) {
+						try {
+							Thread.sleep(10000);
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+						}
+						continue;
+					}
+					try {
+						Socket connectionSocket = serverSocket[0].accept();
 						while (true) {
-							// while (!isStopped) {
 							try {
 								BufferedReader inFromClient = new BufferedReader(
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
 								processSocketRequest("HB", content);
 							} catch (Exception e) {
-								e.printStackTrace();
-								connectionSocket.close();
-								serverSocket.close();
+								System.out.println("Heartbeat readLine: " + e.getMessage());
 								break;
 							}
 						}
-					} catch (IOException ex) {
-						ex.printStackTrace();
+					} catch (IOException e) {
+						System.out.println("Heartbeat accept: " + e.getMessage());
 					}
 				}
 			}

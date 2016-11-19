@@ -1,7 +1,9 @@
 package dfrs.replicamanager;
 
+import dfrs.utils.Config;
+
 public class ReplicaManager2 extends BaseRM {
-	public static final String RM_HOST = "localhost";
+	public static final String RM_HOST = Config.getRmHost2();
 	
 	public static final int RM_RECEIVE_FE_PROT = 7002;
 	public static final int RM_RECEIVE_SEQUENCER_PROT = 7102;
@@ -12,13 +14,13 @@ public class ReplicaManager2 extends BaseRM {
 	private static ReplicaManager2 rm;
 	private String[] args;
 	public ReplicaManager2(String[] args) {
+		super(args);
 		this.args = args;
 	}
 
 	public static void main(String[] args) {
 		rm = new ReplicaManager2(args);
-		rm.createServers(SERVERS);
-		rm.startServer(SERVERS);
+		rm.startServer();
 	}
 	
 	@Override
@@ -55,15 +57,6 @@ public class ReplicaManager2 extends BaseRM {
 	protected int getS2FEport() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	protected void createServers(String[] servers) {
-		if(servers == null)
-			return;
-		for(int i=0;i<servers.length;i++) {
-			registerServer(Server.createServer(this.getClass(), servers[i], args));
-		}
 	}
 
 	@Override

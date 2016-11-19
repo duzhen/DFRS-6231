@@ -1,13 +1,15 @@
-package dfrs.net;
+package dfrs.servers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import net.rudp.ReliableSocket;
 import net.rudp.ReliableSocketOutputStream;
 
-public class HeartBeatSender {
+class HeartBeatSender {
 	private static HeartBeatSender instance;
 	private HashMap<String,ReliableSocket> clientSockets;
 	
@@ -23,13 +25,25 @@ public class HeartBeatSender {
 	}
 	
 	public void closeSocket() {
-		
+		Iterator iter = this.clientSockets.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			Object key = entry.getKey();
+			ReliableSocket value = (ReliableSocket) entry.getValue();
+			if (value != null && !value.isClosed()) {
+				try {
+					value.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
 	}
 	
 	public synchronized void send(String host, int port, String content) {
 		try {
 			ReliableSocket socket = clientSockets.get(host+port);
-			if(socket == null) {
+			if(socket == null || socket.isClosed()) {
 				socket = new ReliableSocket(host, port);
 				clientSockets.put(host+port, socket);
 			}
@@ -37,7 +51,7 @@ public class HeartBeatSender {
 	        PrintWriter outputBuffer = new PrintWriter(outToServer);
 	        outputBuffer.println(content);
 	        outputBuffer.flush();
-//	        clientSocket.close();
+//	        socket.close();
 
 	    } catch (IOException ex) {
 	    	ex.printStackTrace();
