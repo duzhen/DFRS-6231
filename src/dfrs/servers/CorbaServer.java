@@ -1,4 +1,4 @@
-package dfrs.replicamanager;
+package dfrs.servers;
 
 import java.util.Properties;
 import java.util.Timer;
@@ -13,39 +13,50 @@ import org.omg.PortableServer.POA;
 import dfrs.ServerInterface;
 import dfrs.ServerInterfaceHelper;
 import dfrs.ServerInterfacePOA;
-import dfrs.net.HeartBeatSender;
+import dfrs.replicamanager.ReplicaManager1;
+import dfrs.replicamanager.ReplicaManager2;
+import dfrs.replicamanager.ReplicaManager3;
+import dfrs.replicamanager.ReplicaManager4;
 import dfrs.servers1.ServerImpl1;
 import dfrs.servers2.ServerImpl2;
 import dfrs.servers3.ServerImpl3;
 import dfrs.servers4.ServerImpl4;
 
-class Server extends Thread {
+class CorbaServer extends Thread {
 	private ORB	orb;
-	private int error;
+//	private int error;
 	private String[] args;
-	private String s;
-	private String host;
-	private String port;
+	private String server;
+//	private String host;
+//	private String port;
 	private Timer timer;
 	
-	public static Server createServer(Object o, String name, String[] args) {
-		if(ReplicaManager1.class == o) {
-			return new Server(new ServerImpl1(), args, name, ServerImpl1.SERVER_HOST, ServerImpl1.getCorbaPort(name), ReplicaManager1.RM_HOST, ReplicaManager1.RM_RECEIVE_HEARTBEAT_PROT);
-		} else if(ReplicaManager2.class == o) {
-			return new Server(new ServerImpl2(), args, name, ServerImpl2.SERVER_HOST, ServerImpl2.getCorbaPort(name), ReplicaManager2.RM_HOST, ReplicaManager2.RM_RECEIVE_HEARTBEAT_PROT);
-		} else if(ReplicaManager3.class == o) {
-			return new Server(new ServerImpl3(), args, name, ServerImpl3.SERVER_HOST, ServerImpl3.getCorbaPort(name), ReplicaManager3.RM_HOST, ReplicaManager3.RM_RECEIVE_HEARTBEAT_PROT);
-		} else if(ReplicaManager4.class == o) {
-			return new Server(new ServerImpl4(), args, name, ServerImpl4.SERVER_HOST, ServerImpl4.getCorbaPort(name), ReplicaManager4.RM_HOST, ReplicaManager4.RM_RECEIVE_HEARTBEAT_PROT);
+	public static CorbaServer createServer(Object o, String name, String[] args) {
+		if (ServerCluster1.class == o) {
+			return new CorbaServer(new ServerImpl1(), args, name, ServerCluster1.SERVER_HOST,
+					ServerCluster1.getCorbaPort(name), ReplicaManager1.RM_HOST,
+					ReplicaManager1.RM_RECEIVE_HEARTBEAT_PROT);
+		} else if (ServerCluster2.class == o) {
+			return new CorbaServer(new ServerImpl2(), args, name, ServerCluster2.SERVER_HOST,
+					ServerCluster2.getCorbaPort(name), ReplicaManager2.RM_HOST,
+					ReplicaManager2.RM_RECEIVE_HEARTBEAT_PROT);
+		} else if (ServerCluster3.class == o) {
+			return new CorbaServer(new ServerImpl3(), args, name, ServerCluster3.SERVER_HOST,
+					ServerCluster3.getCorbaPort(name), ReplicaManager3.RM_HOST,
+					ReplicaManager3.RM_RECEIVE_HEARTBEAT_PROT);
+		} else if (ServerCluster4.class == o) {
+			return new CorbaServer(new ServerImpl4(), args, name, ServerCluster4.SERVER_HOST,
+					ServerCluster4.getCorbaPort(name), ReplicaManager4.RM_HOST,
+					ReplicaManager4.RM_RECEIVE_HEARTBEAT_PROT);
 		}
 		return null;
 	}
 	
-	public Server(ServerInterfacePOA impl, String[] args, String server, String host, String port, String RMHost, int RMPort) {
+	public CorbaServer(ServerInterfacePOA impl, String[] args, String server, String host, String port, String RMHost, int RMPort) {
 		this.args = args;
-		this.s = server;
-		this.host = host;
-		this.port = port;
+		this.server = server;
+//		this.host = host;
+//		this.port = port;
 		this.timer = new Timer();
 		this.orb = createCorbaServer(impl, args, server, host, port);
 //		if(this.orb != null) {
@@ -62,7 +73,7 @@ class Server extends Thread {
 	}
 
 	public boolean isCreated() {
-		return this.orb==null?true:false;
+		return this.orb==null?false:true;
 	}
 	
 	@Override
@@ -83,23 +94,23 @@ class Server extends Thread {
 	}
 	
 	public String getServerName() {
-		return s;
+		return server;
 	}
 	
-	public String[] getServerArgs() {
-		return args;
-	}
-	
-	public String getServerHost() {
-		return host;
-	}
-	
-	public String getServerPort() {
-		return port;
-	}
-	public int error() {
-		return ++error;
-	}
+//	public String[] getServerArgs() {
+//		return args;
+//	}
+//	
+//	public String getServerHost() {
+//		return host;
+//	}
+//	
+//	public String getServerPort() {
+//		return port;
+//	}
+//	public int error() {
+//		return ++error;
+//	}
 	
 	private ORB createCorbaServer(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
 		try {
