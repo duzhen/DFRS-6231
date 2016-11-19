@@ -8,12 +8,12 @@ import java.io.PrintWriter;
 import net.rudp.ReliableSocket;
 import net.rudp.ReliableSocketOutputStream;
 
-public class clusterManagerAddress {
+public class ClusterManagerSender extends Thread{
 
 	public String host;
 	public int port;
 	public String content;
-	public clusterManagerAddress(String host, int port, String new_content) {
+	public ClusterManagerSender(String host, int port, String new_content) {
 
 		this.host = host;
 		this.port = port;

@@ -48,9 +48,9 @@ public class Sequencer extends Thread {
                 System.out.println("sequence Server: "+content);
                 
               //open four connection with the four clusterManager and send content
-//                multicast mc = new multicast(content);
-//                mc.initial();
-//                mc.execute();
+                SE2CMMulticast mc = new SE2CMMulticast(content);
+                mc.initial();
+                mc.execute();
                 
                 // message send back to client
                 ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();

@@ -1,4 +1,4 @@
-package dfrs.net;
+package dfrs.frontend;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +9,13 @@ import java.net.Socket;
 import net.rudp.ReliableServerSocket;
 import net.rudp.ReliableSocketOutputStream;
 
-public class Server  extends Thread{
+public class FEServer  extends Thread {
 
-    int port;
-    
-    public Server(int port){
+    public int port;
+    public CompareResult CR;
+    public FEServer(int port, CompareResult new_CR){
         this.port = port;
+        CR = new_CR;
     }
     
     public void run(){
@@ -28,6 +29,15 @@ public class Server  extends Thread{
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 System.out.println("Server: "+inFromClient.readLine());
                 
+                if(port==8101){
+                	CR.CM[0] = inFromClient.readLine().toString();
+                }else if(port==8102){
+                	CR.CM[1] = inFromClient.readLine().toString();
+                }else if(port==8103){
+                	CR.CM[2] = inFromClient.readLine().toString();
+                }else if(port==8104){
+                	CR.CM[3]  = inFromClient.readLine().toString();
+                }
                 // message send back to client
                 ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
                 PrintWriter outputBuffer = new PrintWriter(outToClient);
@@ -43,5 +53,7 @@ public class Server  extends Thread{
 
         } 
     }
+
+
 
 }
