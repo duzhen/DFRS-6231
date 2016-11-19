@@ -14,10 +14,10 @@ public class FE2RMMulticast {
 
 	public ClusterManagerSender cma1,cma2,cma3,cma4;
 	public void initial(){
-		cma1 = new ClusterManagerSender("localhost",8201,content);
-		cma2 = new ClusterManagerSender("localhost",8202,content);
-		cma3 = new ClusterManagerSender("localhost",8203,content);
-		cma4 = new ClusterManagerSender("localhost",8204,content);
+		cma1 = new ClusterManagerSender("localhost",7001,content);
+		cma2 = new ClusterManagerSender("localhost",7002,content);
+		cma3 = new ClusterManagerSender("localhost",7003,content);
+		cma4 = new ClusterManagerSender("localhost",7004,content);
 	}
 	
 	public void execute(){

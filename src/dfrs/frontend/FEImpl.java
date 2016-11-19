@@ -48,7 +48,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", 8888, content);
+        Client client = new Client("localhost", port, content);
         client.run();
         try {
 			client.join();
@@ -73,7 +73,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", 8888, content);
+        Client client = new Client("localhost", port, content);
         client.run();
         try {
 			client.join();
@@ -104,7 +104,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", 8888, content);
+        Client client = new Client("localhost", port, content);
         client.run();
         try {
 			client.join();
@@ -191,7 +191,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", 8888, content);
+        Client client = new Client("localhost", port, content);
         client.run();
         try {
 			client.join();
