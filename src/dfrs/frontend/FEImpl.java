@@ -37,13 +37,56 @@ public class FEImpl  extends ServerInterfacePOA  {
 	@Override
 	public String bookFlight(String currentCity, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightClass, String flightDate) {
-		// TODO Auto-generated method stub
+		String content ="1"+"$"+currentCity
+				+"$"+firstName
+				+"$"+lastName
+				+"$"+address
+				+"$"+phoneNumber
+				+"$"+destination
+				+"$"+flightClass
+				+"$"+flightDate+"$";
+		
+		System.out.println("client "+port+" connect string");
+		System.out.println(content);
+        Client client = new Client("localhost", 8888, content);
+        client.run();
+        try {
+			client.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+	     try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public String getBookedFlightCount(String currentCity, String managerID) {
+		String content ="3"+"$"+currentCity
+				+"$"+currentCity
+				+"$"+managerID+"$";
 		
+		System.out.println("client "+port+" connect string");
+		System.out.println(content);
+        Client client = new Client("localhost", 8888, content);
+        client.run();
+        try {
+			client.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+	     try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -74,8 +117,8 @@ public class FEImpl  extends ServerInterfacePOA  {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-		}
-	     
+		 }
+	     //begin to receive
 	     for(int i=0;i<CR.CM.length;i++){
 	    	 if(CR.CM[i].equals("")){
 		    	 System.out.println("CR.CM"+i+" crash");
@@ -91,11 +134,11 @@ public class FEImpl  extends ServerInterfacePOA  {
 		     }
 	     }
 	     //whether crash should be noticed at the FE?
-	     if(successCount==(4-crashCount)){
+	     if(successCount==4){
 	    	 clear();
 	    	 return "success send the content";
 	     }else 
-    	 if(failCount==(4-crashCount)){
+    	 if(failCount==4){
     		 clear();
 	    	 return "fail send the content";
 	     }else 
@@ -107,64 +150,32 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("fail")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
-//    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
-//             mc.initial();
-//             mc.execute();
-    	    ClusterManagerSender cma1,cma2,cma3,cma4;
-			cma1 = new ClusterManagerSender("localhost",8201,RMMessage);
-			cma2 = new ClusterManagerSender("localhost",8202,RMMessage);
-			cma3 = new ClusterManagerSender("localhost",8203,RMMessage);
-			cma4 = new ClusterManagerSender("localhost",8204,RMMessage);
-			cma1.run();
-			cma2.run();
-			cma3.run();
-			cma4.run();
-			try {
-				cma1.join();
-				cma2.join();
-				cma3.join();
-				cma4.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
              clear();
     	     return "success send the content";
 	     }else 
-    	 if(successCount<failCount){
-
+    	 if(successCount<failCount)
+    	 {
     		 String RMMessage="";
     	     for(int i=0;i<CR.CM.length;i++){
     	    	 if(CR.CM[i].equals("fail")){
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("success")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
-//    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
-//             mc.initial();
-//             mc.execute();
-    	    ClusterManagerSender cma1,cma2,cma3,cma4;
- 			cma1 = new ClusterManagerSender("localhost",8201,RMMessage);
- 			cma2 = new ClusterManagerSender("localhost",8202,RMMessage);
- 			cma3 = new ClusterManagerSender("localhost",8203,RMMessage);
- 			cma4 = new ClusterManagerSender("localhost",8204,RMMessage);
- 			cma1.run();
- 			cma2.run();
- 			cma3.run();
- 			cma4.run();
- 			try {
- 				cma1.join();
- 				cma2.join();
- 				cma3.join();
- 				cma4.join();
- 			} catch (InterruptedException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
-              clear();
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
     	 return "success send the content";
 	     }
 	     
@@ -173,7 +184,27 @@ public class FEImpl  extends ServerInterfacePOA  {
 
 	@Override
 	public String transferReservation(String managerID, String PassengerID, String CurrentCity, String OtherCity) {
-		// TODO Auto-generated method stub
+		String content ="4"+"$"+managerID
+				+"$"+PassengerID
+				+"$"+CurrentCity
+				+"$"+OtherCity+"$";
+		
+		System.out.println("client "+port+" connect string");
+		System.out.println(content);
+        Client client = new Client("localhost", 8888, content);
+        client.run();
+        try {
+			client.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+	     try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+		}
 		return null;
 	}
 	

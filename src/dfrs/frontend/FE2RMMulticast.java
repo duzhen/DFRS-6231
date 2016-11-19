@@ -25,6 +25,15 @@ public class FE2RMMulticast {
 		cma2.run();
 		cma3.run();
 		cma4.run();
+		
+		try {
+			cma1.join();
+			cma2.join();
+			cma3.join();
+			cma4.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-
 }
