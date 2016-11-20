@@ -84,20 +84,20 @@ public class CorbaClient {
 		ServerInterface corba = clients.get(server);
 		if(corba == null) {
 			if (ReplicaManager1.class == rm.getClass()) {
-				corba = createCorba(args, server, ServerCluster1.SERVER_HOST, ServerCluster1.SERVER_CORBA_PORT);
+				corba = createCorba(args, server, ServerCluster1.CORBA, ServerCluster1.SERVER_HOST, ServerCluster1.SERVER_CORBA_PORT);
 			} else if (ReplicaManager2.class == rm.getClass()) {
-				corba = createCorba(args, server, ServerCluster2.SERVER_HOST, ServerCluster2.SERVER_CORBA_PORT);
+				corba = createCorba(args, server, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST, ServerCluster2.SERVER_CORBA_PORT);
 			} else if (ReplicaManager3.class == rm.getClass()) {
-				corba = createCorba(args, server, ServerCluster3.SERVER_HOST, ServerCluster3.SERVER_CORBA_PORT);
+				corba = createCorba(args, server, ServerCluster3.CORBA, ServerCluster3.SERVER_HOST, ServerCluster3.SERVER_CORBA_PORT);
 			} else if (ReplicaManager4.class == rm.getClass()) {
-				corba = createCorba(args, server, ServerCluster4.SERVER_HOST, ServerCluster4.SERVER_CORBA_PORT);
+				corba = createCorba(args, server, ServerCluster4.CORBA, ServerCluster4.SERVER_HOST, ServerCluster4.SERVER_CORBA_PORT);
 			}
 			clients.put(server, corba);
 		}
 		return corba;
 	}
 
-	private ServerInterface createCorba(String[] args, String server, String host, String port) {
+	private ServerInterface createCorba(String[] args, String server, String n, String host, String port) {
 		try {
 			Properties props = new Properties();
 			props.put("org.omg.CORBA.ORBInitialPort", port);
@@ -107,7 +107,7 @@ public class CorbaClient {
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			return ServerInterfaceHelper.narrow(ncRef.resolve_str(server));
+			return ServerInterfaceHelper.narrow(ncRef.resolve_str(server+n));
 
 		} catch (Exception e) {
 			e.printStackTrace();

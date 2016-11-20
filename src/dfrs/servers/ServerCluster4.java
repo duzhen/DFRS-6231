@@ -4,9 +4,10 @@ import dfrs.utils.Config;
 
 public class ServerCluster4 extends BaseServerCluster {
 	
+	public static final String CORBA = "4";
 	public static final String SERVER_HOST = Config.getServerHost4();
 	//CORBA
-	public static final String SERVER_CORBA_PORT = "9080";
+	public static final String SERVER_CORBA_PORT = "1050";//"9080";
 	//RM COMMAND
 	public static final int SC_RECEIVE_RM_PROT = 7340;
 	
