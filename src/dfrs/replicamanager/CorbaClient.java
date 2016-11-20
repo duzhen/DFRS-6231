@@ -30,7 +30,8 @@ public class CorbaClient {
 
 	public String requestCorbaServer(String input) {
 		String reply = "error";
-		
+		if(input == null)
+			return reply;
 		String[] params = input.split("\\$");
 		if(params!=null&&params.length>0) {
 			for(int i=0;i<params.length;i++) {
@@ -57,20 +58,21 @@ public class CorbaClient {
 //		        	}
 //		        }
 			}
+			return params[1]+"$"+reply;
 		}
 
-		return params[0]+"$"+reply;
+		return reply;
 	}
 
 	private String requestCorba(String[] params, ServerInterface corba) {
 		String reply = "error";
-		if("1".equals(params[1])&&params.length>10) {
+		if("1".equals(params[0])&&params.length>10) {
 			reply = corba.bookFlight(params[2], params[3], params[4], params[5], params[7], params[8], params[9], params[10]);
-		} else if("2".equals(params[1])&&params.length>8) {
+		} else if("2".equals(params[0])&&params.length>8) {
 			reply = corba.editFlightRecord(params[2], params[3], params[4], params[5], Integer.valueOf(params[6]), Integer.valueOf(params[7]), Integer.valueOf(params[8]));
-		} else if("3".equals(params[1])&&params.length>3) {
+		} else if("3".equals(params[0])&&params.length>3) {
 			reply = corba.getBookedFlightCount(params[2], params[3]);
-		} else if("4".equals(params[1])) {
+		} else if("4".equals(params[0])&&params.length>5) {
 			reply = corba.transferReservation(params[2], params[3], params[4], params[5]);
 		}
 		return reply;

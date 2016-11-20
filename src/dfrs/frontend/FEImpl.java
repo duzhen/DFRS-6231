@@ -34,6 +34,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		cMServer2.start();
 		cMServer3.start();
 		cMServer4.start();
+		clear();
 		System.out.println("FEImpl afterinitial ...");
 	}
 
@@ -117,7 +118,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		}
         
 	     try {
-				Thread.sleep(200);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		 }

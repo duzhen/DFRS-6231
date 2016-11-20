@@ -86,8 +86,8 @@ public abstract class BaseRM {
 					String server = "";
 					String s = "Server Running";
 					for(int i=0;i<BaseServerCluster.SERVERS.length;i++) {
-						if(state.getAlive(BaseServerCluster.SERVERS[i]) > 2000) {
-							server+=(BaseServerCluster.SERVERS[i]+" ");
+						if(state.getAlive(BaseServerCluster.SERVERS[i]) > 3000) {
+							server+=(BaseServerCluster.SERVERS[i]+" "+state.getAlive(BaseServerCluster.SERVERS[i])+" ");
 							s = " Crashed";
 						}
 					}
@@ -95,7 +95,7 @@ public abstract class BaseRM {
 						System.out.println(getRMName()+"-" + server + s);
 					last[0] = server;
 				}
-			}, 2000, 2000);
+			}, 1000, 2000);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -128,8 +128,10 @@ public abstract class BaseRM {
 	}
 	
 	private String processFECommand(String content) {
-		String[] params = content.split("\\$");
 		String result = "";
+		if(content == null)
+			return result;
+		String[] params = content.split("\\$");
 		if("ERROR".equals(params[0])) {
 			result = countingErrorTimes();
 		} else if("ISALIVE".equals(params[0])) {
@@ -184,7 +186,7 @@ public abstract class BaseRM {
 		if("FE".equals(source)) {
 			result = processFECommand(content);
 		} else if("SE".equals(source)) {
-			cluster.requestCorbaServer(content, getHost(), getS2FEport());
+			result = cluster.requestCorbaServer(content, getHost(), getS2FEport());
 		} else if("HB".equals(source)) {
 //			System.out.println(content);
 			String[] params = content.split("\\$");
@@ -221,7 +223,9 @@ public abstract class BaseRM {
 								BufferedReader inFromClient = new BufferedReader(
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
-								System.out.println("FE: " + content);
+								System.out.println("FE:" + content);
+								if(content == null || content.length() == 0)
+									continue;
 								String reply = processSocketRequest("FE", content);
 								// message send back to client
 								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
@@ -267,8 +271,16 @@ public abstract class BaseRM {
 								BufferedReader inFromClient = new BufferedReader(
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
-								System.out.println("SE: "+content);
-				                processSocketRequest("SE",content);
+								System.out.println("SE:"+content);
+								if(content == null || content.length() == 0)
+									continue;
+				                String reply = processSocketRequest("SE",content);
+				             // message send back to client
+								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
+										.getOutputStream();
+								PrintWriter outputBuffer = new PrintWriter(outToClient);
+								outputBuffer.println(reply);
+								outputBuffer.flush();
 							} catch (IOException e) {
 								System.out.println("ReceiveSE readLine: " + e.getMessage());
 								break;
@@ -307,7 +319,9 @@ public abstract class BaseRM {
 								BufferedReader inFromClient = new BufferedReader(
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
-								System.out.println("RM: "+content);
+								System.out.println("RM:"+content);
+								if(content == null || content.length() == 0)
+									continue;
 				                processSocketRequest("RM", content);
 							} catch (IOException e) {
 								System.out.println("ReceiveRM readLine: " + e.getMessage());
@@ -347,6 +361,8 @@ public abstract class BaseRM {
 								BufferedReader inFromClient = new BufferedReader(
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
+								if(content == null || content.length() == 0)
+									continue;
 								processSocketRequest("HB", content);
 							} catch (IOException e) {
 									Utils.println("Heartbeat readLine: " + e.getMessage());

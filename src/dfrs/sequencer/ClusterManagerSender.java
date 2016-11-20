@@ -29,8 +29,8 @@ public class ClusterManagerSender extends Thread{
             outputBuffer.flush();
             
             // message receive from server
-//            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//            System.out.println("Client: " + inFromServer.readLine());
+            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            System.out.println("Client: " + inFromServer.readLine());
 
             clientSocket.close();
 
