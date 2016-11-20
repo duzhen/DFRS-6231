@@ -6,7 +6,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import net.rudp.ReliableSocket;
-import net.rudp.ReliableSocketOutputStream;
 
 public class ClusterManager {
 	private ArrayList<String> logs = new ArrayList<String>();
@@ -40,8 +39,8 @@ public class ClusterManager {
         ReliableSocket clientSocket;
 		try {
 			clientSocket = new ReliableSocket(host, port);
-			ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
-			PrintWriter outputBuffer = new PrintWriter(outToServer);
+//			ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
+			PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
 			outputBuffer.println(reply);
 			outputBuffer.flush();
 			clientSocket.close();

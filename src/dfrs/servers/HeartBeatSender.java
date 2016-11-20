@@ -1,20 +1,18 @@
 package dfrs.servers;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.rudp.ReliableSocket;
-import net.rudp.ReliableSocketOutputStream;
-
 class HeartBeatSender {
 	private static HeartBeatSender instance;
-	private HashMap<String,ReliableSocket> clientSockets;
-	
+//	private HashMap<String,ReliableSocket> clientSockets;
+	private HashMap<String,DatagramSocket> clientSockets;
 	private HeartBeatSender() {
-		clientSockets = new HashMap<String,ReliableSocket>();
+		clientSockets = new HashMap<String,DatagramSocket>();
 	}
 
 	public static synchronized HeartBeatSender getInstance() {
@@ -29,11 +27,11 @@ class HeartBeatSender {
 		while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			Object key = entry.getKey();
-			ReliableSocket value = (ReliableSocket) entry.getValue();
+			DatagramSocket value = (DatagramSocket) entry.getValue();
 			if (value != null && !value.isClosed()) {
 				try {
 					value.close();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
 			}
@@ -42,19 +40,31 @@ class HeartBeatSender {
 	
 	public synchronized void send(String host, int port, String content) {
 		try {
-			ReliableSocket socket = clientSockets.get(host+port);
+			DatagramSocket socket = clientSockets.get(host+port);
 			if(socket == null || socket.isClosed()) {
-				socket = new ReliableSocket(host, port);
+				socket = new DatagramSocket();
 				clientSockets.put(host+port, socket);
 			}
-	        ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) socket.getOutputStream();
-	        PrintWriter outputBuffer = new PrintWriter(outToServer);
-	        outputBuffer.println(content);
-	        outputBuffer.flush();
-//	        socket.close();
-
-	    } catch (IOException ex) {
-	    	ex.printStackTrace();
-	    }
+			byte[] m = content.getBytes();
+			DatagramPacket request = new DatagramPacket(m, m.length, InetAddress.getByName(host), port);
+			socket.send(request);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+//		try {
+//			ReliableSocket socket = clientSockets.get(host+port);
+//			if(socket == null || socket.isClosed()) {
+//				socket = new ReliableSocket(host, port);
+//				clientSockets.put(host+port, socket);
+//			}
+//	        ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) socket.getOutputStream();
+//	        PrintWriter outputBuffer = new PrintWriter(outToServer);
+//	        outputBuffer.println(content);
+//	        outputBuffer.flush();
+////	        socket.close();
+//
+//	    } catch (IOException ex) {
+//	    	ex.printStackTrace();
+//	    }
 	}
 }

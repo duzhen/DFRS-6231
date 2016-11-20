@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.rudp.ReliableSocket;
-import net.rudp.ReliableSocketOutputStream;
 
 class RMSender {
 	private static RMSender instance;
@@ -49,12 +48,13 @@ class RMSender {
 				socket = new ReliableSocket(host, port);
 				clientSockets.put(host+port, socket);
 			}
-	        ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) socket.getOutputStream();
-	        PrintWriter outputBuffer = new PrintWriter(outToServer);
+//	        ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) socket.getOutputStream();
+	        PrintWriter outputBuffer = new PrintWriter(socket.getOutputStream());
 	        outputBuffer.println(content);
 	        outputBuffer.flush();
 	        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-	        return inFromServer.readLine();
+	        String read = inFromServer.readLine();
+	        return read;
 //	        socket.close();
 
 	    } catch (IOException ex) {

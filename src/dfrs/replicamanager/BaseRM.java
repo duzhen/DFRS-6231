@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
@@ -13,7 +15,6 @@ import java.util.TimerTask;
 import dfrs.servers.BaseServerCluster;
 import dfrs.utils.Utils;
 import net.rudp.ReliableServerSocket;
-import net.rudp.ReliableSocketOutputStream;
 
 public abstract class BaseRM {
 	
@@ -86,7 +87,7 @@ public abstract class BaseRM {
 					String server = "";
 					String s = "Server Running";
 					for(int i=0;i<BaseServerCluster.SERVERS.length;i++) {
-						if(state.getAlive(BaseServerCluster.SERVERS[i]) > 3000) {
+						if(state.getAlive(BaseServerCluster.SERVERS[i]) > 2000) {
 							server+=(BaseServerCluster.SERVERS[i]+" "+state.getAlive(BaseServerCluster.SERVERS[i])+" ");
 							s = " Crashed";
 						}
@@ -224,13 +225,16 @@ public abstract class BaseRM {
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
 								System.out.println("FE:" + content);
-								if(content == null || content.length() == 0)
+								if(content == null)
+									break;
+								if(content.length() == 0)
 									continue;
 								String reply = processSocketRequest("FE", content);
 								// message send back to client
-								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
-										.getOutputStream();
-								PrintWriter outputBuffer = new PrintWriter(outToClient);
+//								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
+//										.getOutputStream();
+								PrintWriter outputBuffer = new PrintWriter(connectionSocket
+										.getOutputStream());
 								outputBuffer.println(reply);
 								outputBuffer.flush();
 							} catch (IOException e) {
@@ -272,13 +276,16 @@ public abstract class BaseRM {
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
 								System.out.println("SE:"+content);
-								if(content == null || content.length() == 0)
+								if(content == null)
+									break;
+								if(content.length() == 0)
 									continue;
 				                String reply = processSocketRequest("SE",content);
 				             // message send back to client
-								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
-										.getOutputStream();
-								PrintWriter outputBuffer = new PrintWriter(outToClient);
+//								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
+//										.getOutputStream();
+								PrintWriter outputBuffer = new PrintWriter(connectionSocket
+										.getOutputStream());
 								outputBuffer.println(reply);
 								outputBuffer.flush();
 							} catch (IOException e) {
@@ -320,7 +327,9 @@ public abstract class BaseRM {
 										new InputStreamReader(connectionSocket.getInputStream()));
 								String content = inFromClient.readLine();
 								System.out.println("RM:"+content);
-								if(content == null || content.length() == 0)
+								if(content == null)
+									break;
+								if(content.length() == 0)
 									continue;
 				                processSocketRequest("RM", content);
 							} catch (IOException e) {
@@ -340,11 +349,12 @@ public abstract class BaseRM {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ReliableServerSocket[] serverSocket = new ReliableServerSocket[1];
+				DatagramSocket[] serverSocket = new DatagramSocket[1];
+				byte[] buffer = new byte[1000];
 				while (true) {
 					try {
 						if (serverSocket[0] == null || serverSocket[0].isClosed())
-							serverSocket[0] = new ReliableServerSocket(getHBport());
+						serverSocket[0] = new DatagramSocket(getHBport());
 					} catch (IOException e) {
 						System.out.println(e.getMessage());
 						try {
@@ -355,12 +365,11 @@ public abstract class BaseRM {
 						continue;
 					}
 					try {
-						Socket connectionSocket = serverSocket[0].accept();
 						while (true) {
 							try {
-								BufferedReader inFromClient = new BufferedReader(
-										new InputStreamReader(connectionSocket.getInputStream()));
-								String content = inFromClient.readLine();
+								DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+								serverSocket[0].receive(request);
+								String content = new String(request.getData(), 0, request.getLength()).trim();
 								if(content == null || content.length() == 0)
 									continue;
 								processSocketRequest("HB", content);
@@ -369,10 +378,44 @@ public abstract class BaseRM {
 								break;
 							}
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						Utils.println("Heartbeat accept: " + e.getMessage());
 					}
 				}
+				
+//				ReliableServerSocket[] serverSocket = new ReliableServerSocket[1];
+//				while (true) {
+//					try {
+//						if (serverSocket[0] == null || serverSocket[0].isClosed())
+//							serverSocket[0] = new ReliableServerSocket(getHBport());
+//					} catch (IOException e) {
+//						System.out.println(e.getMessage());
+//						try {
+//							Thread.sleep(10000);
+//						} catch (Exception e1) {
+//							System.out.println(e1.getMessage());
+//						}
+//						continue;
+//					}
+//					try {
+//						Socket connectionSocket = serverSocket[0].accept();
+//						while (true) {
+//							try {
+//								BufferedReader inFromClient = new BufferedReader(
+//										new InputStreamReader(connectionSocket.getInputStream()));
+//								String content = inFromClient.readLine();
+//								if(content == null || content.length() == 0)
+//									continue;
+//								processSocketRequest("HB", content);
+//							} catch (IOException e) {
+//									Utils.println("Heartbeat readLine: " + e.getMessage());
+//								break;
+//							}
+//						}
+//					} catch (IOException e) {
+//						Utils.println("Heartbeat accept: " + e.getMessage());
+//					}
+//				}
 			}
 		}).start();
 	}
