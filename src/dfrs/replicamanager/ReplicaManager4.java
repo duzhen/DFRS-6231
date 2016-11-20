@@ -20,7 +20,12 @@ public class ReplicaManager4 extends BaseRM {
 
 	public static void main(String[] args) {
 		rm = new ReplicaManager4(args);
-		rm.startServer();
+		rm.startRM();
+	}
+	
+	@Override
+	protected String restartServer() {
+		return RMSender.getInstance().send(RM_HOST, RM_RECEIVE_HEARTBEAT_PROT, STATE_RECOVERING);
 	}
 	
 	@Override
@@ -49,14 +54,12 @@ public class ReplicaManager4 extends BaseRM {
 
 	@Override
 	protected String getHost() {
-		// TODO Auto-generated method stub
 		return RM_HOST;
 	}
 
 	@Override
 	protected int getS2FEport() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Config.FE_RECEIVE_SERVER_PORT_4;
 	}
 
 	@Override

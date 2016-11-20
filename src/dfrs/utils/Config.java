@@ -1,7 +1,9 @@
 package dfrs.utils;
 
 public class Config {
-	private static final boolean TEST = true;
+	public static final boolean TEST = true;
+	public static final String SUCCESS = "success";
+	public static final String FAIL = "fail";
 	//FE
 	private static final String FE_HOST = "localhost";
 	//RM
@@ -19,10 +21,10 @@ public class Config {
 	public static final int SE_RECEIVER_FE_UDP_PROT = 8888;
 	
 	public static final int FE_CORBA_PORT = 1050;
-	public static final int FE_RECEIVE_SERVER_PORT_1 = 2001;
-	public static final int FE_RECEIVE_SERVER_PORT_2 = 2002;
-	public static final int FE_RECEIVE_SERVER_PORT_3 = 2003;
-	public static final int FE_RECEIVE_SERVER_PORT_4 = 2004;
+	public static final int FE_RECEIVE_SERVER_PORT_1 = 8101;
+	public static final int FE_RECEIVE_SERVER_PORT_2 = 8102;
+	public static final int FE_RECEIVE_SERVER_PORT_3 = 8103;
+	public static final int FE_RECEIVE_SERVER_PORT_4 = 8104;
 	
 	public static String getFeHost() {
 		if(TEST)

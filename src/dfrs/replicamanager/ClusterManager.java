@@ -13,6 +13,7 @@ public class ClusterManager {
 	private BaseRM rm;
 	private String[] args;
 	private CorbaClient corba;
+	private boolean test = false;
 	
 	public ClusterManager(BaseRM rm, String[] args) {
 		this.rm = rm;
@@ -30,6 +31,9 @@ public class ClusterManager {
 		logs.add(input);
 	}
 	
+	public void testFailure() {
+		test = true;
+	}
 	public String requestCorbaServer(String input, String host, int port) {
 		String reply = corba.requestCorbaServer(input);
 		
@@ -46,8 +50,8 @@ public class ClusterManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(reply.contains("success"))
-			saveRequestLog(input);
+//		if(reply.contains("success"))
+		saveRequestLog(input);
 		return reply;
 	}
 }
