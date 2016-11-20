@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import dfrs.servers.BaseServerCluster;
+import dfrs.utils.Config;
 import dfrs.utils.Utils;
 import net.rudp.ReliableServerSocket;
 
@@ -102,7 +103,7 @@ public abstract class BaseRM {
 		}
 	}
 	protected abstract String getRMName();
-	protected abstract String getHost();
+//	protected abstract String getFEHost();
 	protected abstract int getFEport();
 	protected abstract int getSEport();
 	protected abstract int getS2FEport();
@@ -187,7 +188,7 @@ public abstract class BaseRM {
 		if("FE".equals(source)) {
 			result = processFECommand(content);
 		} else if("SE".equals(source)) {
-			result = cluster.requestCorbaServer(content, getHost(), getS2FEport());
+			result = cluster.requestCorbaServer(content, Config.getFeHost(), getS2FEport());
 		} else if("HB".equals(source)) {
 //			System.out.println(content);
 			String[] params = content.split("\\$");
@@ -227,8 +228,8 @@ public abstract class BaseRM {
 								System.out.println("FE:" + content);
 								if(content == null)
 									break;
-								if(content.length() == 0)
-									continue;
+//								if(content.length() == 0)
+//									continue;
 								String reply = processSocketRequest("FE", content);
 								// message send back to client
 //								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket

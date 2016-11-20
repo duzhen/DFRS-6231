@@ -51,10 +51,10 @@ public class ReplicaManager1 extends BaseRM {
 		return RM_RECEIVE_HEARTBEAT_PROT;
 	}
 
-	@Override
-	protected String getHost() {
-		return RM_HOST;
-	}
+//	@Override
+//	protected String getFEHost() {
+//		return Config.getFeHost();
+//	}
 
 	@Override
 	protected int getS2FEport() {

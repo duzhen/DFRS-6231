@@ -1,6 +1,8 @@
 package dfrs.replicamanager;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -43,7 +45,9 @@ public class ClusterManager {
 			PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
 			outputBuffer.println(reply);
 			outputBuffer.flush();
-			clientSocket.close();
+//			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//            inFromClient.readLine();
+//			clientSocket.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
