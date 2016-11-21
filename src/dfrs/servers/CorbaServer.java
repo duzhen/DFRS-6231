@@ -25,7 +25,7 @@ import dfrs.servers4.ServerImpl4;
 
 class CorbaServer extends Thread {
 	private ORB	orb;
-	private String serverState = "$";
+	private String serverState = BaseRM.STATE_INITIAL;
 	private String[] args;
 	private String server;
 //	private String host;
@@ -60,17 +60,17 @@ class CorbaServer extends Thread {
 //		this.port = port;
 		this.timer = new Timer();
 		this.orb = createCorbaServer(impl, args, server, n, host, port);
-//		if(this.orb != null) {
+		if(this.orb != null) {
 			try {
 				this.timer.schedule(new TimerTask() {
 					public void run() {
-						HeartBeatSender.getInstance().send(RMHost, RMPort, server+serverState);
+						HeartBeatSender.getInstance().send(RMHost, RMPort, server+"$"+serverState);
 					}
 				}, 1000, 1000);
 			} catch (Exception ex) {
 				System.out.println(ex.getMessage());
 			}
-//		}
+		}
 	}
 
 	public boolean isCreated() {
@@ -81,7 +81,6 @@ class CorbaServer extends Thread {
 	public void run() {
 		super.run();
 		if(orb != null) {
-			setServerState("$"+BaseRM.STATE_RUNNING);
 			orb.run();
 		}
 	}

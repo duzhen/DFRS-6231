@@ -1,5 +1,6 @@
 package dfrs.replicamanager;
 
+import dfrs.servers.ServerCluster4;
 import dfrs.utils.Config;
 
 public class ReplicaManager4 extends BaseRM {
@@ -24,8 +25,8 @@ public class ReplicaManager4 extends BaseRM {
 	}
 	
 	@Override
-	protected String restartServer() {
-		return RMSender.getInstance().send(RM_HOST, RM_RECEIVE_HEARTBEAT_PROT, STATE_RECOVERING);
+	protected String sendCommandToServer(String command) {
+		return RMSender.getInstance().send(ServerCluster4.SERVER_HOST, ServerCluster4.SC_RECEIVE_RM_PROT, command);
 	}
 	
 	@Override
@@ -64,6 +65,6 @@ public class ReplicaManager4 extends BaseRM {
 
 	@Override
 	protected String getRMName() {
-		return "RM4";
+		return "4";
 	}
 }

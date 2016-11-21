@@ -22,26 +22,6 @@ public class ServerCluster1 extends BaseServerCluster {
 		rm.createServers(SERVERS);
 		rm.startServer(SERVERS);
 		rm.startReceiveRM();
-//		Runtime.getRuntime().addShutdownHook(new Thread() {
-//		    public void run() {
-//		        try {
-//		        	System.out.println("程序重启！");
-//		            String restartCmd = "cmd /c start java -jar main.jar";
-//		            Thread.sleep(5000);//等10秒，保证分身启动完成后，再关掉自己
-//		            Utils.exec(restartCmd);
-//		            System.out.println("程序重启完成！");
-//		        } catch (Exception e) {
-//		        	System.out.println("重启失败，原因："+e.getMessage());
-//		        }
-//		    }
-//		});
-//		 try {
-//	            Thread.sleep(10000);//等10秒，保证分身启动完成后，再关掉自己
-//	        } catch (Exception e) {
-//	        	System.out.println("重启失败，原因："+e.getMessage());
-//	        }
-//		rm.stopAllServer();
-//		System.exit(0);
 	}
 
 	@Override
@@ -56,5 +36,10 @@ public class ServerCluster1 extends BaseServerCluster {
 	@Override
 	protected int getSCport() {
 		return SC_RECEIVE_RM_PROT;
+	}
+
+	@Override
+	protected String getCorba() {
+		return CORBA;
 	}
 }

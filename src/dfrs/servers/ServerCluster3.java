@@ -37,4 +37,9 @@ public class ServerCluster3 extends BaseServerCluster {
 	protected int getSCport() {
 		return SC_RECEIVE_RM_PROT;
 	}
+	
+	@Override
+	protected String getCorba() {
+		return CORBA;
+	}
 }

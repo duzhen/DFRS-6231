@@ -1,5 +1,6 @@
 package dfrs.replicamanager;
 
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -14,6 +15,7 @@ import dfrs.servers.ServerCluster1;
 import dfrs.servers.ServerCluster2;
 import dfrs.servers.ServerCluster3;
 import dfrs.servers.ServerCluster4;
+import dfrs.utils.Config;
 import dfrs.utils.Utils;
 
 public class CorbaClient {
@@ -27,36 +29,40 @@ public class CorbaClient {
 		this.rm = rm;
 		this.args = args;
 	}
-
-	public String requestCorbaServer(String input) {
+	//
+	public String correctCorbaData(String[] servers,String[] data) {
+//		for(int i=0;i<servers.length&&i<data.length;i++) {
+//			getCorbaClient(server[]).updateDataBase(data[]);
+//		}
+		return "";
+	}
+	
+	public String requestCorbaServer(String[] params, boolean test) {
 		String reply = "error";
-		if(input == null)
-			return reply;
-		String[] params = input.split("\\$");
+		
 		if(params!=null&&params.length>0) {
-			for(int i=0;i<params.length;i++) {
-	        	System.out.println(i+": "+params[i]);
-	        }
 			String server = Utils.getServer(params[2]);
 			ServerInterface corba = getCorbaClient(server);
 			if(corba != null) {
 		        try {
 		        	reply = requestCorba(params, corba);
 	        	} catch (Exception e) {
-	        		e.printStackTrace();
+	        		System.out.println(e.getMessage());
 	        		clients.remove(BaseServerCluster.SERVER_MTL);
 	        		corba = getCorbaClient(server);
-	        		reply = requestCorba(params, corba);
+	        		try {
+			        	reply = requestCorba(params, corba);
+		        	} catch (Exception e1) {
+		        		System.out.println(e1.getMessage());
+		        	}
 	        	}
-//		        if(true) {//) {
-//		        	try {
-//		        		reply = getCorbaClient(BaseServerCluster.SERVER_MTL).
-//		        	} catch (Exception e) {
-//		        		e.printStackTrace();
-//		        		clients.remove(BaseServerCluster.SERVER_MTL);
-//		        		reply = getCorbaClient(BaseServerCluster.SERVER_MTL).editFlightRecord(params[1], params[2], params[3], params[4], Integer.valueOf(params[5]), Integer.valueOf(params[6]), Integer.valueOf(params[7]));
-//		        	}
-//		        }
+			}
+			if(test) {
+				if(Config.SUCCESS.equals(reply)) {
+					return params[1]+"$"+Config.FAIL;
+				} else if(Config.FAIL.equals(reply)) {
+					return params[1]+"$"+Config.SUCCESS;
+				}
 			}
 			return params[1]+"$"+reply;
 		}
@@ -64,18 +70,41 @@ public class CorbaClient {
 		return reply;
 	}
 
-	private String requestCorba(String[] params, ServerInterface corba) {
+	private String requestCorba(String[] params, ServerInterface corba) throws Exception {
 		String reply = "error";
-		if("1".equals(params[0])&&params.length>10) {
-			reply = corba.bookFlight(params[2], params[3], params[4], params[5], params[7], params[8], params[9], params[10]);
-		} else if("2".equals(params[0])&&params.length>8) {
-			reply = corba.editFlightRecord(params[2], params[3], params[4], params[5], Integer.valueOf(params[6]), Integer.valueOf(params[7]), Integer.valueOf(params[8]));
-		} else if("3".equals(params[0])&&params.length>3) {
-			reply = corba.getBookedFlightCount(params[2], params[3]);
-		} else if("4".equals(params[0])&&params.length>5) {
-			reply = corba.transferReservation(params[2], params[3], params[4], params[5]);
-		}
+		if(corba==null)
+			return reply;
+		try {
+			if("1".equals(params[0])&&params.length>10) {
+				reply = corba.bookFlight(params[2], params[3], params[4], params[5], params[7], params[8], params[9], params[10]);
+			} else if("2".equals(params[0])&&params.length>8) {
+				reply = corba.editFlightRecord(params[2], params[3], params[4], params[5], Integer.valueOf(params[6]), Integer.valueOf(params[7]), Integer.valueOf(params[8]));
+			} else if("3".equals(params[0])&&params.length>3) {
+				reply = corba.getBookedFlightCount(params[2], params[3]);
+			} else if("4".equals(params[0])&&params.length>5) {
+				reply = corba.transferReservation(params[2], params[3], params[4], params[5]);
+			}
+		} catch (Exception e) {
+    		throw e;
+    	}
 		return reply;
+	}
+	
+	public void updateCorbaClient(String[] servers) {
+		ServerInterface corba = null;
+		for(int i=0;i<servers.length;i++) {
+			if (ReplicaManager1.class == rm.getClass()) {
+				corba = createCorba(args, servers[i], ServerCluster1.CORBA, ServerCluster1.SERVER_HOST, ServerCluster1.SERVER_CORBA_PORT);
+			} else if (ReplicaManager2.class == rm.getClass()) {
+				corba = createCorba(args, servers[i], ServerCluster2.CORBA, ServerCluster2.SERVER_HOST, ServerCluster2.SERVER_CORBA_PORT);
+			} else if (ReplicaManager3.class == rm.getClass()) {
+				corba = createCorba(args, servers[i], ServerCluster3.CORBA, ServerCluster3.SERVER_HOST, ServerCluster3.SERVER_CORBA_PORT);
+			} else if (ReplicaManager4.class == rm.getClass()) {
+				corba = createCorba(args, servers[i], ServerCluster4.CORBA, ServerCluster4.SERVER_HOST, ServerCluster4.SERVER_CORBA_PORT);
+			}
+			if(corba !=null)
+				clients.put(servers[i], corba);
+		}
 	}
 	
 	private ServerInterface getCorbaClient(String server) {

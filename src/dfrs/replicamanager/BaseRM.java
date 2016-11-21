@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.Timer;
@@ -19,15 +18,16 @@ import net.rudp.ReliableServerSocket;
 
 public abstract class BaseRM {
 	
+	public static final String STATE_INITIAL = "Initial";//0
 	public static final String STATE_RUNNING = "Running";//0
 	public static final String STATE_TERMINATED = "Terminated";//1
 	public static final String STATE_RECOVERING = "Recovering";//2
 	
-	public static final String[] STATES = new String[] {STATE_RUNNING,STATE_TERMINATED,STATE_RECOVERING};
+//	public static final String[] STATES = new String[] {STATE_RUNNING,STATE_TERMINATED,STATE_RECOVERING};
 	
 	private State state;
-	private InetAddress Host;
-	private boolean isStopped = false;
+//	private InetAddress Host;
+//	private boolean isStopped = false;
 	private ClusterManager cluster;
 	
 	class State {
@@ -41,14 +41,18 @@ public abstract class BaseRM {
 				alive[i] =  System.currentTimeMillis();
 			}
 		}
-		public void setRMState(int s) {
-			if(s<0||s>2)
-				return;
-			state = STATES[s];
+		public void setRMState(String s) {
+			this.state = s;
 		}
 
 		public String getRMState() {
-			return state;
+			return this.state;
+		}
+		
+		public void initAliveTime() {
+			for(int i=0;i<alive.length;i++) {
+				alive[i] =  0;
+			}
 		}
 		
 		public void setAlive(String server) {
@@ -77,30 +81,49 @@ public abstract class BaseRM {
 		public int error() {
 			return ++error;
 		}
+		
+		public void initError() {
+			error = 0;
+		}
 	}
 	public BaseRM(String[] args) {
 		this.cluster = new ClusterManager(this, args);
-		this.state = new State(STATE_TERMINATED);
+		this.state = new State(STATE_INITIAL);
+//		String[] server = new String[1];
 		String[] last = new String[1];
+//		server[0] = "";
+		last[0] = "";
 		try {
 			new Timer().schedule(new TimerTask() {
 				public void run() {
 					String server = "";
-					String s = "Server Running";
+					String s = STATE_RUNNING;//Server "+STATE_INITIAL;
 					for(int i=0;i<BaseServerCluster.SERVERS.length;i++) {
 						if(state.getAlive(BaseServerCluster.SERVERS[i]) > 2000) {
-							server+=(BaseServerCluster.SERVERS[i]+" "+state.getAlive(BaseServerCluster.SERVERS[i])+" ");
-							s = " Crashed";
+//							server+=(BaseServerCluster.SERVERS[i]+" "+state.getAlive(BaseServerCluster.SERVERS[i])+" ");
+							server+=(BaseServerCluster.SERVERS[i]+" ");
+							if(STATE_RUNNING.equals(state.getRMState())) {
+								s = "Crash";
+							} else {
+								s = state.getRMState();
+							}
 						}
 					}
-					if(!server.equals(last[0]))
-						System.out.println(getRMName()+"-" + server + s);
+					server+=s;
+					if(!server.equals(last[0])&&!STATE_RECOVERING.equals(s))
+						System.out.println("RM"+getRMName()+"-" + server);
+					else if(!state.getRMState().equals(last[0])&&!"Crash".equals(s)&&!STATE_RECOVERING.equals(s)){
+						server = state.getRMState();
+						System.out.println("RM"+getRMName()+"-" + server);
+					}
+						
 					last[0] = server;
 				}
 			}, 1000, 2000);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+//		System.out.println("RM"+getRMName()+"-" +"Server On");
 	}
 	protected abstract String getRMName();
 //	protected abstract String getFEHost();
@@ -109,23 +132,43 @@ public abstract class BaseRM {
 	protected abstract int getS2FEport();
 	protected abstract int getRMport();
 	protected abstract int getHBport();
-	protected abstract String restartServer();
+	protected abstract String sendCommandToServer(String command);
 	
 	protected void startRM() {
-		isStopped = false;
 		startReceiveHeartBeat();
 		startReceiveRM();
 		startReceiveSE();
 		startReceiveFE();
-		state.setRMState(0);
+		state.setRMState(STATE_RUNNING);
 	}
 	
-	protected void startTest() {
-		showTestMenu();
+	private boolean correctData(String id, int n) {
+		//Correct
+		if(Config.TEST) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		//edit book,edit is easy, get data log from others than use a special corba interface/HB piggyback insert data directly
+		//edit transfer is hard, failed need transfer again, success but should faild need reback
+//		cluster.correctData(id, n);
+		System.out.println("RM"+n+" has corrected record " + id);
+		return true;
 	}
 	
-	private boolean recoveryServer() {
-		state.setRMState(2);
+	private boolean recoveryData() {
+		//Do recovery job
+		if(Config.TEST) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+//		cluster.recoveryData();
+		System.out.println("RM"+getRMName()+" finish recovery");
 		return true;
 	}
 	
@@ -134,12 +177,41 @@ public abstract class BaseRM {
 		if(content == null)
 			return result;
 		String[] params = content.split("\\$");
-		if("ERROR".equals(params[0])) {
-			result = countingErrorTimes();
-		} else if("ISALIVE".equals(params[0])) {
-			result = checkAlive();
-		} else if("RESTART".equals(params[0])) {
-			result = restartServer();
+		int n = Integer.valueOf(getRMName());
+		if(params.length>=2*n+1) {
+			if("correct".equals(params[2*(n-1)+1])) {
+				
+			} else if("wrong".equals(params[2*(n-1)+1])) {
+				System.out.println("RM"+n+":Receive wrong");
+				result = countingErrorTimes(params[0], n);
+			} else if("crash".equals(params[2*(n-1)+1])) {
+				System.out.println("RM"+n+":Receive crash");
+				if(Config.TEST||STATE_TERMINATED.equals(checkAlive())) {
+					System.out.println("RM"+n+":Is crashed, restart now");
+					result = recoveringServer();
+				} else {
+					System.out.println("RM"+n+":No crash");
+				}
+			}
+		}
+		return result;
+	}
+	
+	private String recoveringServer() {
+		String result;
+		result = sendCommandToServer(STATE_RECOVERING);
+		if(STATE_RECOVERING.equals(result)) {
+			state.setRMState(STATE_RECOVERING);
+			state.initAliveTime();
+			state.initError();
+			System.out.println("RM"+getRMName()+"-" + STATE_RECOVERING);
+			if(recoveryData()) {
+				result = sendCommandToServer(STATE_RUNNING);
+				if(STATE_RUNNING.equals(result)) {
+					cluster.updateCorbaClient(BaseServerCluster.SERVERS);
+					state.setRMState(STATE_RUNNING);
+				}
+			}
 		}
 		return result;
 	}
@@ -147,40 +219,41 @@ public abstract class BaseRM {
 	private String checkAlive() {
 		String result = state.getRMState();
 		if(result.equals(STATE_RUNNING)) {
-			if(state.getAlive(BaseServerCluster.SERVER_MTL) > 10*1000) {
+			if(state.getAlive(BaseServerCluster.SERVER_MTL) > 2*1000) {
 				result = STATE_TERMINATED;
-			} else if(state.getAlive(BaseServerCluster.SERVER_WST) > 10*1000) {
+			} else if(state.getAlive(BaseServerCluster.SERVER_WST) > 2*1000) {
 				result = STATE_TERMINATED;
-			} else if(state.getAlive(BaseServerCluster.SERVER_NDL) > 10*1000) {
+			} else if(state.getAlive(BaseServerCluster.SERVER_NDL) > 2*1000) {
 				result = STATE_TERMINATED;
 			}
 		}
 		return result;
 	}
 	
-	private String countingErrorTimes() {
+	private String countingErrorTimes(String id, int n) {//id:total id from SE, n is number of serverCluster
 		if(state.error()>=3) {
-			//recovering
+			state.initError();
+			System.out.println("RM"+n+":error time > 3");
+			recoveringServer();
 			return STATE_RECOVERING;
 		} else {
-			//correct
+			correctData(id, n);
 			return STATE_RUNNING;
 		}
-//		if(getServer(SERVER_MTL).error()>=3) {
-//			stopAllServer();
-//			if(recoveryServer()) {
-//				createServers(SERVERS);
-//				startServer(SERVERS);
-//			}
-//		} else {
-//			state.getAlive(SERVER_MTL);
-//		}
 	}
 	
 	public String processSocketRequest(String source, String content) {
 		String result = "";
 		if("RM".equals(source)) {
-			return "";
+			return result;
+		} else if("HB".equals(source)) {
+//			System.out.println(content);
+			String[] params = content.split("\\$");
+			if(params.length>1) {
+				state.setAlive(params[0]);
+				state.setRMState(params[1]);
+			}
+			return result;
 		}
 		while(!state.getRMState().equals(STATE_RUNNING)) {
 			continue;
@@ -188,13 +261,7 @@ public abstract class BaseRM {
 		if("FE".equals(source)) {
 			result = processFECommand(content);
 		} else if("SE".equals(source)) {
-			result = cluster.requestCorbaServer(content, Config.getFeHost(), getS2FEport());
-		} else if("HB".equals(source)) {
-//			System.out.println(content);
-			String[] params = content.split("\\$");
-			if(params.length>1) {
-				state.setAlive(params[0]);
-			}
+			result = cluster.processRequest(content, Config.getFeHost(), getS2FEport());
 		}
 		return result;
 	}
@@ -234,10 +301,12 @@ public abstract class BaseRM {
 								// message send back to client
 //								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
 //										.getOutputStream();
-								PrintWriter outputBuffer = new PrintWriter(connectionSocket
-										.getOutputStream());
-								outputBuffer.println(reply);
-								outputBuffer.flush();
+//								PrintWriter outputBuffer = new PrintWriter(connectionSocket
+//										.getOutputStream());
+//								outputBuffer.println(reply);
+//								outputBuffer.flush();
+								connectionSocket.close();
+								break;
 							} catch (IOException e) {
 								System.out.println("ReceiveFE readLine: " + e.getMessage());
 								break;
@@ -375,7 +444,7 @@ public abstract class BaseRM {
 									continue;
 								processSocketRequest("HB", content);
 							} catch (IOException e) {
-									Utils.println("Heartbeat readLine: " + e.getMessage());
+								Utils.println("Heartbeat readLine: " + e.getMessage());
 								break;
 							}
 						}
@@ -421,20 +490,21 @@ public abstract class BaseRM {
 		}).start();
 	}
 	
-	public static void showTestMenu() {
+	protected void startDemo() {
+		showDemoMenu();
+	}
+	
+	public void showDemoMenu() {
 		System.out.println("\n****Welcome to DFRS System****\n");
-		System.out.println("Please select your test item (1-3)");
+		System.out.println("Please select your test item (1-2)");
 		System.out.println("1. Test Software Failure");
 		System.out.println("2. Test Crash Failure");
-		System.out.println("3. Both");
 		Scanner keyboard = new Scanner(System.in);
-		int choose = Utils.validInputOption(keyboard, 3);
+		int choose = Utils.validInputOption(keyboard, 2);
 		if(choose == 1) {
-//			ticket.setTicketClass(Flight.FIRST_CLASS);
+			cluster.demoFailure();
 		} else if(choose == 2) {
-//			ticket.setTicketClass(Flight.BUSINESS_CLASS);
-		} else if(choose == 3) {
-//			ticket.setTicketClass(Flight.ECONOMY_CLASS);
+			sendCommandToServer(BaseServerCluster.CRASH);
 		}
 	}
 }

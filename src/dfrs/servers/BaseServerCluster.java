@@ -18,7 +18,6 @@ public abstract class BaseServerCluster {
 	public static final String SERVER_NDL = "New Delhi";
 	public static final String FAILURE = "Failure";
 	public static final String CRASH = "Crash";
-	public static final String BOTH = "Both";
 	
 	public static final String[] SERVERS = new String[] {SERVER_MTL,SERVER_WST,SERVER_NDL};
 	private HashMap<String, CorbaServer> servers;
@@ -26,6 +25,7 @@ public abstract class BaseServerCluster {
 	
 	protected abstract void createServers(String[] servers);
 	protected abstract int getSCport();
+	protected abstract String getCorba();
 	
 	public BaseServerCluster() {
 		this.servers = new HashMap<String, CorbaServer>();
@@ -53,16 +53,16 @@ public abstract class BaseServerCluster {
 		for (int i = 0; i < servers.length; i++) {
 			CorbaServer s = getServer(servers[i]);
 			if (s != null) {
+				s.start();
 				if(state != null && state.length() != 0) {
 					s.setServerState(state);
 				}
-				s.start();
 			}
 		}
 	}
 	
 	protected void startServer(String[] servers) {
-		startServer(servers, "");
+		startServer(servers, BaseRM.STATE_RUNNING);
 	}
 
 	private boolean stopAllServer() {
@@ -76,10 +76,13 @@ public abstract class BaseServerCluster {
 					e.printStackTrace();
 					result = false;
 				}
+			} else {
+				result = true;
 			}
 		}
 		HeartBeatSender.getInstance().closeSocket();
-		return result;
+//		return result;
+		return true;
 	}
 	
 	private void setServerState(String[] servers, String state) {
@@ -102,23 +105,26 @@ public abstract class BaseServerCluster {
 	
 	private String processSocketRequest(String source, String content) {
 		if("RM".equals(source)) {
+			System.out.println("Server"+getCorba()+":Receive "+content);
 			if(BaseRM.STATE_RECOVERING.equals(content) && !BaseRM.STATE_RECOVERING.equals(getServerState())) {
 				setServerState(BaseRM.STATE_RECOVERING);
 				if(stopAllServer()) {
+					System.out.println("Server"+getCorba()+":Sever Down ");
 					createServers(SERVERS);
-					startServer(SERVERS, "$"+BaseRM.STATE_RECOVERING);
+					startServer(SERVERS, BaseRM.STATE_RECOVERING);
+					System.out.println("Server"+getCorba()+":Is Recovering");
 				}
 			} else if(BaseRM.STATE_RUNNING.equals(content) && BaseRM.STATE_RECOVERING.equals(getServerState())) {
 				setServerState(BaseRM.STATE_RUNNING);
-				setServerState(SERVERS, "$"+BaseRM.STATE_RUNNING);
+				setServerState(SERVERS, BaseRM.STATE_RUNNING);
+				System.out.println("Server"+getCorba()+":Sever Is Running");
+			} else if(CRASH.equals(content)) {
+				System.out.println("Server"+getCorba()+":Test Crash");
+				stopAllServer();
 			}
 //			else if(FAILURE.equals(content)) {
 //				
-//			} else if(CRASH.equals(content)) {
-//				
-//			} else if(BOTH.equals(content)) {
-//				
-//			}
+//			} 
 		}
 		return content;
 	}
