@@ -65,7 +65,67 @@ public class FEImpl  extends ServerInterfacePOA  {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
-		return null;
+	     for(int i=0;i<CR.CM.length;i++){
+	    	 if(CR.CM[i].equals("")){
+		    	 System.out.println("CR.CM"+i+" crash");
+		    	 crashCount++;
+		     }
+	     }
+	     
+	     for(int i=0;i<CR.CM.length;i++){
+	    	 if(CR.CM[i].equals("success")){
+	    		 successCount++;
+		     }else if(CR.CM[i].equals("fail")){
+		    	 failCount++;
+		     }
+	     }
+	     //whether crash should be noticed at the FE?
+	     if(successCount==4){
+	    	 clear();
+	    	 return "success send the content";
+	     }else 
+    	 if(failCount==4){
+    		 clear();
+	    	 return "fail send the content";
+	     }else 
+    	 if(successCount>=failCount)
+    	 {
+    		 String RMMessage="";
+    	     for(int i=0;i<CR.CM.length;i++){
+    	    	 if(CR.CM[i].equals("success")){
+    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("fail")){
+    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
+    		     }
+    	     }
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
+    	     return "success send the content";
+	     }else 
+    	 if(successCount<failCount)
+    	 {
+    		 String RMMessage="";
+    	     for(int i=0;i<CR.CM.length;i++){
+    	    	 if(CR.CM[i].equals("fail")){
+    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("success")){
+    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
+    		     }
+    	     }
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
+    	 return "success send the content";
+	     }
+	     
+		return "WRONG END";
 	}
 
 	@Override
@@ -90,7 +150,67 @@ public class FEImpl  extends ServerInterfacePOA  {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
-		return null;
+	     for(int i=0;i<CR.CM.length;i++){
+	    	 if(CR.CM[i].equals("")){
+		    	 System.out.println("CR.CM"+i+" crash");
+		    	 crashCount++;
+		     }
+	     }
+	     
+	     for(int i=0;i<CR.CM.length;i++){
+	    	 if(CR.CM[i].equals("success")){
+	    		 successCount++;
+		     }else if(CR.CM[i].equals("fail")){
+		    	 failCount++;
+		     }
+	     }
+	     //whether crash should be noticed at the FE?
+	     if(successCount==4){
+	    	 clear();
+	    	 return "success send the content";
+	     }else 
+    	 if(failCount==4){
+    		 clear();
+	    	 return "fail send the content";
+	     }else 
+    	 if(successCount>=failCount)
+    	 {
+    		 String RMMessage="";
+    	     for(int i=0;i<CR.CM.length;i++){
+    	    	 if(CR.CM[i].equals("success")){
+    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("fail")){
+    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
+    		     }
+    	     }
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
+    	     return "success send the content";
+	     }else 
+    	 if(successCount<failCount)
+    	 {
+    		 String RMMessage="";
+    	     for(int i=0;i<CR.CM.length;i++){
+    	    	 if(CR.CM[i].equals("fail")){
+    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("success")){
+    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
+    		     }
+    	     }
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
+    	 return "success send the content";
+	     }
+	     
+		return "WRONG END";
 	}
 
 	@Override
@@ -208,7 +328,67 @@ public class FEImpl  extends ServerInterfacePOA  {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
-		return null;
+	     for(int i=0;i<CR.CM.length;i++){
+	    	 if(CR.CM[i].equals("")){
+		    	 System.out.println("CR.CM"+i+" crash");
+		    	 crashCount++;
+		     }
+	     }
+	     
+	     for(int i=0;i<CR.CM.length;i++){
+	    	 if(CR.CM[i].equals("success")){
+	    		 successCount++;
+		     }else if(CR.CM[i].equals("fail")){
+		    	 failCount++;
+		     }
+	     }
+	     //whether crash should be noticed at the FE?
+	     if(successCount==4){
+	    	 clear();
+	    	 return "success send the content";
+	     }else 
+    	 if(failCount==4){
+    		 clear();
+	    	 return "fail send the content";
+	     }else 
+    	 if(successCount>=failCount)
+    	 {
+    		 String RMMessage="";
+    	     for(int i=0;i<CR.CM.length;i++){
+    	    	 if(CR.CM[i].equals("success")){
+    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("fail")){
+    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
+    		     }
+    	     }
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
+    	     return "success send the content";
+	     }else 
+    	 if(successCount<failCount)
+    	 {
+    		 String RMMessage="";
+    	     for(int i=0;i<CR.CM.length;i++){
+    	    	 if(CR.CM[i].equals("fail")){
+    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("success")){
+    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
+    		     }else if(CR.CM[i].equals("")){
+    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
+    		     }
+    	     }
+    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
+             mc.initial();
+             mc.execute();
+             clear();
+    	 return "success send the content";
+	     }
+	     
+		return "WRONG END";
 	}
 	
 	private void clear(){
