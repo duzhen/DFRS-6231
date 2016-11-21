@@ -20,43 +20,42 @@ public class ReplicaManager3 extends BaseRM {
 
 	public static void main(String[] args) {
 		rm = new ReplicaManager3(args);
-		rm.startServer();
+		rm.startRM();
+	}
+	
+	@Override
+	protected String restartServer() {
+		return RMSender.getInstance().send(RM_HOST, RM_RECEIVE_HEARTBEAT_PROT, STATE_RECOVERING);
 	}
 	
 	@Override
 	protected int getFEport() {
-		// TODO Auto-generated method stub
 		return RM_RECEIVE_FE_PROT;
 	}
 
 	@Override
 	protected int getSEport() {
-		// TODO Auto-generated method stub
 		return RM_RECEIVE_SEQUENCER_PROT;
 	}
 	
 	@Override
 	protected int getRMport() {
-		// TODO Auto-generated method stub
 		return RM_RECEIVE_RM_PROT;
 	}
 
 	@Override
 	protected int getHBport() {
-		// TODO Auto-generated method stub
 		return RM_RECEIVE_HEARTBEAT_PROT;
 	}
 
-	@Override
-	protected String getHost() {
-		// TODO Auto-generated method stub
-		return RM_HOST;
-	}
+//	@Override
+//	protected String getFEHost() {
+//		return RM_HOST;
+//	}
 
 	@Override
 	protected int getS2FEport() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Config.FE_RECEIVE_SERVER_PORT_3;
 	}
 
 	@Override

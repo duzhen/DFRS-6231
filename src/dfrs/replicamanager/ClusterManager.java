@@ -1,18 +1,20 @@
 package dfrs.replicamanager;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import net.rudp.ReliableSocket;
-import net.rudp.ReliableSocketOutputStream;
 
 public class ClusterManager {
 	private ArrayList<String> logs = new ArrayList<String>();
 	private BaseRM rm;
 	private String[] args;
 	private CorbaClient corba;
+	private boolean test = false;
 	
 	public ClusterManager(BaseRM rm, String[] args) {
 		this.rm = rm;
@@ -30,24 +32,29 @@ public class ClusterManager {
 		logs.add(input);
 	}
 	
+	public void testFailure() {
+		test = true;
+	}
 	public String requestCorbaServer(String input, String host, int port) {
 		String reply = corba.requestCorbaServer(input);
 		
         ReliableSocket clientSocket;
 		try {
 			clientSocket = new ReliableSocket(host, port);
-			ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
-			PrintWriter outputBuffer = new PrintWriter(outToServer);
+//			ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
+			PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
 			outputBuffer.println(reply);
 			outputBuffer.flush();
-			clientSocket.close();
+//			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//            inFromClient.readLine();
+//			clientSocket.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(reply.contains("success"))
-			saveRequestLog(input);
+//		if(reply.contains("success"))
+		saveRequestLog(input);
 		return reply;
 	}
 }

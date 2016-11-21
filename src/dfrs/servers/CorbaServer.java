@@ -13,6 +13,7 @@ import org.omg.PortableServer.POA;
 import dfrs.ServerInterface;
 import dfrs.ServerInterfaceHelper;
 import dfrs.ServerInterfacePOA;
+import dfrs.replicamanager.BaseRM;
 import dfrs.replicamanager.ReplicaManager1;
 import dfrs.replicamanager.ReplicaManager2;
 import dfrs.replicamanager.ReplicaManager3;
@@ -24,7 +25,7 @@ import dfrs.servers4.ServerImpl4;
 
 class CorbaServer extends Thread {
 	private ORB	orb;
-//	private int error;
+	private String serverState = "$";
 	private String[] args;
 	private String server;
 //	private String host;
@@ -33,39 +34,39 @@ class CorbaServer extends Thread {
 	
 	public static CorbaServer createServer(Object o, String name, String[] args) {
 		if (ServerCluster1.class == o) {
-			return new CorbaServer(new ServerImpl1(), args, name, ServerCluster1.SERVER_HOST,
-					ServerCluster1.getCorbaPort(name), ReplicaManager1.RM_HOST,
+			return new CorbaServer(new ServerImpl1(), args, name, ServerCluster1.CORBA, ServerCluster1.SERVER_HOST,
+					ServerCluster1.SERVER_CORBA_PORT, ReplicaManager1.RM_HOST,
 					ReplicaManager1.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster2.class == o) {
-			return new CorbaServer(new ServerImpl2(), args, name, ServerCluster2.SERVER_HOST,
-					ServerCluster2.getCorbaPort(name), ReplicaManager2.RM_HOST,
+			return new CorbaServer(new ServerImpl2(), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
+					ServerCluster2.SERVER_CORBA_PORT, ReplicaManager2.RM_HOST,
 					ReplicaManager2.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster3.class == o) {
-			return new CorbaServer(new ServerImpl3(), args, name, ServerCluster3.SERVER_HOST,
-					ServerCluster3.getCorbaPort(name), ReplicaManager3.RM_HOST,
+			return new CorbaServer(new ServerImpl3(), args, name, ServerCluster3.CORBA, ServerCluster3.SERVER_HOST,
+					ServerCluster3.SERVER_CORBA_PORT, ReplicaManager3.RM_HOST,
 					ReplicaManager3.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster4.class == o) {
-			return new CorbaServer(new ServerImpl4(), args, name, ServerCluster4.SERVER_HOST,
-					ServerCluster4.getCorbaPort(name), ReplicaManager4.RM_HOST,
+			return new CorbaServer(new ServerImpl4(), args, name, ServerCluster4.CORBA, ServerCluster4.SERVER_HOST,
+					ServerCluster4.SERVER_CORBA_PORT, ReplicaManager4.RM_HOST,
 					ReplicaManager4.RM_RECEIVE_HEARTBEAT_PROT);
 		}
 		return null;
 	}
 	
-	public CorbaServer(ServerInterfacePOA impl, String[] args, String server, String host, String port, String RMHost, int RMPort) {
+	public CorbaServer(ServerInterfacePOA impl, String[] args, String server, String n, String host, String port, String RMHost, int RMPort) {
 		this.args = args;
 		this.server = server;
 //		this.host = host;
 //		this.port = port;
 		this.timer = new Timer();
-		this.orb = createCorbaServer(impl, args, server, host, port);
+		this.orb = createCorbaServer(impl, args, server, n, host, port);
 //		if(this.orb != null) {
 			try {
 				this.timer.schedule(new TimerTask() {
 					public void run() {
-						HeartBeatSender.getInstance().send(RMHost, RMPort, server);
+						HeartBeatSender.getInstance().send(RMHost, RMPort, server+serverState);
 					}
-				}, 5000, 5000);
+				}, 1000, 1000);
 			} catch (Exception ex) {
 				System.out.println(ex.getMessage());
 			}
@@ -79,8 +80,10 @@ class CorbaServer extends Thread {
 	@Override
 	public void run() {
 		super.run();
-		if(orb != null)
+		if(orb != null) {
+			setServerState("$"+BaseRM.STATE_RUNNING);
 			orb.run();
+		}
 	}
 
 	protected void shutdown(boolean wait_for_completion) {
@@ -93,26 +96,20 @@ class CorbaServer extends Thread {
 		}
 	}
 	
+
+	public String getServerState() {
+		return serverState;
+	}
+
+	public void setServerState(String serverState) {
+		this.serverState = serverState;
+	}
+
 	public String getServerName() {
 		return server;
 	}
 	
-//	public String[] getServerArgs() {
-//		return args;
-//	}
-//	
-//	public String getServerHost() {
-//		return host;
-//	}
-//	
-//	public String getServerPort() {
-//		return port;
-//	}
-//	public int error() {
-//		return ++error;
-//	}
-	
-	private ORB createCorbaServer(ServerInterfacePOA impl, String[] args, String server, String host, String port) {
+	private ORB createCorbaServer(ServerInterfacePOA impl, String[] args, String server, String n, String host, String port) {
 		try {
 			Properties props = new Properties();
 			props.put("org.omg.CORBA.ORBInitialPort", port);    
@@ -121,14 +118,12 @@ class CorbaServer extends Thread {
 			ORB	 orb = ORB.init(args , props);
 			POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
 			rootpoa.the_POAManager().activate();
-//			FEImpl impl = new FEImpl("localhost", 8888);
 
 			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(impl);
 			ServerInterface href = ServerInterfaceHelper.narrow(ref);
 			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			String name = "Server";
-			NameComponent path[] = ncRef.to_name(name);
+			NameComponent path[] = ncRef.to_name(server+n);
 			ncRef.rebind(path, href);
 			
 			System.out.println(server + " server ready and waiting ...");

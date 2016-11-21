@@ -4,26 +4,12 @@ import dfrs.utils.Config;
 
 public class ServerCluster1 extends BaseServerCluster {
 	
+	public static final String CORBA = "1";
 	public static final String SERVER_HOST = Config.getServerHost1();
 	//CORBA
-	public static final String SERVER_MTL_CORBA_PORT = "9050";
-	public static final String SERVER_WST_CORBA_PORT = "9051";
-	public static final String SERVER_NDL_CORBA_PORT = "9052";
-	//HEARTBEAT
-//	public static final int RM_HEARTBEAT_MTL_PORT = 7211;
-//	public static final int RM_HEARTBEAT_WST_PORT = 7212;
-//	public static final int RM_HEARTBEAT_NDL_PORT = 7213;
-	
-	public static String getCorbaPort(String server) {
-		if(SERVER_MTL.equals(server)) {
-			return SERVER_MTL_CORBA_PORT;
-		} else if(SERVER_WST.equals(server)) {
-			return SERVER_WST_CORBA_PORT;
-		} else if(SERVER_NDL.equals(server)) {
-			return SERVER_NDL_CORBA_PORT;
-		}
-		return "";
-	}
+	public static final String SERVER_CORBA_PORT = "1050";//"9050";
+	//RM COMMAND
+	public static final int SC_RECEIVE_RM_PROT = 7310;
 	
 	private static ServerCluster1 rm;
 	private String[] args;
@@ -35,6 +21,7 @@ public class ServerCluster1 extends BaseServerCluster {
 		rm = new ServerCluster1(args);
 		rm.createServers(SERVERS);
 		rm.startServer(SERVERS);
+		rm.startReceiveRM();
 //		Runtime.getRuntime().addShutdownHook(new Thread() {
 //		    public void run() {
 //		        try {
@@ -64,5 +51,10 @@ public class ServerCluster1 extends BaseServerCluster {
 		for(int i=0;i<servers.length;i++) {
 			registerServer(CorbaServer.createServer(this.getClass(), servers[i], args));
 		}
+	}
+
+	@Override
+	protected int getSCport() {
+		return SC_RECEIVE_RM_PROT;
 	}
 }
