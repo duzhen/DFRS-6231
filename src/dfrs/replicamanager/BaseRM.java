@@ -191,6 +191,7 @@ public abstract class BaseRM {
 					result = recoveringServer();
 				} else {
 					System.out.println("RM"+n+":No crash");
+					result = countingErrorTimes(params[0], n);
 				}
 			}
 		}

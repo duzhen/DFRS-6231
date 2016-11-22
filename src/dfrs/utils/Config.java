@@ -1,7 +1,7 @@
 package dfrs.utils;
 
 public class Config {
-	public static final boolean TEST = true;
+	public static final boolean TEST = false;
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "fail";
 	//FE
