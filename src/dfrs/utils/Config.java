@@ -20,7 +20,7 @@ public class Config {
 	private static final String SE_HOST = "KAIBAB";
 	public static final int SE_RECEIVER_FE_UDP_PROT = 8888;
 	
-	public static final int FE_CORBA_PORT = 1050;
+	public static final String FE_CORBA_PORT = "1050";
 	public static final int FE_RECEIVE_SERVER_PORT_1 = 8101;
 	public static final int FE_RECEIVE_SERVER_PORT_2 = 8102;
 	public static final int FE_RECEIVE_SERVER_PORT_3 = 8103;

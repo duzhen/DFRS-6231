@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import dfrs.utils.Config;
 import net.rudp.ReliableServerSocket;
 import net.rudp.ReliableSocketOutputStream;
 
@@ -30,13 +31,13 @@ public class FEServer  extends Thread {
                 String reply= inFromClient.readLine().toString();
                 System.out.println("Server: "+reply);
                 
-                if(port==8101){
+                if(port==Config.FE_RECEIVE_SERVER_PORT_1){
                 	CR.CM[0] = reply;
-                }else if(port==8102){
+                }else if(port==Config.FE_RECEIVE_SERVER_PORT_2){
                 	CR.CM[1] = reply;
-                }else if(port==8103){
+                }else if(port==Config.FE_RECEIVE_SERVER_PORT_3){
                 	CR.CM[2] = reply;
-                }else if(port==8104){
+                }else if(port==Config.FE_RECEIVE_SERVER_PORT_4){
                 	CR.CM[3]  = reply;
                 }
                 // message send back to client

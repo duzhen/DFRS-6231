@@ -10,6 +10,7 @@ import org.omg.PortableServer.POA;
 
 import dfrs.ServerInterface;
 import dfrs.ServerInterfaceHelper;
+import dfrs.utils.Config;
 
 public class FrontendServer {
 
@@ -17,13 +18,13 @@ public class FrontendServer {
 		
 		try {
 			Properties props = new Properties();
-			props.put("org.omg.CORBA.ORBInitialPort", "1050");    
-			props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
+			props.put("org.omg.CORBA.ORBInitialPort", Config.FE_CORBA_PORT);    
+			props.put("org.omg.CORBA.ORBInitialHost", Config.getFeHost()); 
 			System.out.println("begin Front end lServer ready and waiting ...");
 			ORB	 orb = ORB.init(args , props);
 			POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
 			rootpoa.the_POAManager().activate();
-			FEImpl serverIm = new FEImpl("localhost", 8888);
+			FEImpl serverIm = new FEImpl(Config.getSeHost(), Config.SE_RECEIVER_FE_UDP_PROT);
 	
 			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(serverIm);
 			ServerInterface href = ServerInterfaceHelper.narrow(ref);

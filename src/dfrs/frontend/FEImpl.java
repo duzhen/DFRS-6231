@@ -1,9 +1,10 @@
 package dfrs.frontend;
 
 import java.util.HashMap;
+
 import dfrs.ServerInterfacePOA;
 import dfrs.net.Client;
-import dfrs.sequencer.ClusterManagerSender;
+import dfrs.utils.Config;
 
 
 public class FEImpl  extends ServerInterfacePOA  {
@@ -25,10 +26,10 @@ public class FEImpl  extends ServerInterfacePOA  {
 		this.port = portone;
 		CR = new CompareResult();
 		// FE reveive cluster manager
-		cMServer1 = new FEServer(8101,CR);
-		cMServer2 = new FEServer(8102,CR);
-		cMServer3 = new FEServer(8103,CR);
-		cMServer4 = new FEServer(8104,CR);
+		cMServer1 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_1,CR);
+		cMServer2 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_2,CR);
+		cMServer3 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_3,CR);
+		cMServer4 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_4,CR);
 		
 		cMServer1.start();
 		cMServer2.start();
@@ -52,7 +53,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", port, content);
+        Client client = new Client(host, port, content);
         client.run();
         try {
 			client.join();
@@ -137,7 +138,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", port, content);
+        Client client = new Client(host, port, content);
         client.run();
         try {
 			client.join();
@@ -228,7 +229,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", port, content);
+        Client client = new Client(host, port, content);
         client.run();
         try {
 			client.join();
@@ -315,7 +316,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
-        Client client = new Client("localhost", port, content);
+        Client client = new Client(host, port, content);
         client.run();
         try {
 			client.join();

@@ -3,6 +3,7 @@ package dfrs.servers.test;
 import java.util.Scanner;
 
 import dfrs.sequencer.ClusterManagerSender;
+import dfrs.utils.Config;
 import dfrs.utils.Utils;
 
 public class TestRMServer {
@@ -18,14 +19,14 @@ public class TestRMServer {
 			Scanner keyboard = new Scanner(System.in);
 			int choose = Utils.validInputOption(keyboard, 5);
 			if(choose == 1) {
-				new ClusterManagerSender("localhost",7101,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7102,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7103,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7104,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost1(),7101,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost2(),7102,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost3(),7103,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost4(),7104,"2$555$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 			}else if(choose == 2) {
-				new ClusterManagerSender("localhost",7101,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7102,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7103,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost1(),7101,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost1(),7102,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost1(),7103,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 //				new ClusterManagerSender("localhost",7104,"2$6$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 			} else if(choose == 3) {
 				new ClusterManagerSender("localhost",7001,"5$correct$1$wrong$2$correct$3$correct$4").start();
@@ -38,10 +39,10 @@ public class TestRMServer {
 				new ClusterManagerSender("localhost",7003,"5$correct$1$wrong$2$crash$3$correct$4").start();
 				new ClusterManagerSender("localhost",7004,"5$correct$1$wrong$2$crash$3$correct$4").start();
 			} else if(choose == 5) {
-				new ClusterManagerSender("localhost",7101,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7102,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7103,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
-				new ClusterManagerSender("localhost",7104,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost1(),7101,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost2(),7102,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost3(),7103,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
+				new ClusterManagerSender(Config.getRmHost4(),7104,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 			}
 		}
 	}

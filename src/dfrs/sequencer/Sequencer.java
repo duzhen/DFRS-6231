@@ -11,6 +11,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import dfrs.utils.Config;
 import net.rudp.ReliableServerSocket;
 import net.rudp.ReliableSocketOutputStream;
 
@@ -68,7 +69,7 @@ public class Sequencer extends Thread {
     }
     
 	public static void main(String[] args) {
-		Sequencer seq = new Sequencer(8888);//initial data
+		Sequencer seq = new Sequencer(Config.SE_RECEIVER_FE_UDP_PROT);//initial data
 		seq.start();
 	}   
 }

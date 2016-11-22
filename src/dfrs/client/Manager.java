@@ -9,6 +9,7 @@ import org.omg.CosNaming.NamingContextExtHelper;
 
 import dfrs.ServerInterface;
 import dfrs.ServerInterfaceHelper;
+import dfrs.utils.Config;
 
 public class Manager {
 	
@@ -74,8 +75,8 @@ public static void main(String[] args) {
 
 		try {
 			Properties props = new Properties();
-		    props.put("org.omg.CORBA.ORBInitialPort", "1050");    
-		    props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
+		    props.put("org.omg.CORBA.ORBInitialPort", Config.FE_CORBA_PORT);    
+		    props.put("org.omg.CORBA.ORBInitialHost", Config.getFeHost()); 
 		    ORB orb = ORB.init(args, props);
 
 			org.omg.CORBA.Object objRef =
