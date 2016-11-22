@@ -5,19 +5,19 @@ public class Config {
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "fail";
 	//FE
-	private static final String FE_HOST = "localhost";
+	private static final String FE_HOST = "KAIBAB";
 	//RM
-	private static final String RM_HOST_1 = "localhost";
-	private static final String RM_HOST_2 = "localhost";
-	private static final String RM_HOST_3 = "localhost";
-	private static final String RM_HOST_4 = "localhost";
+	private static final String RM_HOST_1 = "JENA";
+	private static final String RM_HOST_2 = "JICARILLA";
+	private static final String RM_HOST_3 = "KAIBAB";
+	private static final String RM_HOST_4 = "KALISPEL";
 	//SERVER
-	private static final String SERVER_HOST_1 = "localhost";
-	private static final String SERVER_HOST_2 = "localhost";
-	private static final String SERVER_HOST_3 = "localhost";
-	private static final String SERVER_HOST_4 = "localhost";
+	private static final String SERVER_HOST_1 = "JENA";
+	private static final String SERVER_HOST_2 = "JICARILLA";
+	private static final String SERVER_HOST_3 = "KAIBAB";
+	private static final String SERVER_HOST_4 = "KALISPEL";
 	//SEQUENCER
-	private static final String SE_HOST = "localhost";
+	private static final String SE_HOST = "KAIBAB";
 	public static final int SE_RECEIVER_FE_UDP_PROT = 8888;
 	
 	public static final int FE_CORBA_PORT = 1050;
