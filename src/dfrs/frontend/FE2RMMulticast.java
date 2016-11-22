@@ -17,12 +17,12 @@ public class FE2RMMulticast {
 		this.content = content;
 	}
 
-	public ClusterManagerSender cma1,cma2,cma3,cma4;
+	public FE2RMSender cma1,cma2,cma3,cma4;
 	public void initial(){
-		cma1 = new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_FE_PROT,content);
-		cma2 = new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_FE_PROT,content);
-		cma3 = new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_FE_PROT,content);
-		cma4 = new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_FE_PROT,content);
+		cma1 = new FE2RMSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_FE_PROT,content);
+		cma2 = new FE2RMSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_FE_PROT,content);
+		cma3 = new FE2RMSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_FE_PROT,content);
+		cma4 = new FE2RMSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_FE_PROT,content);
 	}
 	
 	public void execute(){

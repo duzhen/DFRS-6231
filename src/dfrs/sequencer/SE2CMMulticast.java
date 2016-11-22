@@ -24,9 +24,20 @@ public class SE2CMMulticast {
 	}
 	
 	public void execute(){
-		cma1.run();
-		cma2.run();
-		cma3.run();
-		cma4.run();
+		
+		try {
+			cma1.start();
+			cma1.join();
+			cma2.start();
+			cma2.join();
+			cma3.start();
+			cma3.join();
+			cma4.start();
+			cma4.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

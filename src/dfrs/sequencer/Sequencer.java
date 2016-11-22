@@ -57,7 +57,7 @@ public class Sequencer extends Thread {
                 // message send back to client
                 ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
                 PrintWriter outputBuffer = new PrintWriter(outToClient);
-                outputBuffer.println("Processed datagram and multicast");
+                outputBuffer.println("sequencer Processed datagram and multicast");
                 outputBuffer.flush();
                 
                 connectionSocket.close();
