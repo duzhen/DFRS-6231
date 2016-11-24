@@ -47,7 +47,7 @@ public class ClusterManager {
 		test = true;
 	}
 	
-	public String processRequest(String input, String host, int port) {
+	public String processRequest(String input, String host, int port, boolean isRecover) {
 		String reply = "error";
 		if(input == null)
 			return reply;
@@ -80,23 +80,26 @@ public class ClusterManager {
 			if("555".equals(params[1])||"556".equals(params[1])||"557".equals(params[1]))
 				return reply;
 		}
-        ReliableSocket clientSocket;
-		try {
-			clientSocket = new ReliableSocket(host, port);
-//			ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
-			PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
-			outputBuffer.println(reply);
-			outputBuffer.flush();
-//			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//            inFromClient.readLine();
-//			clientSocket.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (!isRecover) {
+	        ReliableSocket clientSocket;
+			try {
+				clientSocket = new ReliableSocket(host, port);
+//				ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
+				PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
+				outputBuffer.println(reply);
+				outputBuffer.flush();
+//				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//	            inFromClient.readLine();
+//				clientSocket.close();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+//			if(reply.contains("success"))
+			saveRequestLog(input);
 		}
-//		if(reply.contains("success"))
-		saveRequestLog(input);
+
 		return reply;
 	}
 }

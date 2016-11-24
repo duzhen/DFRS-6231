@@ -1,7 +1,15 @@
 package dfrs.utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -81,4 +89,42 @@ public class Utils {
         }
 		return "";
 	}
+	
+	// Read lines from file
+	public static List<String> readLinesFromFile(String fileName) {
+        String line = "";
+        List<String> lines = new ArrayList<>();
+        try {
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while((line = bufferedReader.readLine()) != null) {
+            	lines.add(line);
+            }
+            // Always close files.
+            bufferedReader.close();
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" +fileName + "'");
+        }
+        catch(IOException ex) {
+            System.out.println("Error reading file '"+ fileName + "'");
+        }
+		return lines;
+    }
+	
+	// write one line to file
+	public static void writeLineToFile(String fileName, String oneLine) {
+		 try {
+	            FileWriter fileWriter = new FileWriter(fileName);
+	            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+	            bufferedWriter.write(oneLine);
+	            bufferedWriter.newLine();
+	            bufferedWriter.close();
+	        }
+	        catch(IOException ex) {
+	            System.out.println("Error writing to file '"+ fileName + "'");
+	        }
+	} 
+	
+	
 }

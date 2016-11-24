@@ -63,4 +63,9 @@ public class ReplicaManager2 extends BaseRM {
 	protected String getRMName() {
 		return "2";
 	}
+	
+	@Override
+	protected String getLogFileName() {
+		return "src/dfrs/replicamanager/RM2.txt";
+	}
 }

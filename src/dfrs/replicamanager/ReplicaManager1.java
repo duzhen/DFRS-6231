@@ -25,6 +25,9 @@ public class ReplicaManager1 extends BaseRM {
 		if(Config.TEST) {
 			rm.startDemo();
 		}
+		
+		
+		rm.startReceiveSE();
 	}
 	
 	@Override
@@ -66,4 +69,11 @@ public class ReplicaManager1 extends BaseRM {
 	protected String getRMName() {
 		return "1";
 	}
+
+	@Override
+	protected String getLogFileName() {
+		return "src/dfrs/replicamanager/RM1.txt";
+	}
+	
+	
 }
