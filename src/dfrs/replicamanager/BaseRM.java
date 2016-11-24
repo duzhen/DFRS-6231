@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -133,6 +134,7 @@ public abstract class BaseRM {
 	protected abstract int getRMport();
 	protected abstract int getHBport();
 	protected abstract String sendCommandToServer(String command);
+	protected abstract String getLogFileName();
 	
 	protected void startRM() {
 		startReceiveHeartBeat();
@@ -167,6 +169,11 @@ public abstract class BaseRM {
 				e.printStackTrace();
 			}
 		}
+		List<String> logs = loadLogs(getLogFileName());
+		for(String request: logs) {
+			cluster.processRequest(request, Config.getFeHost(), getS2FEport(), true);
+		}
+		
 //		cluster.recoveryData();
 		System.out.println("RM"+getRMName()+" finish recovery");
 		return true;
@@ -262,7 +269,7 @@ public abstract class BaseRM {
 		if("FE".equals(source)) {
 			result = processFECommand(content);
 		} else if("SE".equals(source)) {
-			result = cluster.processRequest(content, Config.getFeHost(), getS2FEport());
+			result = cluster.processRequest(content, Config.getFeHost(), getS2FEport(), false);
 		}
 		return result;
 	}
@@ -325,6 +332,7 @@ public abstract class BaseRM {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				
 				ReliableServerSocket[] serverSocket = new ReliableServerSocket[1];
 				while (true) {
 					try {
@@ -351,6 +359,9 @@ public abstract class BaseRM {
 									break;
 								if(content.length() == 0)
 									continue;
+								// save log
+								saveOneLog(getLogFileName(), content);
+								
 				                String reply = processSocketRequest("SE",content);
 				             // message send back to client
 //								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
@@ -491,6 +502,14 @@ public abstract class BaseRM {
 		}).start();
 	}
 	
+	protected void saveOneLog(String fileName, String log) {
+		Utils.writeLineToFile(fileName, log);
+	}
+	
+	protected List<String> loadLogs(String fileName) {
+		return Utils.readLinesFromFile(fileName);
+	}
+ 
 	protected void startDemo() {
 		showDemoMenu();
 	}
@@ -508,4 +527,6 @@ public abstract class BaseRM {
 			sendCommandToServer(BaseServerCluster.CRASH);
 		}
 	}
+	
+	
 }
