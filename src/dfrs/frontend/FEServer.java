@@ -28,7 +28,11 @@ public class FEServer  extends Thread {
                 Socket connectionSocket = serverSocket.accept();
                 
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-                String reply= inFromClient.readLine().toString();
+                
+                String reply= inFromClient.readLine().toString().trim();
+                String[] params = reply.split("\\$");
+                reply= params[1];
+                
                 System.out.println("Server: "+reply+" port "+port);
                 
                 if(port==Config.FE_RECEIVE_SERVER_PORT_1){

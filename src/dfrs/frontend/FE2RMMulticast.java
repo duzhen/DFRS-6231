@@ -4,7 +4,7 @@ import dfrs.replicamanager.ReplicaManager1;
 import dfrs.replicamanager.ReplicaManager2;
 import dfrs.replicamanager.ReplicaManager3;
 import dfrs.replicamanager.ReplicaManager4;
-import dfrs.sequencer.ClusterManagerSender;
+
 import dfrs.utils.Config;
 
 public class FE2RMMulticast {
