@@ -1,5 +1,6 @@
 package dfrs.servers;
 
+import dfrs.servers2.ServerImpl2;
 import dfrs.utils.Config;
 
 public class ServerCluster2 extends BaseServerCluster {
@@ -29,7 +30,7 @@ public class ServerCluster2 extends BaseServerCluster {
 		if(servers == null)
 			return;
 		for(int i=0;i<servers.length;i++) {
-			registerServer(CorbaServer.createServer(this.getClass(), servers[i], args));
+			registerServer(CorbaServer.createServer(this.getClass(), servers[i], args, i));
 		}
 	}
 	

@@ -29,7 +29,7 @@ public class ServerCluster1 extends BaseServerCluster {
 		if(servers == null)
 			return;
 		for(int i=0;i<servers.length;i++) {
-			registerServer(CorbaServer.createServer(this.getClass(), servers[i], args));
+			registerServer(CorbaServer.createServer(this.getClass(), servers[i], args, i));
 		}
 	}
 
