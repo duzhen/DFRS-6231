@@ -33,15 +33,15 @@ public class TestRMServer {
 				new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_SEQUENCER_PROT,"2$556$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 //				new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_SEQUENCER_PROT,"2$6$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 			} else if(choose == 3) {
-				new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$correct$3$correct$4").start();
-				new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$correct$3$correct$4").start();
-				new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$correct$3$correct$4").start();
-				new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$correct$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$correct$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$correct$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$correct$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$correct$3$correct$4").start();
 			} else if(choose == 4) {
-				new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$crash$3$correct$4").start();
-				new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$crash$3$correct$4").start();
-				new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$crash$3$correct$4").start();
-				new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_FE_PROT,"5$correct$1$wrong$2$crash$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$crash$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$crash$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$crash$3$correct$4").start();
+				new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_FE_PROT,"correct$1$wrong$2$crash$3$correct$4").start();
 			} else if(choose == 5) {
 				new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_SEQUENCER_PROT,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();
 				new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_SEQUENCER_PROT,"2$557$MTL$MTL1111$NDL$20161010$2$2$2$").start();

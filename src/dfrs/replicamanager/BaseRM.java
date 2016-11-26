@@ -155,20 +155,14 @@ public abstract class BaseRM {
 		}
 		//edit book,edit is easy, get data log from others than use a special corba interface/HB piggyback insert data directly
 		//edit transfer is hard, failed need transfer again, success but should faild need reback
+		/**BUT WE NEEDN'T IMPLEMENT**/
 //		cluster.correctData(id, n);
-		System.out.println("RM"+n+" has corrected record " + id);
+//		System.out.println("RM"+n+" has corrected record " + id);
 		return true;
 	}
 	
 	private boolean recoveryData() {
 		//Do recovery job
-		if(Config.TEST) {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		List<String> logs = loadLogs(getLogFileName());
 		for(String request: logs) {
 			cluster.processRequest(request, Config.getFeHost(), getS2FEport(), true);
@@ -186,12 +180,12 @@ public abstract class BaseRM {
 		String[] params = content.split("\\$");
 		int n = Integer.valueOf(getRMName());
 		if(params.length>=2*n+1) {
-			if("correct".equals(params[2*(n-1)+1])) {
+			if("correct".equals(params[2*(n-1)])) {
 				
-			} else if("wrong".equals(params[2*(n-1)+1])) {
+			} else if("wrong".equals(params[2*(n-1)])) {
 				System.out.println("RM"+n+":Receive wrong");
 				result = countingErrorTimes(params[0], n);
-			} else if("crash".equals(params[2*(n-1)+1])) {
+			} else if("crash".equals(params[2*(n-1)])) {
 				System.out.println("RM"+n+":Receive crash");
 				if(Config.TEST||STATE_TERMINATED.equals(checkAlive())) {
 					System.out.println("RM"+n+":Is crashed, restart now");
@@ -213,10 +207,10 @@ public abstract class BaseRM {
 			state.initAliveTime();
 			state.initError();
 			System.out.println("RM"+getRMName()+"-" + STATE_RECOVERING);
+			cluster.updateCorbaClient(BaseServerCluster.SERVERS);
 			if(recoveryData()) {
 				result = sendCommandToServer(STATE_RUNNING);
 				if(STATE_RUNNING.equals(result)) {
-					cluster.updateCorbaClient(BaseServerCluster.SERVERS);
 					state.setRMState(STATE_RUNNING);
 				}
 			}
