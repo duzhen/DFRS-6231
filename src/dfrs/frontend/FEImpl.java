@@ -1,6 +1,5 @@
 package dfrs.frontend;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import dfrs.ServerInterfacePOA;
@@ -40,11 +39,11 @@ public class FEImpl  extends ServerInterfacePOA  {
 		clear();
 		System.out.println("FEImpl afterinitial ...");
 	}
-
+	
 	@Override
-	public String bookFlight(String currentCity, String firstName, String lastName, String address, String phoneNumber,
+	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightClass, String flightDate) {
-		String content ="1"+"$"+currentCity
+		String content ="1"+"$"+departure
 				+"$"+firstName
 				+"$"+lastName
 				+"$"+address
@@ -133,10 +132,9 @@ public class FEImpl  extends ServerInterfacePOA  {
 	}
 
 	@Override
-	public String getBookedFlightCount(String currentCity, String managerID) {
-		String content ="3"+"$"+currentCity
-				+"$"+currentCity
-				+"$"+managerID+"$";
+	public String getBookedFlightCount(String managerID, String recordType) {
+		String content ="3"+"$"+managerID
+				+"$"+recordType+"$";
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
@@ -287,17 +285,21 @@ public class FEImpl  extends ServerInterfacePOA  {
 	}
 
 	@Override
-	public String editFlightRecord(String currentCity, String managerID, String destination, String flightDate,
-			int economy, int business, int firstclass) {
-		
-		String content ="2"+"$"+currentCity
-				+"$"+managerID
-				+"$"+destination
-				+"$"+flightDate
-				+"$"+Integer.toString(economy)
-				+"$"+Integer.toString(business)
-				+"$"+Integer.toString(firstclass)+"$";
-		
+	public String editFlightRecord(String managerID, String recordID, String fieldName, String newValue) {
+		//EDIT
+		String content ="2"+"$"+managerID
+				+"$"+recordID
+				+"$"+fieldName
+				+"$"+newValue
+				+"$";
+//		String content ="2"+"$"+currentCity
+//				+"$"+managerID
+//				+"$"+destination
+//				+"$"+flightDate
+//				+"$"+Integer.toString(economy)
+//				+"$"+Integer.toString(business)
+//				+"$"+Integer.toString(firstclass)+"$";
+		//END
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
         Client client = new Client(host, port, content);
@@ -379,11 +381,11 @@ public class FEImpl  extends ServerInterfacePOA  {
 	}
 
 	@Override
-	public String transferReservation(String managerID, String PassengerID, String CurrentCity, String OtherCity) {
+	public String transferReservation(String managerID, String passengerID, String currentCity, String otherCity) {
 		String content ="4"+"$"+managerID
-				+"$"+PassengerID
-				+"$"+CurrentCity
-				+"$"+OtherCity+"$";
+				+"$"+passengerID
+				+"$"+currentCity
+				+"$"+otherCity+"$";
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);

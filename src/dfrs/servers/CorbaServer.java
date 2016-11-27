@@ -18,6 +18,8 @@ import dfrs.replicamanager.ReplicaManager1;
 import dfrs.replicamanager.ReplicaManager2;
 import dfrs.replicamanager.ReplicaManager3;
 import dfrs.replicamanager.ReplicaManager4;
+import dfrs.servers1.ServerImpl1;
+import dfrs.servers2.ServerImpl2;
 import dfrs.servers3.ServerImpl3;
 import dfrs.servers4.ServerImpl4;
 
@@ -32,19 +34,19 @@ class CorbaServer extends Thread {
 	
 	public static CorbaServer createServer(Object o, String name, String[] args, int i) {
 		if (ServerCluster1.class == o) {
-			return new CorbaServer(new ServerImpl1(), args, name, ServerCluster1.CORBA, ServerCluster1.SERVER_HOST,
+			return new CorbaServer(ServerImpl1.getServerImpl(i), args, name, ServerCluster1.CORBA, ServerCluster1.SERVER_HOST,
 					ServerCluster1.SERVER_CORBA_PORT, ReplicaManager1.RM_HOST,
 					ReplicaManager1.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster2.class == o) {
-			return new CorbaServer(new ServerImpl2(), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
+			return new CorbaServer(ServerImpl2.getServerImpl(i), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
 					ServerCluster2.SERVER_CORBA_PORT, ReplicaManager2.RM_HOST,
 					ReplicaManager2.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster3.class == o) {
-			return new CorbaServer(new ServerImpl3(), args, name, ServerCluster3.CORBA, ServerCluster3.SERVER_HOST,
+			return new CorbaServer(ServerImpl3.getServerImpl(i), args, name, ServerCluster3.CORBA, ServerCluster3.SERVER_HOST,
 					ServerCluster3.SERVER_CORBA_PORT, ReplicaManager3.RM_HOST,
 					ReplicaManager3.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster4.class == o) {
-			return new CorbaServer(ServerImpl4.getServerImple(i), args, name, ServerCluster4.CORBA, ServerCluster4.SERVER_HOST,
+			return new CorbaServer(ServerImpl4.getServerImpl(i), args, name, ServerCluster4.CORBA, ServerCluster4.SERVER_HOST,
 					ServerCluster4.SERVER_CORBA_PORT, ReplicaManager4.RM_HOST,
 					ReplicaManager4.RM_RECEIVE_HEARTBEAT_PROT);
 		}

@@ -9,9 +9,9 @@ import java.util.HashMap;
 public class serverThread  extends Thread{
 
 	private int port = 0;
-	private ServerImpl3 serverIm;
+	private ServerImplYue serverIm;
 	private  HashMap<Character,recordLIst> recordTable ; 
-	public serverThread(int new_port,ServerImpl3 new_serverIm )
+	public serverThread(int new_port,ServerImplYue new_serverIm )
 	{
 		serverIm=new_serverIm;
 		port=new_port;

@@ -57,8 +57,8 @@ public class Manager {
 		 System.out.println("Enter the number of first class seats:");
 		 firstclass = keyboard.nextInt();
 	
-		managerRecvServer=FEImpl.editFlightRecord(currentCity,managerID,destination,
-				 flightDate,  economy,  business,  firstclass);
+//		managerRecvServer=FEImpl.editFlightRecord(currentCity,managerID,destination,
+//				 flightDate,  economy,  business,  firstclass);
 		
 		System.out.println(managerRecvServer);
 		
