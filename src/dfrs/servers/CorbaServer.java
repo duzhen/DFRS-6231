@@ -32,13 +32,14 @@ class CorbaServer extends Thread {
 //	private String port;
 	private Timer timer;
 	
-	public static CorbaServer createServer(Object o, String name, String[] args) {
+	public static CorbaServer createServer(Object o, String name, String[] args, int i) {
 		if (ServerCluster1.class == o) {
 			return new CorbaServer(new ServerImpl1(), args, name, ServerCluster1.CORBA, ServerCluster1.SERVER_HOST,
 					ServerCluster1.SERVER_CORBA_PORT, ReplicaManager1.RM_HOST,
 					ReplicaManager1.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster2.class == o) {
-			return new CorbaServer(new ServerImpl2(), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
+			return new CorbaServer(new ServerImpl2(ServerImpl2.SERVER_NAME[i], name,
+					ServerImpl2.UDP_PORT_NUM[i], ServerImpl2.T_UDP_PORT_NUM[i]), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
 					ServerCluster2.SERVER_CORBA_PORT, ReplicaManager2.RM_HOST,
 					ReplicaManager2.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster3.class == o) {
