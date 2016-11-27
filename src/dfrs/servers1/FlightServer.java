@@ -17,12 +17,7 @@ import java.util.Map.Entry;
 
 import org.omg.CORBA.ORB;
 
-import DFRSApp.ServerInterfacePOA;
-import Records.FlightRecord;
-import Records.Passenger;
-import Records.PassengerRecord;
-
-public abstract class FlightServer extends ServerInterfacePOA{
+public abstract class FlightServer { //extends ServerInterfacePOA{
 	protected FlightRecord flight_record;
 	protected PassengerRecord passenger_record;
 	protected static final int server_ports[] = { 2001, 2002, 2003 };
@@ -57,7 +52,7 @@ public abstract class FlightServer extends ServerInterfacePOA{
 		orb = orb_val;
 	}
 
-	@Override
+//	@Override
 	public String bookFlight(String firstName, String lastName, String address, String telephone, String destination, String date, int seatClass) {
 		Passenger i = null;
 		try {
@@ -77,7 +72,7 @@ public abstract class FlightServer extends ServerInterfacePOA{
 		return "Done-" + i.toString();
 	}
 
-	@Override
+//	@Override
 	public String getBookedFlightCounts(int recordType) {
 		String reply = "";
 		synchronized (passenger_record) {
@@ -141,7 +136,7 @@ public abstract class FlightServer extends ServerInterfacePOA{
 		return reply.toString();
 	}
 
-	@Override
+//	@Override
 	public String editRecord(String recordId, String fieldName, String newValues) {
 		String reply = "";
 		if (fieldName.equalsIgnoreCase("getall")) {
@@ -210,7 +205,7 @@ public abstract class FlightServer extends ServerInterfacePOA{
 	}
 
 	
-	@Override
+//	@Override
 	public String transferReservation(String passengerID, String currentCity, String otherCity) {
 		String msg = "";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);

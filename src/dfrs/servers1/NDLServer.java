@@ -2,17 +2,6 @@ package dfrs.servers1;
 
 import java.util.Properties;
 
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NameComponent;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
-
-import DFRSApp.ServerInterface;
-import DFRSApp.ServerInterfaceHelper;
-import Records.FlightRecord;
-
 public class NDLServer extends FlightServer{
 	static final int UDP_PORT = 2003;
 	
@@ -43,16 +32,16 @@ public class NDLServer extends FlightServer{
 			Properties props = new Properties();
 		    props.put("org.omg.CORBA.ORBInitialPort", "1050");    
 		    props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
-		    ORB orb = ORB.init(args, props);	    
-			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			rootpoa.the_POAManager().activate();
-			server.setORB(orb);
-			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(server);
-			ServerInterface href = ServerInterfaceHelper.narrow(ref);
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-			NameComponent path[] = ncRef.to_name("NDL");
-			ncRef.rebind(path, href);
+//		    ORB orb = ORB.init(args, props);	    
+//			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+//			rootpoa.the_POAManager().activate();
+//			server.setORB(orb);
+//			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(server);
+//			ServerInterface href = ServerInterfaceHelper.narrow(ref);
+//			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+//			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+//			NameComponent path[] = ncRef.to_name("NDL");
+//			ncRef.rebind(path, href);
 			
 
 			System.out.println("New Dehli Server is Running");
