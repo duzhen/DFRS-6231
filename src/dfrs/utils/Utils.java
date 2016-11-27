@@ -171,7 +171,7 @@ public class Utils {
 	// write one line to file
 	public static void writeLineToFile(String fileName, String oneLine) {
 		 try {
-	            FileWriter fileWriter = new FileWriter(fileName);
+	            FileWriter fileWriter = new FileWriter(fileName, true);
 	            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 	            bufferedWriter.write(oneLine);
 	            bufferedWriter.newLine();
