@@ -18,8 +18,6 @@ import dfrs.replicamanager.ReplicaManager1;
 import dfrs.replicamanager.ReplicaManager2;
 import dfrs.replicamanager.ReplicaManager3;
 import dfrs.replicamanager.ReplicaManager4;
-import dfrs.servers1.ServerImpl1;
-import dfrs.servers2.ServerImpl2;
 import dfrs.servers3.ServerImpl3;
 import dfrs.servers4.ServerImpl4;
 
@@ -38,8 +36,7 @@ class CorbaServer extends Thread {
 					ServerCluster1.SERVER_CORBA_PORT, ReplicaManager1.RM_HOST,
 					ReplicaManager1.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster2.class == o) {
-			return new CorbaServer(new ServerImpl2(ServerImpl2.SERVER_NAME[i], name,
-					ServerImpl2.UDP_PORT_NUM[i], ServerImpl2.T_UDP_PORT_NUM[i]), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
+			return new CorbaServer(new ServerImpl2(), args, name, ServerCluster2.CORBA, ServerCluster2.SERVER_HOST,
 					ServerCluster2.SERVER_CORBA_PORT, ReplicaManager2.RM_HOST,
 					ReplicaManager2.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster3.class == o) {
@@ -47,7 +44,7 @@ class CorbaServer extends Thread {
 					ServerCluster3.SERVER_CORBA_PORT, ReplicaManager3.RM_HOST,
 					ReplicaManager3.RM_RECEIVE_HEARTBEAT_PROT);
 		} else if (ServerCluster4.class == o) {
-			return new CorbaServer(new ServerImpl4(), args, name, ServerCluster4.CORBA, ServerCluster4.SERVER_HOST,
+			return new CorbaServer(ServerImpl4.getServerImple(i), args, name, ServerCluster4.CORBA, ServerCluster4.SERVER_HOST,
 					ServerCluster4.SERVER_CORBA_PORT, ReplicaManager4.RM_HOST,
 					ReplicaManager4.RM_RECEIVE_HEARTBEAT_PROT);
 		}

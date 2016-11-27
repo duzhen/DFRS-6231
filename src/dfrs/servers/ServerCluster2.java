@@ -1,6 +1,5 @@
 package dfrs.servers;
 
-import dfrs.servers2.ServerImpl2;
 import dfrs.utils.Config;
 
 public class ServerCluster2 extends BaseServerCluster {

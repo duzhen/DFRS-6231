@@ -1,4 +1,4 @@
-package dfrs.servers1;
+package dfrs.servers3;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,9 +9,9 @@ import java.util.HashMap;
 public class serverThread  extends Thread{
 
 	private int port = 0;
-	private ServerImpl1 serverIm;
+	private ServerImpl3 serverIm;
 	private  HashMap<Character,recordLIst> recordTable ; 
-	public serverThread(int new_port,ServerImpl1 new_serverIm )
+	public serverThread(int new_port,ServerImpl3 new_serverIm )
 	{
 		serverIm=new_serverIm;
 		port=new_port;

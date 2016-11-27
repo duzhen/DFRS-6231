@@ -1,4 +1,4 @@
-package dfrs.servers2;
+package dfrs.servers4;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class FlightData {
 	private ArrayList<Flight> addInitFlight(String name) {
 		ArrayList<Flight> flight = new ArrayList<Flight>();
 		
-		if(ServerImpl2.SERVER_NAME[0].equals(name)) {
+		if(ServerImpl4.SERVER_NAME[0].equals(name)) {
 			
 			Flight f = new Flight();
 			f.setFlightName("CZ 101");
@@ -101,7 +101,7 @@ public class FlightData {
 //			for(int i=0;i<10;i++)
 //				f.sellTicket(Flight.BUSINESS_CLASS, true);
 			flight.add(f);
-		} else if(ServerImpl2.SERVER_NAME[1].equals(name)) {
+		} else if(ServerImpl4.SERVER_NAME[1].equals(name)) {
 			Flight f = new Flight();
 			f.setFlightName("CW 101");
 			f.setDeparture("Washington");
@@ -129,7 +129,7 @@ public class FlightData {
 //			for(int i=0;i<10;i++)
 //				f.sellTicket(Flight.BUSINESS_CLASS, true);
 			flight.add(f);
-		} else if(ServerImpl2.SERVER_NAME[2].equals(name)) {
+		} else if(ServerImpl4.SERVER_NAME[2].equals(name)) {
 			Flight f = new Flight();
 			f.setFlightName("CN 101");
 			f.setDeparture("New Delhi");
