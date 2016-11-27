@@ -1,5 +1,6 @@
 package dfrs.frontend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import dfrs.ServerInterfacePOA;
@@ -11,6 +12,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 
 	public HashMap<String,HashMap<String,String>> recPac;
 	public CompareResult CR;
+	public CompareCount CC;
 	public String host = "";
 	public int port=0;
 	public FEServer cMServer1 ;
@@ -26,10 +28,10 @@ public class FEImpl  extends ServerInterfacePOA  {
 		this.port = portone;
 		CR = new CompareResult();
 		// FE reveive cluster manager
-		cMServer1 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_1,CR);
-		cMServer2 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_2,CR);
-		cMServer3 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_3,CR);
-		cMServer4 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_4,CR);
+		cMServer1 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_1,CR,CC);
+		cMServer2 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_2,CR,CC);
+		cMServer3 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_3,CR,CC);
+		cMServer4 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_4,CR,CC);
 		
 		cMServer1.start();
 		cMServer2.start();
@@ -152,67 +154,136 @@ public class FEImpl  extends ServerInterfacePOA  {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
-	     for(int i=0;i<CR.CM.length;i++){
-	    	 if(CR.CM[i].equals("")){
-		    	 System.out.println("CR.CM"+i+" crash");
-		    	 crashCount++;
+	     
+	     String CM1 = "";
+	     String CM2 = "";
+	     String CM3 = "";
+	     String CM4 = "";
+	     String[] RMReply = new String[4];
+	     
+	     //ArrayList<Integer> crashList = new ArrayList<Integer>();
+	     for(int i=0;i<CC.recordCount.length;i++)
+	     {
+	    	 if(CC.recordCount[i][0]==-1)
+	    	 {
+		    	 System.out.println("CC.recordCount"+i+" crash");
+		    	 //crashList.add(i);
+		    	 RMReply[i]= "crash";
 		     }
 	     }
 	     
-	     for(int i=0;i<CR.CM.length;i++){
-	    	 if(CR.CM[i].equals("success")){
-	    		 successCount++;
-		     }else if(CR.CM[i].equals("fail")){
-		    	 failCount++;
+
+	     
+	     for(int i=0;i<CC.recordCount[0].length;i++)
+	     {
+	    	 CM1=Integer.toString(CC.recordCount[0][i])+"$";
+	     }
+	     
+	     for(int i=0;i<CC.recordCount[0].length;i++)
+	     {
+	    	 CM2=Integer.toString(CC.recordCount[1][i])+"$";
+	     }
+	     
+	     for(int i=0;i<CC.recordCount[0].length;i++)
+	     {
+	    	 CM3=Integer.toString(CC.recordCount[2][i])+"$";
+	     }
+	     
+	     for(int i=0;i<CC.recordCount[0].length;i++)
+	     {
+	    	 CM4=Integer.toString(CC.recordCount[3][i])+"$";
+	     }
+	     
+	     HashMap<String,Integer> hCount = new HashMap<String,Integer>();
+	     
+	     if(!RMReply[0].equals("crash"))
+	     {
+	    	 hCount.put(CM1, 1);
+	     }
+	     if(!RMReply[1].equals("crash")){
+		     if(hCount.containsKey(CM2)){
+		    	 hCount.put(CM2,( hCount.get(CM2)+1));
+		     }else{
+		    	 hCount.put(CM2, 1);
 		     }
 	     }
-	     //whether crash should be noticed at the FE?
-	     if(successCount==4){
-	    	 clear();
-	    	 return "success send the content";
+	     if(!RMReply[2].equals("crash")){
+		     if(hCount.containsKey(CM3)){
+		    	 hCount.put(CM3,( hCount.get(CM3)+1));
+		     }else{
+		    	 hCount.put(CM3, 1);
+		     }
+	     }
+	     if(!RMReply[3].equals("crash")){
+		     if(hCount.containsKey(CM4)){
+		    	 hCount.put(CM4,( hCount.get(CM4)+1));
+		     }else{
+		    	 hCount.put(CM4, 1);
+		     }
+	     }
+	     
+	     int max = 0;
+	     String answer="";
+	     
+	     for (String key : hCount.keySet()) {  
+	    	 if(hCount.get(key)>max){
+	    		 max = hCount.get(key);
+	    		 answer = key;
+	    	 }
+	      System.out.println("key= "+ key + " and value= " + hCount.get(key));  
+	     }  
+	     
+	     String RMMessage="";
+	     
+	     if(RMReply[0].equals("crash")){
+	     RMMessage=RMMessage+"crash"+"$"+0+"$" ;
 	     }else 
-    	 if(failCount==4){
-    		 clear();
-	    	 return "fail send the content";
+	     if(CM1.equals(answer)){
+	    	 RMMessage=RMMessage+"correct"+"$"+0+"$" ;
+	     }else{
+	    	 RMMessage=RMMessage+"wrong"+"$"+0+"$" ;
+	     }
+	     
+	     if(RMReply[1].equals("crash")){
+	     RMMessage=RMMessage+"crash"+"$"+1+"$" ;
 	     }else 
-    	 if(successCount>=failCount)
-    	 {
-    		 String RMMessage="";
-    	     for(int i=0;i<CR.CM.length;i++){
-    	    	 if(CR.CM[i].equals("success")){
-    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("fail")){
-    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
-    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
-    		     }
-    	     }
+	     if(CM2.equals(answer)){
+	    	 RMMessage=RMMessage+"correct"+"$"+1+"$" ;
+	     }else{
+	    	 RMMessage=RMMessage+"wrong"+"$"+1+"$" ;
+	     }
+	     
+	     if(RMReply[2].equals("crash")){
+	     RMMessage=RMMessage+"crash"+"$"+2+"$" ;
+	     }else 
+	     if(CM3.equals(answer)){
+	    	 RMMessage=RMMessage+"correct"+"$"+2+"$" ;
+	     }else{
+	    	 RMMessage=RMMessage+"wrong"+"$"+2+"$" ;
+	     }
+	     
+	     if(RMReply[3].equals("crash")){
+	     RMMessage=RMMessage+"crash"+"$"+3+"$" ;
+	     }else 
+	     if(CM4.equals(answer)){
+	    	 RMMessage=RMMessage+"correct"+"$"+3+"$" ;
+	     }else{
+	    	 RMMessage=RMMessage+"wrong"+"$"+3+"$" ;
+	     }
+	     
     	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
              mc.initial();
              mc.execute();
              clear();
-    	     return "success send the content";
-	     }else 
-    	 if(successCount<failCount)
-    	 {
-    		 String RMMessage="";
-    	     for(int i=0;i<CR.CM.length;i++){
-    	    	 if(CR.CM[i].equals("fail")){
-    	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("success")){
-    		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
-    		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
-    		     }
-    	     }
-    	     FE2RMMulticast mc = new FE2RMMulticast(RMMessage);
-             mc.initial();
-             mc.execute();
-             clear();
-    	 return "success send the content";
-	     }
-	     
-		return "WRONG END";
+             
+             for(int i = 0; i <CC.recordCount.length;i++){
+            	 for(int j = 0; j <CC.recordCount[0].length;j++){
+            		 CC.recordCount[i][j]=-1;
+            	 }
+             }
+
+    	 return answer;
+
 	}
 
 	@Override

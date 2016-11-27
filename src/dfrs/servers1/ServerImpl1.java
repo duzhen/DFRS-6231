@@ -14,11 +14,12 @@ public class ServerImpl1  extends ServerInterfacePOA  {
 	public int porttwo=0;
 	public int counter=0;
 	
-//	public ServerImpl1(String host, int portone) {
-//		super();
-//		this.host = host;
-//		this.port = portone;
-//	}
+	public ServerImpl1(String new_location, int new_portone,int new_porttwo) {
+		super();
+		location = new_location;
+		portone = new_portone;
+		porttwo = new_porttwo;
+	}
 	public ServerImpl1() {}
 	@Override
 	public String bookFlight(String currentCity, String firstName, String lastName, String address, String phoneNumber,
@@ -213,7 +214,7 @@ public class ServerImpl1  extends ServerInterfacePOA  {
 				e.printStackTrace();
 			}
 
-	     String bookedcount = "WST "+ query.WST + "MTL " + query.MTL + "NDL "+ query.NDL+"";
+	     String bookedcount = "MTL$" + query.MTL + "NDL$"+ query.NDL + "WST$" + query.WST + "$";
 		 return bookedcount;
 	}
 

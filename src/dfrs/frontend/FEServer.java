@@ -14,9 +14,11 @@ public class FEServer  extends Thread {
 
     public int port;
     public CompareResult CR;
-    public FEServer(int port, CompareResult new_CR){
+    public CompareCount CC;
+    public FEServer(int port, CompareResult new_CR,CompareCount new_CC){
         this.port = port;
         CR = new_CR;
+        CC=new_CC;
     }
     
     public void run(){
@@ -34,15 +36,37 @@ public class FEServer  extends Thread {
                 reply= params[1];
                 
                 System.out.println("Server: "+reply+" port "+port);
-                
-                if(port==Config.FE_RECEIVE_SERVER_PORT_1){
-                	CR.CM[0] = reply;
-                }else if(port==Config.FE_RECEIVE_SERVER_PORT_2){
-                	CR.CM[1] = reply;
-                }else if(port==Config.FE_RECEIVE_SERVER_PORT_3){
-                	CR.CM[2] = reply;
-                }else if(port==Config.FE_RECEIVE_SERVER_PORT_4){
-                	CR.CM[3]  = reply;
+                if(reply.equals("MTL"))
+                {
+	                if(port==Config.FE_RECEIVE_SERVER_PORT_1){
+	                	CC.recordCount[0][0] = Integer.parseInt(params[2]);
+	                	CC.recordCount[0][1] = Integer.parseInt(params[4]);
+	                	CC.recordCount[0][2] = Integer.parseInt(params[6]);
+	                }else if(port==Config.FE_RECEIVE_SERVER_PORT_2){
+	                	CC.recordCount[1][0] = Integer.parseInt(params[2]);
+	                	CC.recordCount[1][1] = Integer.parseInt(params[4]);
+	                	CC.recordCount[1][2] = Integer.parseInt(params[6]);
+	                }else if(port==Config.FE_RECEIVE_SERVER_PORT_3){
+	                	CC.recordCount[2][0] = Integer.parseInt(params[2]);
+	                	CC.recordCount[2][1] = Integer.parseInt(params[4]);
+	                	CC.recordCount[2][2] = Integer.parseInt(params[6]);
+	                }else if(port==Config.FE_RECEIVE_SERVER_PORT_4)
+	                {
+	                	CC.recordCount[3][0] = Integer.parseInt(params[2]);
+	                	CC.recordCount[3][1] = Integer.parseInt(params[4]);
+	                	CC.recordCount[3][2] = Integer.parseInt(params[6]);
+	                }
+                }else{
+	                if(port==Config.FE_RECEIVE_SERVER_PORT_1){
+	                	CR.CM[0] = reply;
+	                }else if(port==Config.FE_RECEIVE_SERVER_PORT_2){
+	                	CR.CM[1] = reply;
+	                }else if(port==Config.FE_RECEIVE_SERVER_PORT_3){
+	                	CR.CM[2] = reply;
+	                }else if(port==Config.FE_RECEIVE_SERVER_PORT_4){
+	                	CR.CM[3]  = reply;
+	                }
+                	
                 }
                 // message send back to client
                 ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket.getOutputStream();
