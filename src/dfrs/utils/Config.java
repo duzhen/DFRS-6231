@@ -30,6 +30,9 @@ public class Config {
 	public static final String BUSINESS_CLASS = "Business";
 	public static final String ECONOMY_CLASS = "Economy";
 	public static final String ALL_CLASS = "All";
+	public static final String DEPARTURE = "DEPARTURE";
+	public static final String DATE = "DATE";
+	public static final String DESTINATION = "DESTINATION";
 	
 	public static String getFeHost() {
 		if(TEST)

@@ -1,6 +1,7 @@
 package dfrs.servers1;
 
 import dfrs.ServerInterfacePOA;
+import dfrs.servers.BaseServerCluster;
 import dfrs.utils.Config;
 import dfrs.utils.Utils;
 
@@ -26,6 +27,13 @@ public class ServerImpl1 extends ServerInterfacePOA {
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightClass, String flightDate) {
 		String des = Utils.getServer(destination);
+		if(BaseServerCluster.SERVER_MTL.equals(des)) {
+			des = "MTL";
+		} else if(BaseServerCluster.SERVER_WST.equals(des)) {
+			des = "WDC";
+		} else if(BaseServerCluster.SERVER_NDL.equals(des)) {
+			des = "NDL";
+		}
 		int seatClass = 0;
 		if(Config.FIRST_CLASS.equals(flightClass)) {
 			seatClass = 1;
@@ -64,14 +72,69 @@ public class ServerImpl1 extends ServerInterfacePOA {
 
 	@Override
 	public String editFlightRecord(String managerID, String recordID, String fieldName, String newValue) {
-		// TODO Auto-generated method stub
-		return null;
+		String f = "";
+		if(Config.DEPARTURE.equals(fieldName)) {
+			f = "departure";//no this field
+			String des = Utils.getServer(newValue);
+			if(BaseServerCluster.SERVER_MTL.equals(des)) {
+				newValue = "MTL";
+			} else if(BaseServerCluster.SERVER_WST.equals(des)) {
+				newValue = "WDC";
+			} else if(BaseServerCluster.SERVER_NDL.equals(des)) {
+				newValue = "NDL";
+			}
+		} else if(Config.DATE.equals(fieldName)) {
+			f = "date";
+		} else if(Config.DESTINATION.equals(fieldName)) {
+			f = "destination";
+			String des = Utils.getServer(newValue);
+			if(BaseServerCluster.SERVER_MTL.equals(des)) {
+				newValue = "MTL";
+			} else if(BaseServerCluster.SERVER_WST.equals(des)) {
+				newValue = "WDC";
+			} else if(BaseServerCluster.SERVER_NDL.equals(des)) {
+				newValue = "NDL";
+			}
+		} else if(Config.FIRST_CLASS.equals(fieldName)) {
+			f = "first";
+		} else if(Config.BUSINESS_CLASS.equals(fieldName)) {
+			f = "bussiness";
+		} else if(Config.ECONOMY_CLASS.equals(fieldName)) {
+			f = "economy";
+		}
+		//split("$")-this method maybe wrong, should split("\\$")
+		String result = impl.editRecord(recordID, "edit"+f, newValue);
+		if(result != null&&result.startsWith("RIGHT-")) {
+			return Config.SUCCESS;
+		} else {
+			return Config.FAIL;
+		}
 	}
 
 	@Override
 	public String transferReservation(String managerID, String passengerID, String currentCity, String otherCity) {
-		// TODO Auto-generated method stub
-		return null;
+		String c = Utils.getServer(currentCity);
+		String o = Utils.getServer(currentCity);
+		if(BaseServerCluster.SERVER_MTL.equals(c)) {
+			currentCity = "MTL";
+		} else if(BaseServerCluster.SERVER_WST.equals(c)) {
+			currentCity = "WDC";
+		} else if(BaseServerCluster.SERVER_NDL.equals(c)) {
+			currentCity = "NDL";
+		}
+		if(BaseServerCluster.SERVER_MTL.equals(o)) {
+			otherCity = "MTL";
+		} else if(BaseServerCluster.SERVER_WST.equals(o)) {
+			otherCity = "WDC";
+		} else if(BaseServerCluster.SERVER_NDL.equals(o)) {
+			otherCity = "NDL";
+		}
+		String result = impl.transferReservation(passengerID, currentCity, otherCity);
+		if(result != null&&result.contains("Completed")) {
+			return Config.SUCCESS;
+		} else {
+			return Config.FAIL;
+		}
 	}
 
 }

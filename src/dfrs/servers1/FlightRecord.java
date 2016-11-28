@@ -63,7 +63,10 @@ public class FlightRecord {
 		Date d;
 		try {
 			d = (new SimpleDateFormat("yyyy/MM/dd")).parse(date);
-			String flightID = new RandomString().getRandomStringNum(4);
+			//EDIT
+			String flightID = GenerateID.getInstance().getFlightID()+"";
+//			String flightID = new RandomString().getRandomStringNum(4);
+			//END
 			Flight f = new Flight(flightID, departure, destination, d, firstClassSeats, businessClassSeats, economyClassSeats);
 			records.put("" + flightID, f);
 			synchronized (records) {

@@ -29,7 +29,10 @@ public class Passenger {
 		this.seatClass = seatClass;
 		this.departure = departure;
 		this.destination = destination;
-		this.recordID = "Pasg@" + departure + new RandomString().getRandomStringNum(3);
+		//EDIT
+		this.recordID = GenerateID.getInstance().getPassengerID()+"";
+//		this.recordID = "Pasg@" + departure + new RandomString().getRandomStringNum(3);
+		//END
 	}
 	
 	public Passenger(String firstName, String lastName, String address, String phone, String flightID, String date, int seatClass, String departure, String destination) {
@@ -47,7 +50,10 @@ public class Passenger {
 		this.seatClass = seatClass;
 		this.departure = departure;
 		this.destination = destination;
-		this.recordID = "Pasg@" + departure + new RandomString().getRandomStringNum(3);
+		//EDIT
+		this.recordID = GenerateID.getInstance().getPassengerID()+"";
+//		this.recordID = "Pasg@" + departure + new RandomString().getRandomStringNum(3);
+		//END
 	}
 	
 	
