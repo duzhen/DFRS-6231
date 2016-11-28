@@ -25,6 +25,10 @@ public class Config {
 	public static final int FE_RECEIVE_SERVER_PORT_2 = 8102;
 	public static final int FE_RECEIVE_SERVER_PORT_3 = 8103;
 	public static final int FE_RECEIVE_SERVER_PORT_4 = 8104;
+	//SEATS CLASS
+	public static final String FIRST_CLASS = "First";
+	public static final String BUSINESS_CLASS = "Business";
+	public static final String ECONOMY_CLASS = "Economy";
 	
 	public static String getFeHost() {
 		if(TEST)

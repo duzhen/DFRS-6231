@@ -1,11 +1,21 @@
 package dfrs.servers1;
 
 import dfrs.ServerInterfacePOA;
+import dfrs.utils.Config;
+import dfrs.utils.Utils;
 
 public class ServerImpl1 extends ServerInterfacePOA {
 
+	private FlightServer impl;
+	
 	public ServerImpl1(int i) {
-		// TODO Auto-generated constructor stub
+		if(i==0) {
+			impl = MTLServer.main(null);
+		} else if(i==1) {
+			impl = WDCServer.main(null);
+		} else if(i==2) {
+			impl = NDLServer.main(null);
+		}
 	}
 
 	public static ServerInterfacePOA getServerImpl(int i) {
@@ -15,8 +25,22 @@ public class ServerImpl1 extends ServerInterfacePOA {
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightClass, String flightDate) {
-		// TODO Auto-generated method stub
-		return null;
+		String des = Utils.getServer(destination);
+		int seatClass = 0;
+		if(Config.FIRST_CLASS.equals(flightClass)) {
+			seatClass = 1;
+		} else if(Config.BUSINESS_CLASS.equals(flightClass)) {
+			seatClass = 2;
+		} else if(Config.ECONOMY_CLASS.equals(flightClass)) {
+			seatClass = 3;
+		}
+		//flightDate must be yyyy/MM/dd
+		String result = impl.bookFlight(firstName, lastName, address, phoneNumber, des, flightDate, seatClass);
+		if(result != null&&result.startsWith("Done-")) {
+			return Config.SUCCESS;
+		} else {
+			return Config.FAIL;
+		}
 	}
 
 	@Override

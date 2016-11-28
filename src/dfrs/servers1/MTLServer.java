@@ -1,7 +1,5 @@
 package dfrs.servers1;
 
-import java.util.Properties;
-
 public class MTLServer extends FlightServer {
 	static final int UDP_PORT = 2001;
 	
@@ -26,12 +24,12 @@ public class MTLServer extends FlightServer {
 		f.addFlight("MTL", "WDC", "2016/11/07", 30, 50, 300);
 	}
 	
-	public static void main(String args[]){
+	public static FlightServer main(String args[]){
+		final MTLServer server = new MTLServer();
 		try{
-			final MTLServer server = new MTLServer();
-			Properties props = new Properties();
-		    props.put("org.omg.CORBA.ORBInitialPort", "1050");    
-		    props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
+//			Properties props = new Properties();
+//		    props.put("org.omg.CORBA.ORBInitialPort", "1050");    
+//		    props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
 //		    ORB orb = ORB.init(args, props);
 //			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 //			rootpoa.the_POAManager().activate();
@@ -57,5 +55,6 @@ public class MTLServer extends FlightServer {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		return server;
 	}
 }

@@ -1,7 +1,5 @@
 package dfrs.servers1;
 
-import java.util.Properties;
-
 public class WDCServer extends FlightServer{
 	static final int UDP_PORT = 2002;
 
@@ -26,12 +24,12 @@ public class WDCServer extends FlightServer{
 		f.addFlight("WDC", "MTL", "2016/11/07", 30, 50, 300);
 	}
 	
-	public static void main(String args[]){
+	public static FlightServer main(String args[]){
+		final WDCServer server = new WDCServer();
 		try{
-			final WDCServer server = new WDCServer();
-			Properties props = new Properties();
-		    props.put("org.omg.CORBA.ORBInitialPort", "1050");    
-		    props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
+//			Properties props = new Properties();
+//		    props.put("org.omg.CORBA.ORBInitialPort", "1050");    
+//		    props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1"); 
 //		    ORB orb = ORB.init(args, props);	    
 //			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 //			rootpoa.the_POAManager().activate();	
@@ -57,5 +55,6 @@ public class WDCServer extends FlightServer{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		return server;
 	}
 }

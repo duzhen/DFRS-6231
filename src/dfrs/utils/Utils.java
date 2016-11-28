@@ -135,7 +135,7 @@ public class Utils {
         if(Pattern.compile(pat).matcher(input).matches()) {
         	return BaseServerCluster.SERVER_MTL;
         }
-        pat = "(WST|wst|Washington|washtington)" ;
+        pat = "(WST|WDC|wst|Washington|washtington)" ;
         if(Pattern.compile(pat).matcher(input).matches()) {
         	return BaseServerCluster.SERVER_WST;
         }

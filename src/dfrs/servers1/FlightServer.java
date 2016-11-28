@@ -308,7 +308,8 @@ public abstract class FlightServer { //extends ServerInterfacePOA{
 
 
 	public void createLogFile() {
-		filePath = "ServerLog/" + city + ".txt";
+//		filePath = "ServerLog/" + city + ".txt";
+		filePath = "./" + city + ".txt";
 		logFile = new File(filePath);
 		try {
 			PrintWriter pw = new PrintWriter(new FileWriter(filePath), true);
