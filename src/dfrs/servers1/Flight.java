@@ -83,7 +83,7 @@ public class Flight {
 	
 	@Override
 	public String toString(){
-		return departure+flightID + " : " + departure + " ---> " + destination + " \t" + new SimpleDateFormat("yyyy/MM/dd").format(date) + " \t " + 
+		return flightID + " : " + departure + " ---> " + destination + " \t" + new SimpleDateFormat("yyyy/MM/dd").format(date) + " \t " + 
 		"FirstClass: " + numberOfFirstClass + ", BusinessClass: " + numberOfBusinessClass + ", EconomyClass: " + numberOfEconomyClass+"\r\n";
 	}
 	
