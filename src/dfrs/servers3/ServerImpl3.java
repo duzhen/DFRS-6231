@@ -3,7 +3,9 @@ package dfrs.servers3;
 import java.util.HashMap;
 
 import dfrs.ServerInterfacePOA;
+import dfrs.servers.BaseServerCluster;
 import dfrs.utils.Config;
+import dfrs.utils.Utils;
 
 public class ServerImpl3 extends ServerInterfacePOA {
 
@@ -131,8 +133,22 @@ public class ServerImpl3 extends ServerInterfacePOA {
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightClass, String flightDate) {
-		// TODO Auto-generated method stub
-		return null;
+		String des = Utils.getServer(destination);
+		if(BaseServerCluster.SERVER_MTL.equals(des)) {
+			des = "MTL";
+		} else if(BaseServerCluster.SERVER_WST.equals(des)) {
+			des = "WST";
+		} else if(BaseServerCluster.SERVER_NDL.equals(des)) {
+			des = "NDL";
+		}
+		if(Config.FIRST_CLASS.equals(flightClass)) {
+			flightClass = "firstclass";
+		} else if(Config.BUSINESS_CLASS.equals(flightClass)) {
+			flightClass = "business";
+		} else if(Config.ECONOMY_CLASS.equals(flightClass)) {
+			flightClass = "economy";
+		}
+		return impl.bookFlight(departure, firstName, lastName, address, phoneNumber, des, flightClass, flightDate);
 	}
 
 	@Override

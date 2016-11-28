@@ -26,7 +26,8 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 			String destination, String flightClass, String flightDate) {
 		passengerRecord record = new passengerRecord();
 		Character lNameFLetter = lastName.substring(0, 1).toCharArray()[0];
-		record.RecordID=counter;
+		//EDIT
+		record.RecordID=++counter;
 		record.firstName = firstName;
 		record.lastName = lastName;
 		record.address =address;
@@ -35,7 +36,8 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 		record.flightClass = flightClass;
 		record.flightDate = flightDate;
 		String keyManager = record.destination+record.flightDate ;
-		counter++;
+		//EDIT
+//		counter++;
 		
 		if(recordTable.containsKey(lNameFLetter))
 		  {
