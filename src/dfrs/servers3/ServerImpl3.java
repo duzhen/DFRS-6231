@@ -1,12 +1,127 @@
 package dfrs.servers3;
 
+import java.util.HashMap;
+
 import dfrs.ServerInterfacePOA;
+import dfrs.utils.Config;
 
 public class ServerImpl3 extends ServerInterfacePOA {
 
-	
+	private ServerImplYue impl;
+	public  HashMap<String,String> flight = new HashMap<String,String>();
+	/*
+	 6789 6790 MTL
+	 6791 6792 WST
+	 6793 6794 NDL
+	 */
 	public ServerImpl3(int i) {
-		// TODO Auto-generated constructor stub
+		if(i==0) {
+			impl = new ServerImplYue();
+			impl.portone = 6791;
+			impl.porttwo = 6793;
+			impl.location="MTL";
+			//create flight to wst
+			managerRecord a = new managerRecord();
+			a.managerID="MTL0001";
+			a.destination = "WST";
+			a.flightDate =Config.DATE;
+			a.business = 100;
+			a.businessLeft = 100;
+			a.firstclass = 100;
+			a.firstclassLeft = 100;
+			a.economy = 100;
+			a.economyLeft = 100;
+			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
+			impl.planeMap.put((a.destination+a.flightDate) , a);
+			//create flight to ndl
+			a = new managerRecord();
+			a.managerID="MTL0002";
+			a.destination = "NDL";
+			a.flightDate =Config.DATE;
+			a.business = 100;
+			a.businessLeft = 100;
+			a.firstclass = 100;
+			a.firstclassLeft = 100;
+			a.economy = 100;
+			a.economyLeft = 100;
+			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
+			impl.planeMap.put((a.destination+a.flightDate) , a);
+			
+			serverThread sTone = new serverThread(6789,impl);
+	    	serverThread sTtwo = new serverThread(6790,impl);
+	    	System.out.println("mtlServer ready and waiting ...");
+		} else if(i==1) {
+			impl = new ServerImplYue();
+			impl.portone = 6789;
+			impl.porttwo = 6794;
+			impl.location="WST";
+			//create flight to mtl
+			managerRecord a = new managerRecord();
+			a.managerID="WST0001";
+			a.destination = "MTL";
+			a.flightDate =Config.DATE;
+			a.business = 100;
+			a.businessLeft = 100;
+			a.firstclass = 100;
+			a.firstclassLeft = 100;
+			a.economy = 100;
+			a.economyLeft = 100;
+			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
+			impl.planeMap.put((a.destination+a.flightDate) , a);
+			
+			//create flight to NDL
+			managerRecord b = new managerRecord();
+			b.managerID="WST0002";
+			b.destination = "NDL";
+			a.flightDate =Config.DATE;
+			a.business = 100;
+			a.businessLeft = 100;
+			a.firstclass = 100;
+			a.firstclassLeft = 100;
+			a.economy = 100;
+			a.economyLeft = 100;
+			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
+			impl.planeMap.put((b.destination+b.flightDate) , b);
+			
+			serverThread sTone = new serverThread(6791,impl);
+	    	serverThread sTtwo = new serverThread(6792,impl);
+	    	System.out.println("ndlServer ready and waiting ...");
+		} else if(i==2) {
+			impl = new ServerImplYue();
+			impl.portone = 6790;
+			impl.porttwo = 6792;
+			impl.location="NDL";
+			//create a planeMap record
+			managerRecord a = new managerRecord();
+			a.managerID="NDL0001";
+			a.destination = "MTL";
+			a.flightDate =Config.DATE;
+			a.business = 100;
+			a.businessLeft = 100;
+			a.firstclass = 100;
+			a.firstclassLeft = 100;
+			a.economy = 100;
+			a.economyLeft = 100;
+			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
+			impl.planeMap.put((a.destination+a.flightDate) , a);
+			//create a planeMap record
+			a = new managerRecord();
+			a.managerID="NDL0002";
+			a.destination = "WST";
+			a.flightDate =Config.DATE;
+			a.business = 100;
+			a.businessLeft = 100;
+			a.firstclass = 100;
+			a.firstclassLeft = 100;
+			a.economy = 100;
+			a.economyLeft = 100;
+			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
+			impl.planeMap.put((a.destination+a.flightDate) , a);
+			
+			serverThread sTone = new serverThread(6793,impl);
+	    	serverThread sTtwo = new serverThread(6794,impl);
+	    	System.out.println("wstServer ready and waiting ...");
+		}
 	}
 
 	public static ServerInterfacePOA getServerImpl(int i) {

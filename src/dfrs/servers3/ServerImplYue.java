@@ -14,12 +14,12 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 	public int porttwo=0;
 	public int counter=0;
 	
-	public ServerImplYue(String new_location, int new_portone,int new_porttwo) {
-		super();
-		location = new_location;
-		portone = new_portone;
-		porttwo = new_porttwo;
-	}
+//	public ServerImplYue(String new_location, int new_portone,int new_porttwo) {
+//		super();
+//		location = new_location;
+//		portone = new_portone;
+//		porttwo = new_porttwo;
+//	}
 	public ServerImplYue() {}
 //	@Override
 	public String bookFlight(String currentCity, String firstName, String lastName, String address, String phoneNumber,
