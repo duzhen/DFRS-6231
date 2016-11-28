@@ -22,6 +22,7 @@ public class ReplicaManager3 extends BaseRM {
 	public static void main(String[] args) {
 		rm = new ReplicaManager3(args);
 		rm.startRM();
+		rm.startDemo();
 	}
 	
 	@Override

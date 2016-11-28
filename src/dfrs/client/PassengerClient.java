@@ -71,7 +71,23 @@ public class PassengerClient {
 	
 	public void inputLastName(Scanner keyboard) {
 		System.out.println("\nPlease input your Last Name:\n");
-		ticket.setLastName(keyboard.next());
+		boolean valid = false;
+		String input = "";
+		while (!valid) {
+			try {
+				input = keyboard.next();
+				if(Utils.validLastName(input))
+					valid = true;
+				else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				System.out.println("Invalid Input, please input right name\n");
+				valid = false;
+				keyboard.nextLine();
+			}
+		}
+		ticket.setLastName(input);
 	}
 	
 	public void inputAddress(Scanner keyboard) {

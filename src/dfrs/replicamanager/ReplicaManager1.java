@@ -22,12 +22,7 @@ public class ReplicaManager1 extends BaseRM {
 	public static void main(String[] args) {
 		rm = new ReplicaManager1(args);
 		rm.startRM();
-		if(Config.TEST) {
-			rm.startDemo();
-		}
-		
-		
-		rm.startReceiveSE();
+		rm.startDemo();
 	}
 	
 	@Override

@@ -23,7 +23,7 @@ public class ServerImpl4 extends ServerInterfacePOA {
 	
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
-			String destination, String flightClass, String flightDate) {
+			String destination, String flightDate, String flightClass) {
 		Result result = imple.bookFlight(firstName, lastName, address, phoneNumber, destination, flightDate, flightClass);
 		if(result.success) {
 			return Config.SUCCESS;

@@ -71,6 +71,13 @@ public class Utils {
         return m.matches();
 	}
 	
+	public static boolean validLastName(String input) {
+		String pat = "[a-zA-Z]*" ;
+        Pattern p = Pattern.compile(pat) ;
+        Matcher m = p.matcher(input) ;
+        return m.matches();
+	}
+	
 	public static void printFlight(String server) {
 //		System.out.println("["+server+"]-Flight Information:");
 		List<Flight> flight = FlightData.getInstance().initData(server);

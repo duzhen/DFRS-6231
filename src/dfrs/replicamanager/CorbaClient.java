@@ -48,7 +48,7 @@ public class CorbaClient {
 		        	reply = requestCorba(params, corba);
 	        	} catch (Exception e) {
 	        		System.out.println(e.getMessage());
-	        		clients.remove(BaseServerCluster.SERVER_MTL);
+	        		clients.remove(server);
 	        		corba = getCorbaClient(server);
 	        		try {
 			        	reply = requestCorba(params, corba);
@@ -75,13 +75,13 @@ public class CorbaClient {
 		if(corba==null)
 			return reply;
 		try {
-			if("1".equals(params[0])&&params.length>10) {
-				reply = corba.bookFlight(params[2], params[3], params[4], params[5], params[7], params[8], params[9], params[10]);
-			} else if("2".equals(params[0])&&params.length>8) {
+			if("1".equals(params[0])&&params.length>=10) {
+				reply = corba.bookFlight(params[2], params[3], params[4], params[5], params[6], params[7], params[8], params[9]);
+			} else if("2".equals(params[0])&&params.length>=6) {
 				reply = corba.editFlightRecord(params[2], params[3], params[4], params[5]);//, Integer.valueOf(params[6]), Integer.valueOf(params[7]), Integer.valueOf(params[8]));
-			} else if("3".equals(params[0])&&params.length>3) {
+			} else if("3".equals(params[0])&&params.length>=4) {
 				reply = corba.getBookedFlightCount(params[2], params[3]);
-			} else if("4".equals(params[0])&&params.length>5) {
+			} else if("4".equals(params[0])&&params.length>=6) {
 				reply = corba.transferReservation(params[2], params[3], params[4], params[5]);
 			}
 		} catch (Exception e) {
