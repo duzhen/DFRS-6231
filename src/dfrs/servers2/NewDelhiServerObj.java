@@ -17,6 +17,8 @@ import java.util.Map;
 
 import org.omg.CORBA.ORB;
 
+import dfrs.utils.Config;
+
 public class NewDelhiServerObj extends BaseObj {
 
 	private ORB orb;
@@ -43,7 +45,7 @@ public class NewDelhiServerObj extends BaseObj {
 		passengerRecordsMap = new HashMap<>();
 		flightRecords = new ArrayList<>();
 		addInitialFlightRecord();
-		addInitialPassengerRecord();
+//		addInitialPassengerRecord();
 
 	}
 
@@ -112,6 +114,7 @@ public class NewDelhiServerObj extends BaseObj {
 		if (seats > 0) {
 			Passenger p = new Passenger(firstName, lastName, address, phoneNumber);
 			PassengerRecord pr = new PassengerRecord(p, destination, flightClass, dateOfFlight);
+			pr.setPassengerID(GenerateID.getInstance().getPassengerID()+"");
 			Character c = lastName.toLowerCase().charAt(0);
 			synchronized(this) {
 				if (passengerRecordsMap.get(c) != null) {
@@ -220,16 +223,16 @@ public class NewDelhiServerObj extends BaseObj {
 	}
 
 	private void addInitialFlightRecord() {
-		flightRecords.add(new FlightRecord("0001", "NewDelhi", "Washington", 20, 30, 4, "2016-11-06-10-10"));
-		flightRecords.add(new FlightRecord("0002", "NewDelhi", "Washington", 21, 31, 41, "2016-11-06-10-11"));
-		flightRecords.add(new FlightRecord("0003", "NewDelhi", "Washington", 22, 32, 42, "2016-11-06-10-12"));
-		flightRecords.add(new FlightRecord("0004", "NewDelhi", "Washington", 23, 33, 43, "2016-11-06-10-13"));
-		flightRecords.add(new FlightRecord("0005", "NewDelhi", "Washington", 24, 34, 44, "2016-11-06-10-14"));
-		flightRecords.add(new FlightRecord("0006", "NewDelhi", "Montreal", 20, 30, 40, "2016-11-06-10-10"));
-		flightRecords.add(new FlightRecord("0007", "NewDelhi", "Montreal", 21, 31, 41, "2016-11-06-10-11"));
-		flightRecords.add(new FlightRecord("0008", "NewDelhi", "Montreal", 22, 32, 42, "2016-11-06-10-12"));
-		flightRecords.add(new FlightRecord("0009", "NewDelhi", "Montreal", 23, 33, 43, "2016-11-06-10-13"));
-		flightRecords.add(new FlightRecord("0010", "NewDelhi", "Montreal", 24, 34, 44, "2016-11-06-10-14"));
+		flightRecords.add(new FlightRecord(GenerateID.getInstance().getFlightID()+"", "NewDelhi", "Montreal", 100, 100, 100, Config.DATE));
+		flightRecords.add(new FlightRecord(GenerateID.getInstance().getFlightID()+"", "NewDelhi", "Washington", 100, 100, 100, Config.DATE));
+//		flightRecords.add(new FlightRecord("0003", "NewDelhi", "Washington", 22, 32, 42, "2016-11-06-10-12"));
+//		flightRecords.add(new FlightRecord("0004", "NewDelhi", "Washington", 23, 33, 43, "2016-11-06-10-13"));
+//		flightRecords.add(new FlightRecord("0005", "NewDelhi", "Washington", 24, 34, 44, "2016-11-06-10-14"));
+//		flightRecords.add(new FlightRecord("0006", "NewDelhi", "Montreal", 20, 30, 40, "2016-11-06-10-10"));
+//		flightRecords.add(new FlightRecord("0007", "NewDelhi", "Montreal", 21, 31, 41, "2016-11-06-10-11"));
+//		flightRecords.add(new FlightRecord("0008", "NewDelhi", "Montreal", 22, 32, 42, "2016-11-06-10-12"));
+//		flightRecords.add(new FlightRecord("0009", "NewDelhi", "Montreal", 23, 33, 43, "2016-11-06-10-13"));
+//		flightRecords.add(new FlightRecord("0010", "NewDelhi", "Montreal", 24, 34, 44, "2016-11-06-10-14"));
 
 	}
 	
