@@ -28,7 +28,9 @@ public class Flight {
 
 
 	public String getFlightNumber(){
-		return departure.toUpperCase()+flightID;
+		//EDIT
+		return flightID;
+//		return departure.toUpperCase()+flightID;
 	}
 
 	public String getDeparture() {

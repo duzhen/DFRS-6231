@@ -61,8 +61,9 @@ public class serverThread  extends Thread{
   				{	
   					System.out.println("going to the second");
   					passengerRecord record = new passengerRecord();
-  					record.RecordID=serverIm.counter;
-  					
+  					//EDIT
+  					record.RecordID=++serverIm.counter;
+  					//END
   					int j =1;
   					int cal=0;
   					for(int i=2;i<receiver.length();i++){
@@ -98,8 +99,9 @@ public class serverThread  extends Thread{
   					Character lNameFLetter = record.lastName.substring(0, 1).toCharArray()[0];
   					System.out.println(lNameFLetter.toString());
   					String keyManager = record.destination+record.flightDate ;
-  					
-  					serverIm.counter++;
+  					//EDIT
+//  					serverIm.counter++;
+  					//END
   					String reply=null;
   					if(recordTable.containsKey(lNameFLetter))
   					  {
