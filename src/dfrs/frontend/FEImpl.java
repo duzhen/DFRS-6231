@@ -26,6 +26,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		this.host = host;
 		this.port = portone;
 		CR = new CompareResult();
+		CC = new CompareCount();
 		// FE reveive cluster manager
 		cMServer1 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_1,CR,CC);
 		cMServer2 = new FEServer(Config.FE_RECEIVE_SERVER_PORT_2,CR,CC);
@@ -42,15 +43,15 @@ public class FEImpl  extends ServerInterfacePOA  {
 	
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
-			String destination, String flightClass, String flightDate) {
+			String destination, String flightDate, String flightClass) {
 		String content ="1"+"$"+departure
 				+"$"+firstName
 				+"$"+lastName
 				+"$"+address
 				+"$"+phoneNumber
 				+"$"+destination
-				+"$"+flightClass
-				+"$"+flightDate+"$";
+				+"$"+flightDate
+				+"$"+flightClass+"$";
 		
 		System.out.println("client "+port+" connect string");
 		System.out.println(content);
@@ -107,7 +108,7 @@ public class FEImpl  extends ServerInterfacePOA  {
              mc.initial();
              mc.execute();
              clear();
-    	     return "success send the content";
+    	     return "success";
 	     }else 
     	 if(successCount<failCount)
     	 {
@@ -125,7 +126,7 @@ public class FEImpl  extends ServerInterfacePOA  {
              mc.initial();
              mc.execute();
              clear();
-    	 return "success send the content";
+    	 return "fail";
 	     }
 	     
 		return "WRONG END";
@@ -194,25 +195,25 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     
 	     HashMap<String,Integer> hCount = new HashMap<String,Integer>();
 	     
-	     if(!RMReply[0].equals("crash"))
+	     if(!"crash".equals(RMReply[0]))
 	     {
 	    	 hCount.put(CM1, 1);
 	     }
-	     if(!RMReply[1].equals("crash")){
+	     if(!"crash".equals(RMReply[1])){
 		     if(hCount.containsKey(CM2)){
 		    	 hCount.put(CM2,( hCount.get(CM2)+1));
 		     }else{
 		    	 hCount.put(CM2, 1);
 		     }
 	     }
-	     if(!RMReply[2].equals("crash")){
+	     if(!"crash".equals(RMReply[2])){
 		     if(hCount.containsKey(CM3)){
 		    	 hCount.put(CM3,( hCount.get(CM3)+1));
 		     }else{
 		    	 hCount.put(CM3, 1);
 		     }
 	     }
-	     if(!RMReply[3].equals("crash")){
+	     if(!"crash".equals(RMReply[3])){
 		     if(hCount.containsKey(CM4)){
 		    	 hCount.put(CM4,( hCount.get(CM4)+1));
 		     }else{
@@ -233,7 +234,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     
 	     String RMMessage="";
 	     
-	     if(RMReply[0].equals("crash")){
+	     if("crash".equals(RMReply[0])){
 	     RMMessage=RMMessage+"crash"+"$"+0+"$" ;
 	     }else 
 	     if(CM1.equals(answer)){
@@ -242,7 +243,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 	    	 RMMessage=RMMessage+"wrong"+"$"+0+"$" ;
 	     }
 	     
-	     if(RMReply[1].equals("crash")){
+	     if("crash".equals(RMReply[1])){
 	     RMMessage=RMMessage+"crash"+"$"+1+"$" ;
 	     }else 
 	     if(CM2.equals(answer)){
@@ -251,7 +252,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 	    	 RMMessage=RMMessage+"wrong"+"$"+1+"$" ;
 	     }
 	     
-	     if(RMReply[2].equals("crash")){
+	     if("crash".equals(RMReply[2])){
 	     RMMessage=RMMessage+"crash"+"$"+2+"$" ;
 	     }else 
 	     if(CM3.equals(answer)){
@@ -260,7 +261,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 	    	 RMMessage=RMMessage+"wrong"+"$"+2+"$" ;
 	     }
 	     
-	     if(RMReply[3].equals("crash")){
+	     if("crash".equals(RMReply[3])){
 	     RMMessage=RMMessage+"crash"+"$"+3+"$" ;
 	     }else 
 	     if(CM4.equals(answer)){
@@ -334,11 +335,11 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     //whether crash should be noticed at the FE?
 	     if(successCount==4){
 	    	 clear();
-	    	 return "success send the content";
+	    	 return "success";
 	     }else 
     	 if(failCount==4){
     		 clear();
-	    	 return "fail send the content";
+	    	 return "fail";
 	     }else 
     	 if(successCount>=failCount)
     	 {
@@ -356,7 +357,7 @@ public class FEImpl  extends ServerInterfacePOA  {
              mc.initial();
              mc.execute();
              clear();
-    	     return "success send the content";
+    	     return "success";
 	     }else 
     	 if(successCount<failCount)
     	 {
@@ -374,7 +375,7 @@ public class FEImpl  extends ServerInterfacePOA  {
              mc.initial();
              mc.execute();
              clear();
-    	 return "success send the content";
+    	 return "fail";
 	     }
 	     
 		return "WRONG END";
@@ -420,11 +421,11 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     //whether crash should be noticed at the FE?
 	     if(successCount==4){
 	    	 clear();
-	    	 return "success send the content";
+	    	 return "success";
 	     }else 
     	 if(failCount==4){
     		 clear();
-	    	 return "fail send the content";
+	    	 return "fail";
 	     }else 
     	 if(successCount>=failCount)
     	 {
@@ -442,7 +443,7 @@ public class FEImpl  extends ServerInterfacePOA  {
              mc.initial();
              mc.execute();
              clear();
-    	     return "success send the content";
+    	     return "success";
 	     }else 
     	 if(successCount<failCount)
     	 {
@@ -460,7 +461,7 @@ public class FEImpl  extends ServerInterfacePOA  {
              mc.initial();
              mc.execute();
              clear();
-    	 return "success send the content";
+    	 return "fail";
 	     }
 	     
 		return "WRONG END";

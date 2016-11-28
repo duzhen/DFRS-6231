@@ -32,10 +32,10 @@ public class FEServer  extends Thread {
                 BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
                 
                 String reply= inFromClient.readLine().toString().trim();
+                System.out.println("Server: "+reply+" port "+port);
                 String[] params = reply.split("\\$");
                 reply= params[1];
                 
-                System.out.println("Server: "+reply+" port "+port);
                 if(reply.equals("MTL"))
                 {
 	                if(port==Config.FE_RECEIVE_SERVER_PORT_1){
