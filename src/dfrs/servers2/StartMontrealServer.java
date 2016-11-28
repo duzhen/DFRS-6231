@@ -1,0 +1,93 @@
+package dfrs.servers2;
+
+
+
+import java.util.Scanner;
+
+import org.omg.CORBA.ORB;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+
+import DFRSApp.Server;
+import DFRSApp.ServerHelper;
+import driver.TestConcurrency;
+
+public class StartMontrealServer {
+
+	public static String SERVER_NAME = "Montreal";
+
+	public static void main(String args[]) {
+		System.out.println(SERVER_NAME + " Server is ready and waiting ...");
+		StartMontrealServer server = new StartMontrealServer();
+		server.initializeServer(args);
+		System.out.println("1. print flight record");
+		System.out.println("2. print passenger record");
+ 
+	}
+
+	private void initializeServer(String args[]) {
+		String[] a = {"-ORBInitialPort", "1050", "-ORBInitialHost", "localhost"};
+		args = a;
+		try {
+			// create and initialize the ORB //// get reference to rootpoa &amp;
+			// activate the POAManager
+			ORB orb = ORB.init(args, null);
+			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+			rootpoa.the_POAManager().activate();
+
+			// create servant and register it with the ORB
+			MontrealServerObj obj = new MontrealServerObj();
+			obj.setORB(orb);
+
+			// get object reference from the servant
+			org.omg.CORBA.Object ref = rootpoa.servant_to_reference(obj);
+			Server href = ServerHelper.narrow(ref);
+
+			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+
+			NameComponent path[] = ncRef.to_name(SERVER_NAME);
+			ncRef.rebind(path, href);
+
+
+			// wait for invocations from clients
+			while (true) {
+				orb.run();
+				int userInput = 0;
+				Scanner input = new Scanner(System.in);
+				
+		 
+		            Boolean valid = false;
+		            while(!valid)
+		            {
+		                try {
+		                	userInput = input.nextInt();
+		                    valid = true;
+		                }
+		                catch(Exception e) {
+		                    System.out.println("Invalid Input, please enter an Integer");
+		                    valid = false;
+		                    input.nextLine();
+		                }
+		            }
+		            switch(userInput) {
+		            case 1: obj.printFlightRecord(); break;
+		            case 2: obj.printPassengerRecord(); break;
+		            }
+		        
+ 
+			}
+		}
+
+		catch (Exception e) {
+			System.err.println("ERROR: " + e);
+			e.printStackTrace(System.out);
+		}
+
+		System.out.println(SERVER_NAME + " Server Exiting ...");
+
+	}
+}
