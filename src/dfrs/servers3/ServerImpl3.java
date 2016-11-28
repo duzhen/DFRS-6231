@@ -26,7 +26,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			managerRecord a = new managerRecord();
 			a.managerID="MTL0001";
 			a.destination = "WST";
-			a.flightDate =Config.DATE;
+			a.flightDate =Config.DEPARTURE_DATE;
 			a.business = 100;
 			a.businessLeft = 100;
 			a.firstclass = 100;
@@ -39,7 +39,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			a = new managerRecord();
 			a.managerID="MTL0002";
 			a.destination = "NDL";
-			a.flightDate =Config.DATE;
+			a.flightDate =Config.DEPARTURE_DATE;
 			a.business = 100;
 			a.businessLeft = 100;
 			a.firstclass = 100;
@@ -51,7 +51,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			
 			serverThread sTone = new serverThread(6789,impl);
 	    	serverThread sTtwo = new serverThread(6790,impl);
-	    	System.out.println("mtlServer ready and waiting ...");
+	    	System.out.println("Montreal Server ready and waiting ...");
 		} else if(i==1) {
 			impl = new ServerImplYue();
 			impl.portone = 6789;
@@ -61,7 +61,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			managerRecord a = new managerRecord();
 			a.managerID="WST0001";
 			a.destination = "MTL";
-			a.flightDate =Config.DATE;
+			a.flightDate =Config.DEPARTURE_DATE;
 			a.business = 100;
 			a.businessLeft = 100;
 			a.firstclass = 100;
@@ -72,10 +72,10 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			impl.planeMap.put((a.destination+a.flightDate) , a);
 			
 			//create flight to NDL
-			managerRecord b = new managerRecord();
-			b.managerID="WST0002";
-			b.destination = "NDL";
-			a.flightDate =Config.DATE;
+			a = new managerRecord();
+			a.managerID="WST0002";
+			a.destination = "NDL";
+			a.flightDate =Config.DEPARTURE_DATE;
 			a.business = 100;
 			a.businessLeft = 100;
 			a.firstclass = 100;
@@ -83,11 +83,11 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			a.economy = 100;
 			a.economyLeft = 100;
 			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
-			impl.planeMap.put((b.destination+b.flightDate) , b);
+			impl.planeMap.put((a.destination+a.flightDate) , a);
 			
 			serverThread sTone = new serverThread(6791,impl);
 	    	serverThread sTtwo = new serverThread(6792,impl);
-	    	System.out.println("ndlServer ready and waiting ...");
+	    	System.out.println("New Delhi Server ready and waiting ...");
 		} else if(i==2) {
 			impl = new ServerImplYue();
 			impl.portone = 6790;
@@ -97,7 +97,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			managerRecord a = new managerRecord();
 			a.managerID="NDL0001";
 			a.destination = "MTL";
-			a.flightDate =Config.DATE;
+			a.flightDate =Config.DEPARTURE_DATE;
 			a.business = 100;
 			a.businessLeft = 100;
 			a.firstclass = 100;
@@ -110,7 +110,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			a = new managerRecord();
 			a.managerID="NDL0002";
 			a.destination = "WST";
-			a.flightDate =Config.DATE;
+			a.flightDate =Config.DEPARTURE_DATE;
 			a.business = 100;
 			a.businessLeft = 100;
 			a.firstclass = 100;
@@ -122,7 +122,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			
 			serverThread sTone = new serverThread(6793,impl);
 	    	serverThread sTtwo = new serverThread(6794,impl);
-	    	System.out.println("wstServer ready and waiting ...");
+	    	System.out.println("Washington Server ready and waiting ...");
 		}
 	}
 
@@ -132,7 +132,7 @@ public class ServerImpl3 extends ServerInterfacePOA {
 	
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
-			String destination, String flightClass, String flightDate) {
+			String destination, String flightDate, String flightClass) {
 		String des = Utils.getServer(destination);
 		if(BaseServerCluster.SERVER_MTL.equals(des)) {
 			des = "MTL";
