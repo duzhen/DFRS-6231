@@ -45,8 +45,21 @@ public class ServerImpl1 extends ServerInterfacePOA {
 
 	@Override
 	public String getBookedFlightCount(String managerID, String recordType) {
-		// TODO Auto-generated method stub
-		return null;
+		//didn't implement by type
+		int type = 0;
+		if(Config.FIRST_CLASS.equals(recordType)) {
+			type = 1;
+		} else if(Config.BUSINESS_CLASS.equals(recordType)) {
+			type = 2;
+		} else if(Config.ECONOMY_CLASS.equals(recordType)) {
+			type = 3;
+		} else if(Config.ALL_CLASS.equals(recordType)) {
+			type = 0;
+		}
+		//WST: 0\tWDC: 0\tNDL: 0
+		String result = impl.getBookedFlightCounts(type);
+		//return WST$0$WDC$0$NDL$0
+		return result.replace("\t", ": ").replace(": ", "$").replace("WDC", "WST");
 	}
 
 	@Override
