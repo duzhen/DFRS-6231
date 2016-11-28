@@ -25,7 +25,7 @@ public class ServerImpl2 extends ServerInterfacePOA {
 	
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
-			String destination, String flightClass, String flightDate) {
+			String destination, String flightDate, String flightClass) {
 		String des = Utils.getServer(destination);
 		if(BaseServerCluster.SERVER_MTL.equals(des)) {
 			des = StartMontrealServer.SERVER_NAME;

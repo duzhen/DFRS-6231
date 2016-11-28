@@ -228,8 +228,8 @@ public class MontrealServerObj extends BaseObj {
 	}
 
 	private void addInitialFlightRecord() {
-		flightRecords.add(new FlightRecord(GenerateID.getInstance().getFlightID()+"", "Montreal", "Washington", 100, 100, 100, Config.DATE));
-		flightRecords.add(new FlightRecord(GenerateID.getInstance().getFlightID()+"", "Montreal", "NewDelhi", 100, 100, 100, Config.DATE));
+		flightRecords.add(new FlightRecord(GenerateID.getInstance().getFlightID()+"", "Montreal", "Washington", 100, 100, 100, Config.DEPARTURE_DATE));
+		flightRecords.add(new FlightRecord(GenerateID.getInstance().getFlightID()+"", "Montreal", "NewDelhi", 100, 100, 100, Config.DEPARTURE_DATE));
 //		flightRecords.add(new FlightRecord("0003", "Montreal", "Washington", 22, 32, 42, "2016-11-06-10-12"));
 //		flightRecords.add(new FlightRecord("0004", "Montreal", "Washington", 23, 33, 43, "2016-11-06-10-13"));
 //		flightRecords.add(new FlightRecord("0005", "Montreal", "Washington", 24, 34, 44, "2016-11-06-10-14"));
@@ -258,37 +258,38 @@ public class MontrealServerObj extends BaseObj {
 
 	private int queryAvailableSeatsAndUpdates(String flightClass, String dest, String date) {
 		for (FlightRecord fr : flightRecords) {
-			switch (flightClass) {
-			case "economy":
-				if (fr.getEconomySeats() > 0 && fr.getDateOfFlight().equals(date) && fr.getDestination().equals(dest)) {
-					int seat = fr.getEconomySeats();
-					fr.setEconomySeats(seat - 1);
-					return seat;
-				} else {
-					return 0;
+			if(fr.getDateOfFlight().equals(date) && fr.getDestination().equals(dest)) {
+				switch (flightClass) {
+				case "economy":
+					if (fr.getEconomySeats() > 0) {
+						int seat = fr.getEconomySeats();
+						fr.setEconomySeats(seat - 1);
+						return seat;
+					} else {
+						return 0;
+					}
+					
+				case "business":
+					if (fr.getBusinessSeats() > 0) {
+						int seat = fr.getBusinessSeats();
+						fr.setBusinessSeats(seat - 1);
+						return seat;
+					} else {
+						return 0;
+					}
+					
+				case "fit":
+					if (fr.getFitsSeats() > 0) {
+						int seat = fr.getFitsSeats();
+						fr.setFitsSeats(seat - 1);
+						return seat;
+					} else {
+						return 0;
+					}
+					
+				default:
+					break;
 				}
-
-			case "business":
-				if (fr.getBusinessSeats() > 0 && fr.getDateOfFlight().equals(date)
-						&& fr.getDestination().equals(dest)) {
-					int seat = fr.getBusinessSeats();
-					fr.setBusinessSeats(seat - 1);
-					return seat;
-				} else {
-					return 0;
-				}
-
-			case "fit":
-				if (fr.getFitsSeats() > 0 && fr.getDateOfFlight().equals(date) && fr.getDestination().equals(dest)) {
-					int seat = fr.getFitsSeats();
-					fr.setFitsSeats(seat - 1);
-					return seat;
-				} else {
-					return 0;
-				}
-
-			default:
-				break;
 			}
 		}
 		return -1;
@@ -406,7 +407,7 @@ public class MontrealServerObj extends BaseObj {
 			 
 			DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
 			aSocket.receive(incomingPacket);
-			return new String(incomingPacket.getData());
+			return new String(incomingPacket.getData(), 0, incomingPacket.getLength()).trim();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return null;

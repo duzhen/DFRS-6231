@@ -37,30 +37,36 @@ public class StartWashingtonServer {
 
 
 			// wait for invocations from clients
-			while (true) {
-//				orb.run();
-				int userInput = 0;
-				Scanner input = new Scanner(System.in);
+			new Thread(new Runnable() {
 				
-		 
-		            Boolean valid = false;
-		            while(!valid)
-		            {
-		                try {
-		                	userInput = input.nextInt();
-		                    valid = true;
-		                }
-		                catch(Exception e) {
-		                    System.out.println("Invalid Input, please enter an Integer");
-		                    valid = false;
-		                    input.nextLine();
-		                }
-		            }
-		            switch(userInput) {
-		            case 1: obj.printFlightRecord(); break;
-		            case 2: obj.printPassengerRecord(); break;
-		            }
-			}
+				@Override
+				public void run() {
+					while (true) {
+//						orb.run();
+						int userInput = 0;
+						Scanner input = new Scanner(System.in);
+						
+				 
+				            Boolean valid = false;
+				            while(!valid)
+				            {
+				                try {
+				                	userInput = input.nextInt();
+				                    valid = true;
+				                }
+				                catch(Exception e) {
+				                    System.out.println("Invalid Input, please enter an Integer");
+				                    valid = false;
+				                    input.nextLine();
+				                }
+				            }
+				            switch(userInput) {
+				            case 3: obj.printFlightRecord(); break;
+				            case 4: obj.printPassengerRecord(); break;
+				            }
+					}
+				}
+			}).start();
 		}
 
 		catch (Exception e) {
