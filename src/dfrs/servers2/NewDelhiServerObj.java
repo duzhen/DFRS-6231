@@ -17,15 +17,7 @@ import java.util.Map;
 
 import org.omg.CORBA.ORB;
 
-import DFRSApp.ServerPOA;
- 
-import model.FlightRecord;
-import model.Log;
-import model.Passenger;
-import model.PassengerRecord;
-import server.ServerInfo;
-
-public class NewDelhiServerObj extends ServerPOA {
+public class NewDelhiServerObj extends BaseObj {
 
 	private ORB orb;
  
@@ -139,7 +131,7 @@ public class NewDelhiServerObj extends ServerPOA {
 			String ts = new Date().toString();
 			String who = "Passenger: " + firstName + " " + lastName;
 			String operation = "booked a flight from NewDelhi to " + destination + " at " + dateOfFlight;
-			new Log(ts, who, operation).writeToLog("src/server/newdelhi/log.txt");
+			new Log(ts, who, operation).writeToLog("src/dfrs/servers2/newdelhi_log.txt");
 			
 			
 			return true;
@@ -161,7 +153,7 @@ public class NewDelhiServerObj extends ServerPOA {
 				String ts = new Date().toString();
 				String who = "Manager";
 				String operation = "add a flight from NewDelhi to " + fr.getDestination().toString() + " at " + fr.getDateOfFlight();
-				new Log(ts, who, operation).writeToLog("src/server/newdelhi/log.txt");
+				new Log(ts, who, operation).writeToLog("src/dfrs/servers2/newdelhi_log.txt");
 			} else { // edit this record
 				FlightRecord fr = flightRecords.get(index);
 				fr.setDeparture(departure);
@@ -174,7 +166,7 @@ public class NewDelhiServerObj extends ServerPOA {
 				String ts = new Date().toString();
 				String who = "Manager";
 				String operation = "edit a flight from NewDelhi to " + fr.getDestination().toString() + " at " + fr.getDateOfFlight();
-				new Log(ts, who, operation).writeToLog("src/server/newdelhi/log.txt");
+				new Log(ts, who, operation).writeToLog("src/dfrs/servers2/newdelhi_log.txt");
 			}
 		}
 		printFlightRecord();
@@ -194,7 +186,7 @@ public class NewDelhiServerObj extends ServerPOA {
 		String ts = new Date().toString();
 		String who = "Manager";
 		String operation = "count the number of all the flight records";
-		new Log(ts, who, operation).writeToLog("src/server/newdelhi/log.txt");
+		new Log(ts, who, operation).writeToLog("src/dfrs/servers2/newdelhi_log.txt");
 		
 		return sb.toString();
 	}
@@ -208,13 +200,13 @@ public class NewDelhiServerObj extends ServerPOA {
 			int i = pack[1];
 			synchronized (this) {
 				PassengerRecord pr = passengerRecordsMap.get(c).remove(i);
-				send(pr, "localhost", server.ServerInfo.getServerMaps().get(otherCity));
+				send(pr, "localhost", ServerInfo.getServerMaps().get(otherCity));
 				printPassengerRecord();
 			}
 			String ts = new Date().toString();
 			String who = "Manager";
 			String operation = "transfer the passenger recordID : " + passengerID + " from " + "Newdelhi to " + otherCity;
-			new Log(ts, who, operation).writeToLog("src/server/newdelhi/log.txt");
+			new Log(ts, who, operation).writeToLog("src/dfrs/servers2/newdelhi_log.txt");
 			
 			return true;
 		} else {

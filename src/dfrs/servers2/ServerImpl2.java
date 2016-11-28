@@ -4,8 +4,16 @@ import dfrs.ServerInterfacePOA;
 
 public class ServerImpl2 extends ServerInterfacePOA {
 
+	private BaseObj impl;
+	
 	public ServerImpl2(int i) {
-		// TODO Auto-generated constructor stub
+		if(i==0) {
+			impl = StartMontrealServer.main(null);
+		} else if(i==1) {
+			impl = StartWashingtonServer.main(null);
+		} else if(i==2) {
+			impl = StartNewDelhiServer.main(null);
+		}
 	}
 
 	public static ServerInterfacePOA getServerImpl(int i) {
