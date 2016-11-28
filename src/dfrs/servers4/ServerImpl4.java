@@ -1,6 +1,7 @@
 package dfrs.servers4;
 
 import dfrs.ServerInterfacePOA;
+import dfrs.utils.Config;
 
 public class ServerImpl4 extends ServerInterfacePOA {
 
@@ -23,26 +24,40 @@ public class ServerImpl4 extends ServerInterfacePOA {
 	@Override
 	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightClass, String flightDate) {
-		// TODO Auto-generated method stub
-		return null;
+		Result result = imple.bookFlight(firstName, lastName, address, phoneNumber, destination, flightDate, flightClass);
+		if(result.success) {
+			return Config.SUCCESS;
+		} else {
+			return Config.FAIL;
+		}
 	}
 
 	@Override
 	public String getBookedFlightCount(String managerID, String recordType) {
-		// TODO Auto-generated method stub
-		return null;
+		//MTL 0,WST 0,NDL 0
+		String result = imple.getBookedFlightCount(recordType);
+		//MTL$0$WST$0$NDL$0
+		return result.replace(" ", "$").replace(",", "$");
 	}
 
 	@Override
 	public String editFlightRecord(String managerID, String recordID, String fieldName, String newValue) {
-		// TODO Auto-generated method stub
-		return null;
+		Result result = imple.editFlightRecord(Integer.valueOf(recordID), fieldName, newValue);
+		if(result.success) {
+			return Config.SUCCESS;
+		} else {
+			return Config.FAIL;
+		}
 	}
 
 	@Override
 	public String transferReservation(String managerID, String passengerID, String currentCity, String otherCity) {
-		// TODO Auto-generated method stub
-		return null;
+		Result result = imple.transferReservation(Integer.valueOf(passengerID), currentCity, otherCity);
+		if(result.success) {
+			return Config.SUCCESS;
+		} else {
+			return Config.FAIL;
+		}
 	}
 
 }
