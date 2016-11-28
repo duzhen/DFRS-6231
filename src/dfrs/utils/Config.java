@@ -2,6 +2,7 @@ package dfrs.utils;
 
 public class Config {
 	public static final boolean TEST = true;
+	public static final String DEPARTURE_DATE = "2016/12/25";
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "fail";
 	//FE

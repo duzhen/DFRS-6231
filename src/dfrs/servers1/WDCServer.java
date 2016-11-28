@@ -1,5 +1,7 @@
 package dfrs.servers1;
 
+import dfrs.utils.Config;
+
 public class WDCServer extends FlightServer{
 	static final int UDP_PORT = 2002;
 
@@ -21,7 +23,8 @@ public class WDCServer extends FlightServer{
 //		f.addFlight("WDC", "MTL", "2016/11/02", 20, 40, 200);
 //		f.addFlight("WDC", "NDL", "2016/11/03", 30, 50, 300);
 //		f.addFlight("WDC", "MTL", "2016/11/03", 30, 50, 300);
-		f.addFlight("WDC", "MTL", "2016/11/07", 30, 50, 300);
+		f.addFlight("WDC", "MTL", Config.DEPARTURE_DATE, 100, 100, 100);
+		f.addFlight("WDC", "NDL", Config.DEPARTURE_DATE, 100, 100, 100);
 	}
 	
 	public static FlightServer main(String args[]){

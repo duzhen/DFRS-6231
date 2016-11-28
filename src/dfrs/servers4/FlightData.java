@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import dfrs.utils.Config;
+
 public class FlightData {
 	private static FlightData instance;
 	private HashMap<String, List<Flight>> data;
@@ -78,8 +80,8 @@ public class FlightData {
 			f.setFlightName("CZ 101");
 			f.setDeparture("Montreal");
 			f.setDestination("Washington");
-			f.setDepartureDate("20161010");
-			f.setAchieveDate("20161011");
+			f.setDepartureDate(Config.DEPARTURE_DATE);
+			f.setAchieveDate(Config.DEPARTURE_DATE);
 			f.setTotalBusinessTickets(100);
 			f.setTotalFirstTickets(100);
 			f.setTotalEconomyTickets(100);
@@ -92,8 +94,8 @@ public class FlightData {
 			f.setFlightName("CZ 201");
 			f.setDeparture("Montreal");
 			f.setDestination("New Delhi");
-			f.setDepartureDate("20161010");
-			f.setAchieveDate("20161011");
+			f.setDepartureDate(Config.DEPARTURE_DATE);
+			f.setAchieveDate(Config.DEPARTURE_DATE);
 			f.setTotalBusinessTickets(100);
 			f.setTotalFirstTickets(100);
 			f.setTotalEconomyTickets(100);
@@ -106,8 +108,8 @@ public class FlightData {
 			f.setFlightName("CW 101");
 			f.setDeparture("Washington");
 			f.setDestination("Montreal");
-			f.setDepartureDate("20161010");
-			f.setAchieveDate("20161011");
+			f.setDepartureDate(Config.DEPARTURE_DATE);
+			f.setAchieveDate(Config.DEPARTURE_DATE);
 			f.setTotalBusinessTickets(100);
 			f.setTotalFirstTickets(100);
 			f.setTotalEconomyTickets(100);
@@ -120,8 +122,8 @@ public class FlightData {
 			f.setFlightName("CW 201");
 			f.setDeparture("Washington");
 			f.setDestination("New Delhi");
-			f.setDepartureDate("20161010");
-			f.setAchieveDate("20161011");
+			f.setDepartureDate(Config.DEPARTURE_DATE);
+			f.setAchieveDate(Config.DEPARTURE_DATE);
 			f.setTotalBusinessTickets(100);
 			f.setTotalFirstTickets(100);
 			f.setTotalEconomyTickets(100);
@@ -131,31 +133,31 @@ public class FlightData {
 			flight.add(f);
 		} else if(ServerImpl4.SERVER_NAME[2].equals(name)) {
 			Flight f = new Flight();
-			f.setFlightName("CN 101");
-			f.setDeparture("New Delhi");
-			f.setDestination("Washington");
-			f.setDepartureDate("20161010");
-			f.setAchieveDate("20161011");
-			f.setTotalBusinessTickets(100);
-			f.setTotalFirstTickets(100);
-			f.setTotalEconomyTickets(100);
-			f.setRecordID(++recordID);
-//			for(int i=0;i<10;i++)
-//				f.sellTicket(Flight.FIRST_CLASS, true);
-			flight.add(f);
-			
-			f = new Flight();
 			f.setFlightName("CN 201");
 			f.setDeparture("New Delhi");
 			f.setDestination("Montreal");
-			f.setDepartureDate("20161010");
-			f.setAchieveDate("20161011");
+			f.setDepartureDate(Config.DEPARTURE_DATE);
+			f.setAchieveDate(Config.DEPARTURE_DATE);
 			f.setTotalBusinessTickets(100);
 			f.setTotalFirstTickets(100);
 			f.setTotalEconomyTickets(100);
 			f.setRecordID(++recordID);
 //			for(int i=0;i<10;i++)
 //				f.sellTicket(Flight.BUSINESS_CLASS, true);
+			flight.add(f);
+			
+			f = new Flight();
+			f.setFlightName("CN 101");
+			f.setDeparture("New Delhi");
+			f.setDestination("Washington");
+			f.setDepartureDate(Config.DEPARTURE_DATE);
+			f.setAchieveDate(Config.DEPARTURE_DATE);
+			f.setTotalBusinessTickets(100);
+			f.setTotalFirstTickets(100);
+			f.setTotalEconomyTickets(100);
+			f.setRecordID(++recordID);
+//			for(int i=0;i<10;i++)
+//				f.sellTicket(Flight.FIRST_CLASS, true);
 			flight.add(f);
 		}
 		
