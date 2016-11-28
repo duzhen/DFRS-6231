@@ -445,28 +445,30 @@ public class ServerImplZhen {//extends ServerInterfacePOA {
 			}
 		}
 		if(!find) {
-			Flight f = new Flight();
-			f.setRecordID(recordID);
-			if(Flight.DEPARTURE.equals(fieldName)) {
-				f.setDeparture(newValue);
-			} else if(Flight.DATE.equals(fieldName)) {
-				f.setDepartureDate(newValue);
-			} else if(Flight.DESTINATION.equals(fieldName)) {
-				f.setDestination(newValue);
-			} else if(Flight.F_SEATS.equals(fieldName)) {
-				f.setTotalFirstTickets(Integer.valueOf(newValue));
-			} else if(Flight.B_SEATS.equals(fieldName)) {
-				f.setTotalBusinessTickets(Integer.valueOf(newValue));
-			} else if(Flight.E_SEATS.equals(fieldName)) {
-				f.setTotalEconomyTickets(Integer.valueOf(newValue));
-			}
-			FlightData.getInstance().addNewFlight(server, f);
-			r = true;
-			info = "ADD Flight Record Success, Thank you!";
-			s = "["+server+"]-"+"Can't Find Record Create A New One:" + f.toString();
-			System.out.println(s);
-			Log.i(LOG_PATH, s);
-			Utils.printFlight(this.server);
+//			Flight f = new Flight();
+//			f.setRecordID(recordID);
+//			if(Flight.DEPARTURE.equals(fieldName)) {
+//				f.setDeparture(newValue);
+//			} else if(Flight.DATE.equals(fieldName)) {
+//				f.setDepartureDate(newValue);
+//			} else if(Flight.DESTINATION.equals(fieldName)) {
+//				f.setDestination(newValue);
+//			} else if(Flight.F_SEATS.equals(fieldName)) {
+//				f.setTotalFirstTickets(Integer.valueOf(newValue));
+//			} else if(Flight.B_SEATS.equals(fieldName)) {
+//				f.setTotalBusinessTickets(Integer.valueOf(newValue));
+//			} else if(Flight.E_SEATS.equals(fieldName)) {
+//				f.setTotalEconomyTickets(Integer.valueOf(newValue));
+//			}
+//			FlightData.getInstance().addNewFlight(server, f);
+//			r = true;
+//			info = "ADD Flight Record Success, Thank you!";
+//			s = "["+server+"]-"+"Can't Find Record Create A New One:" + f.toString();
+//			System.out.println(s);
+//			Log.i(LOG_PATH, s);
+//			Utils.printFlight(this.server);
+			r = false;
+			info = "Edit Failed, No Flight!";
 		}
 		result.success = r;
 		result.content=info;

@@ -81,12 +81,13 @@ public class ServerImpl2 extends ServerInterfacePOA {
 			departure = StartNewDelhiServer.SERVER_NAME;
 		}
 		if(index == -1) {
-			value[0] = departure;
-			value[1] = "";
-			value[2] = Config.DATE;
-			seats[0] = 0;
-			seats[1] = 0;
-			seats[2] = 0;
+			return Config.FAIL;
+//			value[0] = departure;
+//			value[1] = "";
+//			value[2] = Config.DATE;
+//			seats[0] = 0;
+//			seats[1] = 0;
+//			seats[2] = 0;
 		} else {
 			FlightRecord record = impl.getRecordsByIndex(index);
 			value[0] = record.getDeparture();
