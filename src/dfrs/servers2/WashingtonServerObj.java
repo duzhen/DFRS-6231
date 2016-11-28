@@ -23,7 +23,7 @@ public class WashingtonServerObj extends BaseObj {
  
 	private DatagramSocket aSocket;
 	private HashMap<Character, ArrayList<PassengerRecord>> passengerRecordsMap;
-	private ArrayList<FlightRecord> flightRecords;
+//	private ArrayList<FlightRecord> flightRecords;
 	private int bookedCount = 0;
 
 	public WashingtonServerObj() {
@@ -177,10 +177,14 @@ public class WashingtonServerObj extends BaseObj {
 		String countMTL = send("", "localhost", ServerInfo.getServerMaps().get("Montreal"));
 		String countNDL = send("", "localhost", ServerInfo.getServerMaps().get("NewDelhi"));
 		StringBuilder sb = new StringBuilder();
-		sb.append("MTL" +  countMTL + "\n");
-		sb.append("WST" + bookedCount + "\n");
-		sb.append("NDL" + countNDL + "\n");
-		
+		//EDIT
+		sb.append("MTL$" +  countMTL + "$");
+		sb.append("WST$" + bookedCount + "$");
+		sb.append("NDL$" + countNDL + "$");
+//		sb.append("MTL" +  countMTL + "\n");
+//		sb.append("WST" + bookedCount + "\n");
+//		sb.append("NDL" + countNDL + "\n");
+		//END
 		String ts = new Date().toString();
 		String who = "Manager";
 		String operation = "count the number of all the flight records";
@@ -280,18 +284,18 @@ public class WashingtonServerObj extends BaseObj {
 		}
 		return -1;
 	}
-
-	private int findFlightRecordsByID(String recordID) {
-		for (FlightRecord fr : flightRecords) {
-			if (fr != null) {
-				if (fr.getRecordID().equals(recordID)) {
-					return flightRecords.indexOf(fr);
-				}
-			}
-
-		}
-		return -1;
-	}
+//EDIT MOVE TO BASE
+//	private int findFlightRecordsByID(String recordID) {
+//		for (FlightRecord fr : flightRecords) {
+//			if (fr != null) {
+//				if (fr.getRecordID().equals(recordID)) {
+//					return flightRecords.indexOf(fr);
+//				}
+//			}
+//
+//		}
+//		return -1;
+//	}
 
 	private int[] findPassengerRecordByID(String passengerID) {
 		int[] result = { -1, -1 };

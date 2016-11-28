@@ -135,11 +135,11 @@ public class Utils {
         if(Pattern.compile(pat).matcher(input).matches()) {
         	return BaseServerCluster.SERVER_MTL;
         }
-        pat = "(WST|WDC|wst|Washington|washtington)" ;
+        pat = "(WST|WDC|wst|Washington|washington)" ;
         if(Pattern.compile(pat).matcher(input).matches()) {
         	return BaseServerCluster.SERVER_WST;
         }
-		pat = "(NDL|ndl|New Delhi|new Delhi|new delhi|New delhi)" ;
+		pat = "(NDL|ndl|New Delhi|new Delhi|new delhi|New delhi|NewDelhi)" ;
 		if(Pattern.compile(pat).matcher(input).matches()) {
         	return BaseServerCluster.SERVER_NDL;
         }
