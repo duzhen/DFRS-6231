@@ -113,7 +113,7 @@ public class PassengerClient {
 					throw new Exception();
 				}
 			} catch (Exception e) {
-				System.out.println("Invalid Input, please enter Date like 20161010\n");
+				System.out.println("Invalid Input, please enter Date like 2016/12/25\n");
 				valid = false;
 				keyboard.nextLine();
 			}

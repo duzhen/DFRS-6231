@@ -65,7 +65,7 @@ public class Utils {
 	}
 	
 	public static boolean validDate(String input) {
-		String pat = "\\d{8}" ;
+		String pat = "\\d{4}(/)\\d{2}(/)\\d{2}" ;
         Pattern p = Pattern.compile(pat) ;
         Matcher m = p.matcher(input) ;
         return m.matches();

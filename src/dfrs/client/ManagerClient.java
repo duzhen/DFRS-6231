@@ -61,9 +61,10 @@ public class ManagerClient {
 		String m3 = "3. Economy Class";
 		String m4 = "4. ALL";
 		System.out.println(m);
-		System.out.println(m1);
-		System.out.println(m2);
-		System.out.println(m3);
+//not all members getBookFlightCount by type, so default is ALL
+//		System.out.println(m1);
+//		System.out.println(m2);
+//		System.out.println(m3);
 		System.out.println(m4);
 		String s = "-"+managerName + " Choose ";
 		
@@ -123,9 +124,10 @@ public class ManagerClient {
 					"5. Business Class seats",
 					"6. Economy Class seats"};
 		System.out.println(m[0]);
-		System.out.println(m[1]);
-		System.out.println(m[2]);
-		System.out.println(m[3]);
+//Not all members implemented edit Departure, date, destination, so only edit seats
+//		System.out.println(m[1]);
+//		System.out.println(m[2]);
+//		System.out.println(m[3]);
 		System.out.println(m[4]);
 		System.out.println(m[5]);
 		System.out.println(m[6]);
@@ -177,7 +179,7 @@ public class ManagerClient {
 							throw new Exception();
 						}
 					} catch (Exception e) {
-						System.out.println("Invalid Input, please enter Date like 20161010\n");
+						System.out.println("Invalid Input, please enter Date like 2016/12/25\n");
 						valid = false;
 						keyboard.nextLine();
 					}
