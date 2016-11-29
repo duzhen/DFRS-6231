@@ -9,12 +9,12 @@ public class Config {
 	private static final String FE_HOST = "KAIBAB";
 	//RM
 	private static final String RM_HOST_1 = "JENA";
-	private static final String RM_HOST_2 = "JICARILLA";
+	private static final String RM_HOST_2 = "KAWEENAW";//"JICARILLA";
 	private static final String RM_HOST_3 = "KAIBAB";
 	private static final String RM_HOST_4 = "LUMMI";//"KALISPEL";
 	//SERVER
 	private static final String SERVER_HOST_1 = "JENA";
-	private static final String SERVER_HOST_2 = "JICARILLA";
+	private static final String SERVER_HOST_2 = "KAWEENAW";//"JICARILLA";
 	private static final String SERVER_HOST_3 = "KAIBAB";
 	private static final String SERVER_HOST_4 = "LUMMI";//"KALISPEL";
 	//SEQUENCER
