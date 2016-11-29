@@ -1,7 +1,7 @@
 package dfrs.utils;
 
 public class Config {
-	public static final boolean TEST = true;
+	public static final boolean TEST = false;
 	public static final String DEPARTURE_DATE = "2016/12/25";
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "fail";
@@ -11,12 +11,12 @@ public class Config {
 	private static final String RM_HOST_1 = "JENA";
 	private static final String RM_HOST_2 = "JICARILLA";
 	private static final String RM_HOST_3 = "KAIBAB";
-	private static final String RM_HOST_4 = "KALISPEL";
+	private static final String RM_HOST_4 = "LUMMI";//"KALISPEL";
 	//SERVER
 	private static final String SERVER_HOST_1 = "JENA";
 	private static final String SERVER_HOST_2 = "JICARILLA";
 	private static final String SERVER_HOST_3 = "KAIBAB";
-	private static final String SERVER_HOST_4 = "KALISPEL";
+	private static final String SERVER_HOST_4 = "LUMMI";//"KALISPEL";
 	//SEQUENCER
 	private static final String SE_HOST = "KAIBAB";
 	public static final int SE_RECEIVER_FE_UDP_PROT = 8888;
