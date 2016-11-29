@@ -208,7 +208,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 		  }
 		  
 		 clientThread cTone= new clientThread(portone,query);//need to change port number and get the result in the thread
-    	 clientThread cTtwo= new clientThread(porttwo,query);//可以通过设置pot1,port2在初始化serverimpl的之后设置
+    	 clientThread cTtwo= new clientThread(porttwo,query);
 	    	
 	     try {
 				Thread.sleep(200);
@@ -304,6 +304,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 //			 6791 6792 WST
 //			 6793 6794 NDL 
 			//lastName.substring(0, 1).toCharArray()[0];
+			String keyManager = pasRectrans.destination+pasRectrans.flightDate ;
 			if(OtherCity.equals("MTL"))
 			{
 				transmodule tR = new transmodule(6789 ,pasRectrans );
@@ -312,6 +313,18 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 					{
 						recordTable.get(pasRectrans.lastName.substring(0, 1).toCharArray()[0]).recordList.remove(pasRectrans);
 					}
+					
+					if("economy".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).economyLeft++;
+					}else if("business".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).businessLeft++;
+					}else if("firstclass".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).businessLeft++;
+					}
+					
 					System.out.println("remove"+6789);
 					return "MTL  transfer succeed";
 				}
@@ -325,6 +338,18 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 					{
 						recordTable.get(pasRectrans.lastName.substring(0, 1).toCharArray()[0]).recordList.remove(pasRectrans);
 					}
+					
+					if("economy".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).economyLeft++;
+					}else if("business".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).businessLeft++;
+					}else if("firstclass".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).businessLeft++;
+					}
+					
 					System.out.println("remove"+6791);
 					System.out.println(recordTable.get(pasRectrans.lastName.substring(0, 1).toCharArray()[0]).recordList.size()); 
 					return "WST transfer succeed";
@@ -339,6 +364,19 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 					{
 						recordTable.get(pasRectrans.lastName.substring(0, 1).toCharArray()[0]).recordList.remove(pasRectrans);
 					}
+					
+					
+					if("economy".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).economyLeft++;
+					}else if("business".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).businessLeft++;
+					}else if("firstclass".equals(pasRectrans.flightClass))
+					{
+						planeMap.get(keyManager).businessLeft++;
+					}
+					
 					System.out.println("remove"+6793);
 				return "NDL  transfer succeed";
 				}
