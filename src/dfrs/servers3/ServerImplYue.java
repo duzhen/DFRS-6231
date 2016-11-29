@@ -216,7 +216,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 				e.printStackTrace();
 			}
 
-	     String bookedcount = "MTL$" + query.MTL + "$NDL$"+ query.NDL + "$WST$" + query.WST + "$";
+	     String bookedcount = "MTL$" + query.MTL +  "$WST$" + query.WST + "$NDL$"+ query.NDL +"$";
 		 return bookedcount;
 	}
 

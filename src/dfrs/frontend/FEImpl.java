@@ -161,6 +161,19 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     String[] RMReply = new String[4];
 	     
 	     //ArrayList<Integer> crashList = new ArrayList<Integer>();
+	     //print all result
+	     
+	     for(int i=0;i<CC.recordCount.length;i++)
+	     {
+	    	 for(int j=0;j<CC.recordCount[0].length;j++)
+	    	 {
+		    	 System.out.print(CC.recordCount[i][j]+" ");
+		    	 //crashList.add(i);
+		    	 //RMReply[i]= "crash";
+		     }
+	    	 System.out.println(" ");
+	     }
+	     
 	     for(int i=0;i<CC.recordCount.length;i++)
 	     {
 	    	 if(CC.recordCount[i][0]==-1)
@@ -175,22 +188,22 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     
 	     for(int i=0;i<CC.recordCount[0].length;i++)
 	     {
-	    	 CM1=Integer.toString(CC.recordCount[0][i])+"$";
+	    	 CM1=CM1+ Integer.toString(CC.recordCount[0][i])+"$";
 	     }
 	     
 	     for(int i=0;i<CC.recordCount[0].length;i++)
 	     {
-	    	 CM2=Integer.toString(CC.recordCount[1][i])+"$";
+	    	 CM2=CM2+ Integer.toString(CC.recordCount[1][i])+"$";
 	     }
 	     
 	     for(int i=0;i<CC.recordCount[0].length;i++)
 	     {
-	    	 CM3=Integer.toString(CC.recordCount[2][i])+"$";
+	    	 CM3=CM3+Integer.toString(CC.recordCount[2][i])+"$";
 	     }
 	     
 	     for(int i=0;i<CC.recordCount[0].length;i++)
 	     {
-	    	 CM4=Integer.toString(CC.recordCount[3][i])+"$";
+	    	 CM4=CM4+Integer.toString(CC.recordCount[3][i])+"$";
 	     }
 	     
 	     HashMap<String,Integer> hCount = new HashMap<String,Integer>();
@@ -199,23 +212,27 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     {
 	    	 hCount.put(CM1, 1);
 	     }
+	     
 	     if(!"crash".equals(RMReply[1])){
 		     if(hCount.containsKey(CM2)){
-		    	 hCount.put(CM2,( hCount.get(CM2)+1));
+		    	 int sum=hCount.get(CM2)+1;
+		    	 hCount.put(CM2,sum);
 		     }else{
 		    	 hCount.put(CM2, 1);
 		     }
 	     }
 	     if(!"crash".equals(RMReply[2])){
 		     if(hCount.containsKey(CM3)){
-		    	 hCount.put(CM3,( hCount.get(CM3)+1));
+		    	 int sum=hCount.get(CM3)+1;
+		    	 hCount.put(CM3,sum);
 		     }else{
 		    	 hCount.put(CM3, 1);
 		     }
 	     }
 	     if(!"crash".equals(RMReply[3])){
 		     if(hCount.containsKey(CM4)){
-		    	 hCount.put(CM4,( hCount.get(CM4)+1));
+		    	 int sum=hCount.get(CM4)+1;
+		    	 hCount.put(CM4,sum);
 		     }else{
 		    	 hCount.put(CM4, 1);
 		     }
@@ -233,6 +250,8 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     }  
 	     
 	     String RMMessage="";
+	     String[] answerSplit = answer.split("\\$");
+	     answer = "MTL "+answerSplit[0] + " WST "+answerSplit[1] +" NDL "  +answerSplit[2]; 
 	     
 	     if("crash".equals(RMReply[0])){
 	     RMMessage=RMMessage+"crash"+"$"+0+"$" ;
