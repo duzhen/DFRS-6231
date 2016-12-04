@@ -226,7 +226,7 @@ public class ServerImpl3 extends ServerInterfacePOA implements IServerManager {
 	@Override
 	public String transferReservation(String managerID, String passengerID, String currentCity, String otherCity) {
 		String c = Utils.getServer(currentCity);
-		String o = Utils.getServer(currentCity);
+		String o = Utils.getServer(otherCity);
 		if(BaseServerCluster.SERVER_MTL.equals(c)) {
 			currentCity = "MTL";
 		} else if(BaseServerCluster.SERVER_WST.equals(c)) {
@@ -253,6 +253,7 @@ public class ServerImpl3 extends ServerInterfacePOA implements IServerManager {
 	public void shutdown() {
 		sTone.shutdown();
 		sTtwo.shutdown();
+		GenerateID.getInstance().clearID();
 	}
 
 	@Override

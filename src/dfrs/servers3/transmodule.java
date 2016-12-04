@@ -33,7 +33,8 @@ public class transmodule {
 						+"$"+pR.phoneNumber
 						+"$"+pR.destination
 						+"$"+pR.flightClass
-						+"$"+pR.flightDate+"$";
+						+"$"+pR.flightDate
+						+"$"+pR.RecordID+"$";
 				byte [] m = t.getBytes();
 				InetAddress aHost = InetAddress.getByName("localhost");
 				DatagramPacket request =

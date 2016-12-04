@@ -36,7 +36,7 @@ public class serverThread  extends Thread implements IServerManager {
  				
  				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
   				aSocket.receive(request);     
-  				String receiver =new String(request.getData()).trim();
+  				String receiver =new String(request.getData(), 0, request.getLength()).trim();
   				System.out.println("receiver is " + receiver);
   				
   				if(receiver.charAt(0)== '1') //getbookednumber
@@ -66,7 +66,7 @@ public class serverThread  extends Thread implements IServerManager {
   					System.out.println("going to the second");
   					passengerRecord record = new passengerRecord();
   					//EDIT
-  					record.RecordID=++serverIm.counter;
+//  					record.RecordID=++serverIm.counter;
   					//END
   					int j =1;
   					int cal=0;
@@ -92,6 +92,9 @@ public class serverThread  extends Thread implements IServerManager {
   									cal++;
   								}else if(cal==6){
   									record.flightDate = receiver.substring(j+1,i);
+  									cal++;
+  								}else if(cal==7) {
+  									record.RecordID = Integer.valueOf(receiver.substring(j+1,i));
   									cal++;
   								}
   								j=i;

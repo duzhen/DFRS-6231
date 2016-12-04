@@ -9,7 +9,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 	public String location = "";
 	public int portone=0;
 	public int porttwo=0;
-	public int counter=0;
+//	public int counter=0;
 	
 //	public ServerImplYue(String new_location, int new_portone,int new_porttwo) {
 //		super();
@@ -24,7 +24,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 		passengerRecord record = new passengerRecord();
 		Character lNameFLetter = lastName.substring(0, 1).toCharArray()[0];
 		//EDIT
-		record.RecordID=++counter;
+//		record.RecordID=0;//++counter;
 		record.firstName = firstName;
 		record.lastName = lastName;
 		record.address =address;
@@ -49,6 +49,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 							}
 							synchronized(recordTable.get(lNameFLetter).recordList)
 							{
+								record.RecordID = GenerateID.getInstance().getPassengerID();
 								recordTable.get(lNameFLetter).recordList.add(record);
 							
 								//thread concurrency test case
@@ -73,6 +74,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 							}
 							synchronized(recordTable.get(lNameFLetter).recordList)
 							{
+								record.RecordID = GenerateID.getInstance().getPassengerID();
 								recordTable.get(lNameFLetter).recordList.add(record);
 							}
 							return "success adding"+record.lastName;
@@ -86,6 +88,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 							}
 							synchronized(recordTable.get(lNameFLetter).recordList)
 							{
+								record.RecordID = GenerateID.getInstance().getPassengerID();
 								recordTable.get(lNameFLetter).recordList.add(record);
 							}
 							return "success adding"+record.lastName;
@@ -116,6 +119,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 							}
 							synchronized(recordTable.get(lNameFLetter).recordList)
 							{
+								record.RecordID = GenerateID.getInstance().getPassengerID();
 								recordTable.get(lNameFLetter).recordList.add(record);
 							
 								//thread concurrency test case
@@ -139,6 +143,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 							}
 							synchronized(recordTable.get(lNameFLetter).recordList)
 							{
+								record.RecordID = GenerateID.getInstance().getPassengerID();
 								recordTable.get(lNameFLetter).recordList.add(record);
 							}
 							return "success adding"+record.lastName;
@@ -152,6 +157,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 							}
 							synchronized(recordTable.get(lNameFLetter).recordList)
 							{
+								record.RecordID = GenerateID.getInstance().getPassengerID();
 								recordTable.get(lNameFLetter).recordList.add(record);
 							}
 							return "success adding"+record.lastName;
@@ -278,6 +284,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 					{
 						if(pid == a.recordList.get(i).RecordID)
 						{
+							System.out.println("*************************"+a.recordList.get(i).toString());
 							return a.recordList.get(i);
 						}
 					}
@@ -297,6 +304,10 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 		if(pasRectrans == null){
 			return "the record is not found.";
 		}else{
+			if(pasRectrans.destination.equals(OtherCity)) {
+				System.out.println("****DES:"+pasRectrans.destination+"-Other:"+OtherCity);
+				return "fail";
+			}
 //			 6789 6790 MTL
 //			 6791 6792 WST
 //			 6793 6794 NDL 
