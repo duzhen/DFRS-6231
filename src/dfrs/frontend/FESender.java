@@ -1,4 +1,4 @@
-package dfrs.replicamanager;
+package dfrs.frontend;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,17 +10,17 @@ import java.util.Map;
 
 import net.rudp.ReliableSocket;
 
-class RMSender {
-	private static RMSender instance;
+public class FESender {
+	private static FESender instance;
 	private HashMap<String,ReliableSocket> clientSockets;
 	
-	private RMSender() {
+	private FESender() {
 		clientSockets = new HashMap<String,ReliableSocket>();
 	}
 
-	public static synchronized RMSender getInstance() {
+	public static synchronized FESender getInstance() {
 		if (instance == null) {
-			instance = new RMSender();
+			instance = new FESender();
 		}
 		return instance;
 	}
@@ -39,6 +39,19 @@ class RMSender {
 				}
 			}
 		}
+	}
+	
+	public synchronized ReliableSocket getSocket(String host, int port) {
+		ReliableSocket socket = clientSockets.get(host + port);
+		if (socket == null || socket.isClosed()) {
+			try {
+				socket = new ReliableSocket(host, port);
+				clientSockets.put(host + port, socket);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return socket;
 	}
 	
 	public synchronized String send(String host, int port, String content) {

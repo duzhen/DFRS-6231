@@ -5,6 +5,7 @@ import java.util.HashMap;
 import dfrs.ServerInterfacePOA;
 import dfrs.net.Client;
 import dfrs.utils.Config;
+import net.rudp.ReliableSocket;
 
 
 public class FEImpl  extends ServerInterfacePOA  {
@@ -42,7 +43,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 	}
 	
 	@Override
-	public String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
+	public synchronized String bookFlight(String departure, String firstName, String lastName, String address, String phoneNumber,
 			String destination, String flightDate, String flightClass) {
 		String content ="1"+"$"+departure
 				+"$"+firstName
@@ -53,9 +54,9 @@ public class FEImpl  extends ServerInterfacePOA  {
 				+"$"+flightDate
 				+"$"+flightClass+"$";
 		
-		System.out.println("client "+port+" connect string");
-		System.out.println(content);
-        Client client = new Client(host, port, content);
+		System.out.println("Request:"+content);
+		ReliableSocket socket = FESender.getInstance().getSocket(host, port);
+        Client client = new Client(socket, content);
         client.run();
         try {
 			client.join();
@@ -70,7 +71,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 				e.printStackTrace();
 		}
 	     for(int i=0;i<CR.CM.length;i++){
-	    	 if(CR.CM[i].equals("")){
+	    	 if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
 		    	 System.out.println("CR.CM"+i+" crash");
 		    	 crashCount++;
 		     }
@@ -100,7 +101,7 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("fail")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
+    		     }else if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
     		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
@@ -118,7 +119,7 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("success")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
+    		     }else if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
     		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
@@ -133,13 +134,13 @@ public class FEImpl  extends ServerInterfacePOA  {
 	}
 
 	@Override
-	public String getBookedFlightCount(String managerID, String recordType) {
+	public synchronized String getBookedFlightCount(String managerID, String recordType) {
 		String content ="3"+"$"+managerID
 				+"$"+recordType+"$";
 		
-		System.out.println("client "+port+" connect string");
-		System.out.println(content);
-        Client client = new Client(host, port, content);
+		System.out.println("Request:"+content);
+		ReliableSocket socket = FESender.getInstance().getSocket(host, port);
+        Client client = new Client(socket, content);
         client.run();
         try {
 			client.join();
@@ -251,7 +252,10 @@ public class FEImpl  extends ServerInterfacePOA  {
 	     
 	     String RMMessage="";
 	     String[] answerSplit = answer.split("\\$");
-	     answer = "MTL "+answerSplit[0] + " WST "+answerSplit[1] +" NDL "  +answerSplit[2]; 
+	     if(answerSplit.length<3) {
+	    	 System.out.println("answer:"+answer);
+	     }
+	     String reply = "MTL "+answerSplit[0] + ",WST "+answerSplit[1] +",NDL "  +answerSplit[2]; 
 	     
 	     if("crash".equals(RMReply[0])){
 	     RMMessage=RMMessage+"crash"+"$"+0+"$" ;
@@ -300,12 +304,12 @@ public class FEImpl  extends ServerInterfacePOA  {
             	 }
              }
 
-    	 return answer;
+    	 return reply;
 
 	}
 
 	@Override
-	public String editFlightRecord(String managerID, String recordID, String fieldName, String newValue) {
+	public synchronized String editFlightRecord(String managerID, String recordID, String fieldName, String newValue) {
 		//EDIT
 		String content ="2"+"$"+managerID
 				+"$"+recordID
@@ -320,9 +324,9 @@ public class FEImpl  extends ServerInterfacePOA  {
 //				+"$"+Integer.toString(business)
 //				+"$"+Integer.toString(firstclass)+"$";
 		//END
-		System.out.println("client "+port+" connect string");
-		System.out.println(content);
-        Client client = new Client(host, port, content);
+		System.out.println("Request:"+content);
+		ReliableSocket socket = FESender.getInstance().getSocket(host, port);
+        Client client = new Client(socket, content);
         client.run();
         try {
 			client.join();
@@ -332,13 +336,13 @@ public class FEImpl  extends ServerInterfacePOA  {
 		}
         
 	     try {
-				Thread.sleep(2000);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		 }
 	     //begin to receive
 	     for(int i=0;i<CR.CM.length;i++){
-	    	 if(CR.CM[i].equals("")){
+	    	 if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
 		    	 System.out.println("CR.CM"+i+" crash");
 		    	 crashCount++;
 		     }
@@ -368,7 +372,7 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("fail")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
+    		     }else if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
     		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
@@ -386,7 +390,7 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("success")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
+    		     }else if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
     		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
@@ -401,15 +405,15 @@ public class FEImpl  extends ServerInterfacePOA  {
 	}
 
 	@Override
-	public String transferReservation(String managerID, String passengerID, String currentCity, String otherCity) {
+	public synchronized String transferReservation(String managerID, String passengerID, String currentCity, String otherCity) {
 		String content ="4"+"$"+managerID
 				+"$"+passengerID
 				+"$"+currentCity
 				+"$"+otherCity+"$";
 		
-		System.out.println("client "+port+" connect string");
-		System.out.println(content);
-        Client client = new Client(host, port, content);
+		System.out.println("Request:"+content);
+		ReliableSocket socket = FESender.getInstance().getSocket(host, port);
+        Client client = new Client(socket, content);
         client.run();
         try {
 			client.join();
@@ -424,7 +428,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 				e.printStackTrace();
 		}
 	     for(int i=0;i<CR.CM.length;i++){
-	    	 if(CR.CM[i].equals("")){
+	    	 if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
 		    	 System.out.println("CR.CM"+i+" crash");
 		    	 crashCount++;
 		     }
@@ -454,7 +458,7 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("fail")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
+    		     }else if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
     		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
@@ -472,7 +476,7 @@ public class FEImpl  extends ServerInterfacePOA  {
     	    		 RMMessage=RMMessage+"correct"+"$"+Integer.toString(i)+"$" ;
     		     }else if(CR.CM[i].equals("success")){
     		    	 RMMessage=RMMessage+"wrong"+"$"+Integer.toString(i)+"$" ;
-    		     }else if(CR.CM[i].equals("")){
+    		     }else if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
     		    	 RMMessage=RMMessage+"crash"+"$"+Integer.toString(i)+"$" ;
     		     }
     	     }
@@ -486,7 +490,7 @@ public class FEImpl  extends ServerInterfacePOA  {
 		return "WRONG END";
 	}
 	
-	private void clear(){
+	private synchronized void clear(){
 		successCount=0;
 		failCount=0;
 		crashCount=0;

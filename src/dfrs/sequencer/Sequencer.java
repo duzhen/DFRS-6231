@@ -47,7 +47,7 @@ public class Sequencer extends Thread {
                 sb.insert(2, counter);
                 content = sb.toString();
                 counter++;
-                System.out.println("sequence Server: "+content);
+                System.out.println("Receive Request: "+content);
                 
               //open four connection with the four clusterManager and send content
                 SE2CMMulticast mc = new SE2CMMulticast(content);

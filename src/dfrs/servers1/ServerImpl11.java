@@ -1,25 +1,26 @@
-package dfrs.servers4;
+package dfrs.servers1;
 
 import dfrs.ServerInterfacePOA;
 import dfrs.servers.IServerManager;
+import dfrs.servers4.Result;
 import dfrs.utils.Config;
 
-public class ServerImpl4 extends ServerInterfacePOA implements IServerManager {
+public class ServerImpl11 extends ServerInterfacePOA implements IServerManager {
 
 	public static final String[] SERVERS = new String[] {"Montreal","Washington","New Delhi"};
 	public static final String[] SERVER_NAME = {"MTL","WST","NDL"};
-	public static final int[] UDP_PORT_NUM = {3020,3021,3022};
-	public static final int[] T_UDP_PORT_NUM = {4020,4021,4022};
+	public static final int[] UDP_PORT_NUM = {2001,2002,2003};
+	public static final int[] T_UDP_PORT_NUM = {2004,2005,2006};
 	
-	private ServerImplZhen imple;
+	private ServerImpl imple;
 	
-	public ServerImpl4(int i) {
-		imple = new ServerImplZhen(SERVER_NAME[i], SERVERS[i],
+	public ServerImpl11(int i) {
+		imple = new ServerImpl(SERVER_NAME[i], SERVERS[i],
 				UDP_PORT_NUM[i], T_UDP_PORT_NUM[i]);
 	}
 	
 	public static ServerInterfacePOA getServerImpl(int i) {
-		return new ServerImpl4(i);
+		return new ServerImpl11(i);
 	}
 	
 	@Override

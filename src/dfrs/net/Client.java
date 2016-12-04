@@ -13,17 +13,20 @@ public class Client extends Thread{
     String host;
     int port;
     String content;
-    
-    public Client(String host, int port, String content){
-        this.host = host;
-        this.port = port;
-        this.content = content;
-    }
-        
+    private ReliableSocket clientSocket;
+//    public Client(String host, int port, String content){
+//        this.host = host;
+//        this.port = port;
+//        this.content = content;
+//    }
+    public Client(ReliableSocket clientSocket, String content) {
+		this.clientSocket = clientSocket;
+		this.content = content;
+	}  
      @Override
     public void run(){
     try {
-        ReliableSocket clientSocket = new ReliableSocket(host, port);
+//        ReliableSocket clientSocket = new ReliableSocket(host, port);
         ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
         PrintWriter outputBuffer = new PrintWriter(outToServer);
         outputBuffer.println(content);
@@ -31,10 +34,7 @@ public class Client extends Thread{
         
         // message receive from server
         BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        System.out.println("Client receive the reply: " + inFromServer.readLine());
-
-        clientSocket.close();
-
+        System.out.println("Receive Sequencer Reply: " + inFromServer.readLine());
     } catch (IOException ex) {
 
     }

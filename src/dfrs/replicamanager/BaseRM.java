@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -146,13 +145,13 @@ public abstract class BaseRM {
 	
 	private boolean correctData(String id, int n) {
 		//Correct
-		if(Config.TEST) {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		if(Config.TEST) {
+//			try {
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		//edit book,edit is easy, get data log from others than use a special corba interface/HB piggyback insert data directly
 		//edit transfer is hard, failed need transfer again, success but should faild need reback
 		/**BUT WE NEEDN'T IMPLEMENT**/
@@ -162,13 +161,7 @@ public abstract class BaseRM {
 	}
 	
 	private boolean recoveryData() {
-		//Do recovery job
-		List<String> logs = loadLogs(getLogFileName());
-		for(String request: logs) {
-			cluster.processRequest(request, Config.getFeHost(), getS2FEport(), true);
-		}
-		
-//		cluster.recoveryData();
+		cluster.recoveryData();
 		System.out.println("RM"+getRMName()+" finish recovery");
 		return true;
 	}
@@ -179,7 +172,7 @@ public abstract class BaseRM {
 			return result;
 		String[] params = content.split("\\$");
 		int n = Integer.valueOf(getRMName());
-		if(params.length>=2*n+1) {
+		if(params.length>=2*n) {
 			if("correct".equals(params[2*(n-1)])) {
 				
 			} else if("wrong".equals(params[2*(n-1)])) {
@@ -201,17 +194,19 @@ public abstract class BaseRM {
 	
 	private String recoveringServer() {
 		String result;
-		result = sendCommandToServer(STATE_RECOVERING);
-		if(STATE_RECOVERING.equals(result)) {
-			state.setRMState(STATE_RECOVERING);
-			state.initAliveTime();
-			state.initError();
-			System.out.println("RM"+getRMName()+"-" + STATE_RECOVERING);
-			cluster.updateCorbaClient(BaseServerCluster.SERVERS);
-			if(recoveryData()) {
-				result = sendCommandToServer(STATE_RUNNING);
-				if(STATE_RUNNING.equals(result)) {
-					state.setRMState(STATE_RUNNING);
+		synchronized (state) {
+			result = sendCommandToServer(STATE_RECOVERING);
+			if(STATE_RECOVERING.equals(result)) {
+				state.setRMState(STATE_RECOVERING);
+				state.initAliveTime();
+				state.initError();
+				System.out.println("RM"+getRMName()+"-" + STATE_RECOVERING);
+				cluster.updateCorbaClient(BaseServerCluster.SERVERS);
+				if(recoveryData()) {
+					result = sendCommandToServer(STATE_RUNNING);
+					if(STATE_RUNNING.equals(result)) {
+						state.setRMState(STATE_RUNNING);
+					}
 				}
 			}
 		}
@@ -257,13 +252,21 @@ public abstract class BaseRM {
 			}
 			return result;
 		}
-		while(!state.getRMState().equals(STATE_RUNNING)) {
-			continue;
-		}
-		if("FE".equals(source)) {
-			result = processFECommand(content);
-		} else if("SE".equals(source)) {
-			result = cluster.processRequest(content, Config.getFeHost(), getS2FEport(), false);
+//		while(!state.getRMState().equals(STATE_RUNNING)) {
+//			System.out.println("RM DID NOT STATE_RUNNING");
+//			try {
+//				Thread.sleep(2000);
+//			} catch (Exception e1) {
+//				System.out.println(e1.getMessage());
+//			}
+//			continue;
+//		}
+		synchronized (state) {
+			if("FE".equals(source)) {
+				result = processFECommand(content);
+			} else if("SE".equals(source)) {
+				result = cluster.processRequest(content, Config.getFeHost(), getS2FEport());
+			}
 		}
 		return result;
 	}
@@ -326,7 +329,6 @@ public abstract class BaseRM {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
 				ReliableServerSocket[] serverSocket = new ReliableServerSocket[1];
 				while (true) {
 					try {
@@ -353,9 +355,6 @@ public abstract class BaseRM {
 									break;
 								if(content.length() == 0)
 									continue;
-								// save log
-								saveOneLog(getLogFileName(), content);
-								
 				                String reply = processSocketRequest("SE",content);
 				             // message send back to client
 //								ReliableSocketOutputStream outToClient = (ReliableSocketOutputStream) connectionSocket
@@ -495,17 +494,14 @@ public abstract class BaseRM {
 			}
 		}).start();
 	}
-	
-	protected void saveOneLog(String fileName, String log) {
-		Utils.writeLineToFile(fileName, log);
-	}
-	
-	protected List<String> loadLogs(String fileName) {
-		return Utils.readLinesFromFile(fileName);
-	}
- 
+
 	protected void startDemo() {
-		showDemoMenu();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				showDemoMenu();
+			}
+		}).start();
 	}
 	
 	public void showDemoMenu() {
@@ -513,14 +509,23 @@ public abstract class BaseRM {
 		System.out.println("Please select your test item (1-2)");
 		System.out.println("1. Test Software Failure");
 		System.out.println("2. Test Crash Failure");
-		Scanner keyboard = new Scanner(System.in);
-		int choose = Utils.validInputOption(keyboard, 2);
-		if(choose == 1) {
-			cluster.demoFailure();
-		} else if(choose == 2) {
-			sendCommandToServer(BaseServerCluster.CRASH);
+		if(!"3".equals(getRMName()))
+			System.out.println("3. Print Information");
+		while(true) {
+			Scanner keyboard = new Scanner(System.in);
+			int choose = Utils.validInputOption(keyboard, 3);
+			if(choose == 1) {
+				System.out.println("************!!Replica Manager Is In DEMO Model!!************");
+				cluster.demoFailure();
+			} else if(choose == 2) {
+				System.out.println("************!!Replica Manager Shutdown The Servers!!************");
+				sendCommandToServer(BaseServerCluster.CRASH);
+			} else if(choose == 3) {
+				if(!"3".equals(getRMName())) {
+					sendCommandToServer(BaseServerCluster.PRINT);
+					System.out.println("Print at ServerCluster"+getRMName());
+				}
+			}
 		}
 	}
-	
-	
 }

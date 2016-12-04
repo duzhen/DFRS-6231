@@ -90,5 +90,12 @@ public class Ticket implements Serializable {
 	public void setRecordID(int recordID) {
 		this.recordID = recordID;
 	}
+
+	@Override
+	public String toString() {
+		return "Ticket [recordID=" + recordID + ", firstName=" + firstName + ", lastName=" + lastName + ", address="
+				+ address + ", phone=" + phone + ", ticketClass=" + ticketClass + ", departure=" + departure
+				+ ", departureDate=" + departureDate + ", destination=" + destination + "]";
+	}
 	
 }

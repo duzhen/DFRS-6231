@@ -6,11 +6,15 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.HashMap;
 
-public class serverThread  extends Thread{
+import dfrs.servers.IServerManager;
 
+public class serverThread  extends Thread implements IServerManager {
+
+	private boolean running = true;
 	private int port = 0;
 	private ServerImplYue serverIm;
-	private  HashMap<Character,recordLIst> recordTable ; 
+	private  HashMap<Character,recordLIst> recordTable;
+	DatagramSocket aSocket;
 	public serverThread(int new_port,ServerImplYue new_serverIm )
 	{
 		serverIm=new_serverIm;
@@ -22,13 +26,13 @@ public class serverThread  extends Thread{
 	public void run()
 	{
 		 
-    	DatagramSocket aSocket = null;
+//    	DatagramSocket aSocket = null;
 		try{
 	    	aSocket = new DatagramSocket(port);
 			
 	    	byte[] buffer = new byte[1000];
 			System.out.println("server "+port+" begin running");
- 			while(true){
+ 			while(running){
  				
  				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
   				aSocket.receive(request);     
@@ -231,5 +235,16 @@ public class serverThread  extends Thread{
 			if(aSocket != null) 
 				aSocket.close();
 		}
+	}
+
+	@Override
+	public void shutdown() {
+		running = false;
+		if(aSocket!=null)aSocket.close();
+	}
+
+	@Override
+	public void printAllTicket() {
+		
 	}
 }

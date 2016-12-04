@@ -2,9 +2,6 @@ package dfrs.servers3;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import dfrs.ServerInterfacePOA;
-import dfrs.utils.Config;
-
 public class ServerImplYue {// extends ServerInterfacePOA  {
 
 	public  HashMap<Character,recordLIst> recordTable = new HashMap<Character,recordLIst>();

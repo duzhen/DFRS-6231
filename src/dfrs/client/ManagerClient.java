@@ -62,9 +62,9 @@ public class ManagerClient {
 		String m4 = "4. ALL";
 		System.out.println(m);
 //not all members getBookFlightCount by type, so default is ALL
-//		System.out.println(m1);
-//		System.out.println(m2);
-//		System.out.println(m3);
+		System.out.println(m1);
+		System.out.println(m2);
+		System.out.println(m3);
 		System.out.println(m4);
 		String s = "-"+managerName + " Choose ";
 		

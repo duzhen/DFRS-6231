@@ -31,6 +31,7 @@ class CorbaServer extends Thread {
 //	private String host;
 //	private String port;
 	private Timer timer;
+	private ServerInterfacePOA impl;
 	
 	public static CorbaServer createServer(Object o, String name, String[] args, int i) {
 		if (ServerCluster1.class == o) {
@@ -56,6 +57,7 @@ class CorbaServer extends Thread {
 	public CorbaServer(ServerInterfacePOA impl, String[] args, String server, String n, String host, String port, String RMHost, int RMPort) {
 		this.args = args;
 		this.server = server;
+		this.impl = impl;
 //		this.host = host;
 //		this.port = port;
 		this.timer = new Timer();
@@ -86,6 +88,11 @@ class CorbaServer extends Thread {
 	}
 
 	protected void shutdown(boolean wait_for_completion) {
+		if(impl!=null) {
+			if(impl instanceof IServerManager) {
+				((IServerManager) impl).shutdown();
+			}
+		}
 		if(orb != null) {
 			orb.shutdown(wait_for_completion);
 			orb.destroy();
@@ -95,7 +102,6 @@ class CorbaServer extends Thread {
 		}
 	}
 	
-
 	public String getServerState() {
 		return serverState;
 	}
@@ -106,6 +112,12 @@ class CorbaServer extends Thread {
 
 	public String getServerName() {
 		return server;
+	}
+	
+	public void printAllTicket() {
+		if(impl instanceof IServerManager) {
+			((IServerManager) impl).printAllTicket();
+		}
 	}
 	
 	private ORB createCorbaServer(ServerInterfacePOA impl, String[] args, String server, String n, String host, String port) {

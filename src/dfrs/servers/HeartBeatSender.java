@@ -22,7 +22,7 @@ class HeartBeatSender {
 		return instance;
 	}
 	
-	public void closeSocket() {
+	void closeSocket() {
 		Iterator iter = this.clientSockets.entrySet().iterator();
 		while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();

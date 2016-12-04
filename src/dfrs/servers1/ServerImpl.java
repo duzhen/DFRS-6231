@@ -1,4 +1,4 @@
-package dfrs.servers4;
+package dfrs.servers1;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -16,9 +16,18 @@ import org.omg.CORBA.ORB;
 
 import dfrs.servers.BaseServerCluster;
 import dfrs.servers.IServerManager;
+import dfrs.servers4.FlightData;
+import dfrs.servers4.ITransaction;
+import dfrs.servers4.Log;
+import dfrs.servers4.Result;
+import dfrs.servers4.Flight;
+import dfrs.servers4.Ticket;
+import dfrs.servers4.TicketData;
+import dfrs.servers4.TransactionException;
+import dfrs.servers4.TransferReservation;
 import dfrs.utils.Utils;
 
-public class ServerImplZhen implements IServerManager {//extends ServerInterfacePOA {
+public class ServerImpl implements IServerManager {//extends ServerInterfacePOA {
 	
 	private ORB orb;
 	private boolean running = true;
@@ -30,7 +39,7 @@ public class ServerImplZhen implements IServerManager {//extends ServerInterface
 	DatagramSocket aSocket;
 	DatagramSocket tSocket;
 	
-	public ServerImplZhen(String server, String name, int udp, int tudp) {
+	public ServerImpl(String server, String name, int udp, int tudp) {
 		super();
 		this.server = server;
 		this.name = name;
@@ -69,11 +78,11 @@ public class ServerImplZhen implements IServerManager {//extends ServerInterface
 //		System.out.println("["+server+"]-"+passengerID+"-START--transferReservation,passengerID:"+passengerID+"[this:"+this.toString()+"]");
 		int port = 0;
 		if(BaseServerCluster.SERVERS[0].equals(otherCity)) {
-			port = ServerImpl4.T_UDP_PORT_NUM[0];
+			port = ServerImpl11.T_UDP_PORT_NUM[0];
 		} else if(BaseServerCluster.SERVERS[1].equals(otherCity)) {
-			port = ServerImpl4.T_UDP_PORT_NUM[1];
+			port = ServerImpl11.T_UDP_PORT_NUM[1];
 		} else if(BaseServerCluster.SERVERS[2].equals(otherCity)) {
-			port = ServerImpl4.T_UDP_PORT_NUM[2];
+			port = ServerImpl11.T_UDP_PORT_NUM[2];
 		}
 		Result result = startTransferTransaction(passengerID, otherCity, "localhost", port);
 		String s = "["+server+"]-ID:"+passengerID+" transfer departure from "+currentCity+" to "+otherCity+"["+result.success+":"+result.content+"]";
@@ -327,19 +336,19 @@ public class ServerImplZhen implements IServerManager {//extends ServerInterface
 		Log.i(LOG_PATH, s);
 		int count = getRecordTypeCount(recordType);
 		String value = "";
-		if(ServerImpl4.SERVER_NAME[0].equals(server)) {
+		if(ServerImpl11.SERVER_NAME[0].equals(server)) {
 			value = server + " " +count+",";
-			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl4.UDP_PORT_NUM[1]);
+			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[1]);
 			value +=",";
-			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl4.UDP_PORT_NUM[2]);
-		} else if(ServerImpl4.SERVER_NAME[1].equals(server)) {
-			value =getCountFromOtherServers(recordType, "localhost", ServerImpl4.UDP_PORT_NUM[0]);
+			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[2]);
+		} else if(ServerImpl11.SERVER_NAME[1].equals(server)) {
+			value =getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[0]);
 			value += ("," + server + " " +count+",");
-			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl4.UDP_PORT_NUM[2]);
-		} else if(ServerImpl4.SERVER_NAME[2].equals(server)) {
-			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl4.UDP_PORT_NUM[0]);
+			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[2]);
+		} else if(ServerImpl11.SERVER_NAME[2].equals(server)) {
+			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[0]);
 			value +=",";
-			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl4.UDP_PORT_NUM[1]);
+			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[1]);
 			value += ("," + server + " " +count);
 		}
 		s = "Reply Value Is: " + value;

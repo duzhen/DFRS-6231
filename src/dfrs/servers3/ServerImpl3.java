@@ -4,11 +4,14 @@ import java.util.HashMap;
 
 import dfrs.ServerInterfacePOA;
 import dfrs.servers.BaseServerCluster;
+import dfrs.servers.IServerManager;
 import dfrs.utils.Config;
 import dfrs.utils.Utils;
 
-public class ServerImpl3 extends ServerInterfacePOA {
+public class ServerImpl3 extends ServerInterfacePOA implements IServerManager {
 
+	serverThread sTone;
+	serverThread sTtwo;
 	private ServerImplYue impl;
 	public  HashMap<String,String> flight = new HashMap<String,String>();
 	/*
@@ -49,8 +52,8 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
 			impl.planeMap.put((a.destination+a.flightDate) , a);
 			
-			serverThread sTone = new serverThread(6789,impl);
-	    	serverThread sTtwo = new serverThread(6790,impl);
+			sTone = new serverThread(6789,impl);
+	    	sTtwo = new serverThread(6790,impl);
 	    	System.out.println("Montreal Server ready and waiting ...");
 		} else if(i==1) {
 			impl = new ServerImplYue();
@@ -85,8 +88,8 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
 			impl.planeMap.put((a.destination+a.flightDate) , a);
 			
-			serverThread sTone = new serverThread(6791,impl);
-	    	serverThread sTtwo = new serverThread(6792,impl);
+			sTone = new serverThread(6791,impl);
+	    	sTtwo = new serverThread(6792,impl);
 	    	System.out.println("New Delhi Server ready and waiting ...");
 		} else if(i==2) {
 			impl = new ServerImplYue();
@@ -120,8 +123,8 @@ public class ServerImpl3 extends ServerInterfacePOA {
 			flight.put(GenerateID.getInstance().getFlightID()+"", a.destination+a.flightDate);
 			impl.planeMap.put((a.destination+a.flightDate) , a);
 			
-			serverThread sTone = new serverThread(6793,impl);
-	    	serverThread sTtwo = new serverThread(6794,impl);
+			sTone = new serverThread(6793,impl);
+	    	sTtwo = new serverThread(6794,impl);
 	    	System.out.println("Washington Server ready and waiting ...");
 		}
 	}
@@ -246,4 +249,14 @@ public class ServerImpl3 extends ServerInterfacePOA {
 		}
 	}
 
+	@Override
+	public void shutdown() {
+		sTone.shutdown();
+		sTtwo.shutdown();
+	}
+
+	@Override
+	public void printAllTicket() {
+//		imple.printAllTicket();
+	}
 }

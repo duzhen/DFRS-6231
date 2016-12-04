@@ -45,6 +45,11 @@ public class TestBookEdit extends dfrs.test.Test {
 					startBookTest(dfrs[i], i, 2, false);
 				}
 			}
+			try {
+				Thread.sleep(2*1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("\nBook and Edit Testing...");
 	}

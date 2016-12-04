@@ -14,16 +14,20 @@ public class FE2RMSender extends Thread {
 	public String host;
 	public int port;
 	public String content;
-	public FE2RMSender(String host, int port, String new_content) {
-
-		this.host = host;
-		this.port = port;
+	private  ReliableSocket clientSocket;
+//	public FE2RMSender(String host, int port, String new_content) {
+//
+//		this.host = host;
+//		this.port = port;
+//		this.content = new_content;
+//	}
+	public FE2RMSender(ReliableSocket clientSocket, String new_content) {
+		this.clientSocket = clientSocket;
 		this.content = new_content;
 	}
-	
     public void run(){
         try {
-            ReliableSocket clientSocket = new ReliableSocket(host, port);
+//            ReliableSocket clientSocket = new ReliableSocket(host, port);
             ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
             PrintWriter outputBuffer = new PrintWriter(outToServer);
             outputBuffer.println(content);
@@ -31,10 +35,8 @@ public class FE2RMSender extends Thread {
             
             // message receive from server
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            System.out.println("FE2RMSender Client: " + inFromServer.readLine());
-
-            clientSocket.close();
-
+            inFromServer.readLine();
+//            System.out.println("FE2RMSender Client: " + inFromServer.readLine());
         } catch (IOException ex) {
 
         }

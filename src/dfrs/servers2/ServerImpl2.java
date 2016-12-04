@@ -20,7 +20,7 @@ public class ServerImpl2 extends ServerInterfacePOA {
 	}
 
 	public static ServerInterfacePOA getServerImpl(int i) {
-		return new ServerImpl2(i);
+		return new ServerImpl22(i);
 	}
 	
 	@Override

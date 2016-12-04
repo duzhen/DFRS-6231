@@ -15,7 +15,7 @@ import dfrs.utils.Config;
 public abstract class Test {
 	
 	private static final int RANDOM = 100;
-	private static final int LOOP = 100;
+	private static final int LOOP = 20;
 	
 	ServerInterface dfrs[] = new ServerInterface[9];
 	String ticketType[] = new String[] {"First", "Business", "Economy", "All"};
@@ -119,7 +119,7 @@ public abstract class Test {
 					Ticket ticket = new Ticket("Zhen", "Du", "1819", "55667788", ticketDestination[des], "2016/12/25", type, ticketDestination[departure]);
 					String success = dfrs.bookFlight(server[departure], ticket.getFirstName(), ticket.getLastName(), ticket.getAddress(),
 							ticket.getPhone(), ticket.getDestination(), ticket.getDepartureDate(), ticket.getTicketClass());
-//					System.out.println(server[departure]+"[B]-"+th+":"+success.content);
+					System.out.println(server[departure]+"[B]-"+th+":"+success);
 					try {
 						Thread.sleep(random);
 					} catch (InterruptedException e) {
@@ -178,7 +178,7 @@ public abstract class Test {
 //					} else {
 //						transferFailed(index);
 //					}
-//					System.out.println(server[departure]+"[T]-"+th+":"+result.content);
+					System.out.println(server[departure]+"[T]-"+th+":"+result);
 					try {
 						Thread.sleep(random);
 					} catch (InterruptedException e) {
@@ -214,7 +214,7 @@ public abstract class Test {
 					int book = 100;
 					book = getBookedCount(dfrs, random%3, departure);
 					String result = dfrs.editFlightRecord(server[departure], id+"", ticketType[random%3], book/2+"");
-//					System.out.println(server[departure]+"[E]-"+th+":"+result.content);
+					System.out.println(server[departure]+"[E]-"+th+":"+result);
 					try {
 						Thread.sleep(random);
 					} catch (InterruptedException e) {

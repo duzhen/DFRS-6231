@@ -22,6 +22,11 @@ public class TicketData {
 		return instance;
 	}
 
+	public void clearData() {
+		data.clear();
+		recordID = 0;
+	}
+	
 	public synchronized HashMap<String, List<Ticket>> initData(String name) {
 		HashMap<String, List<Ticket>> o = data.get(name);
 		if (o == null) {

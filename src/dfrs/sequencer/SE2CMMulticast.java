@@ -1,10 +1,12 @@
 package dfrs.sequencer;
 
+import dfrs.frontend.FESender;
 import dfrs.replicamanager.ReplicaManager1;
 import dfrs.replicamanager.ReplicaManager2;
 import dfrs.replicamanager.ReplicaManager3;
 import dfrs.replicamanager.ReplicaManager4;
 import dfrs.utils.Config;
+import net.rudp.ReliableSocket;
 
 public class SE2CMMulticast {
 	
@@ -17,10 +19,14 @@ public class SE2CMMulticast {
 
 	public ClusterManagerSender cma1,cma2,cma3,cma4;
 	public void initial(){
-		cma1 = new ClusterManagerSender(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_SEQUENCER_PROT,content);
-		cma2 = new ClusterManagerSender(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_SEQUENCER_PROT,content);
-		cma3 = new ClusterManagerSender(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_SEQUENCER_PROT,content);
-		cma4 = new ClusterManagerSender(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_SEQUENCER_PROT,content);
+		ReliableSocket socket = FESender.getInstance().getSocket(Config.getRmHost1(),ReplicaManager1.RM_RECEIVE_SEQUENCER_PROT);
+		cma1 = new ClusterManagerSender(socket,content);
+		socket = FESender.getInstance().getSocket(Config.getRmHost2(),ReplicaManager2.RM_RECEIVE_SEQUENCER_PROT);
+		cma2 = new ClusterManagerSender(socket,content);
+		socket = FESender.getInstance().getSocket(Config.getRmHost3(),ReplicaManager3.RM_RECEIVE_SEQUENCER_PROT);
+		cma3 = new ClusterManagerSender(socket,content);
+		socket = FESender.getInstance().getSocket(Config.getRmHost4(),ReplicaManager4.RM_RECEIVE_SEQUENCER_PROT);
+		cma4 = new ClusterManagerSender(socket,content);
 	}
 	
 	public void execute(){

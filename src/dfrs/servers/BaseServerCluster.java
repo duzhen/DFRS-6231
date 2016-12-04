@@ -18,6 +18,7 @@ public abstract class BaseServerCluster {
 	public static final String SERVER_NDL = "New Delhi";
 	public static final String FAILURE = "Failure";
 	public static final String CRASH = "Crash";
+	public static final String PRINT = "Print";
 	
 	public static final String[] SERVERS = new String[] {SERVER_MTL,SERVER_WST,SERVER_NDL};
 	private HashMap<String, CorbaServer> servers;
@@ -103,6 +104,15 @@ public abstract class BaseServerCluster {
 		this.serverState = serverState;
 	}
 	
+	private void printAllTicket() {
+		for (int i = 0; i < SERVERS.length; i++) {
+			CorbaServer s = getServer(SERVERS[i]);
+			if (s != null && s.isAlive()) {
+				s.printAllTicket();
+			}
+		}
+	}
+	
 	private String processSocketRequest(String source, String content) {
 		if("RM".equals(source)) {
 			System.out.println("Server"+getCorba()+":Receive "+content);
@@ -119,8 +129,10 @@ public abstract class BaseServerCluster {
 				setServerState(SERVERS, BaseRM.STATE_RUNNING);
 				System.out.println("Server"+getCorba()+":Sever Is Running");
 			} else if(CRASH.equals(content)) {
-				System.out.println("Server"+getCorba()+":Test Crash");
+				System.out.println("Server"+getCorba()+":Demo Crash");
 				stopAllServer();
+			} else if(PRINT.equals(content)) {
+				printAllTicket();
 			}
 //			else if(FAILURE.equals(content)) {
 //				

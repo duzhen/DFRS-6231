@@ -24,6 +24,11 @@ public class FlightData {
 		return instance;
 	}
 
+	public void clearData() {
+		data.clear();
+		recordID = 0;
+	}
+	
 	public synchronized List<Flight> initData(String name) {
 		List<Flight> o = data.get(name);
 		if (o == null) {
