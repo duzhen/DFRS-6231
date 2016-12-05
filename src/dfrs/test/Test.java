@@ -65,7 +65,7 @@ public abstract class Test {
 	}
 	
 	private synchronized int getBookedCount(ServerInterface dfrs, int type, int departure) {
-		String count = dfrs.getBookedFlightCount(server[departure], ticketType[type]);
+		String count = dfrs.getBookedFlightCount(server[departure], ticketType[3]);//type]);
 		if(count != null) {
 			String c[] = count.split(",");
 			if(c.length == 3) {
@@ -121,7 +121,7 @@ public abstract class Test {
 							ticket.getPhone(), ticket.getDestination(), ticket.getDepartureDate(), ticket.getTicketClass());
 					System.out.println(server[departure]+"[B]-"+th+":"+success);
 					try {
-						Thread.sleep(random);
+						Thread.sleep(random*100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -180,7 +180,7 @@ public abstract class Test {
 //					}
 					System.out.println(server[departure]+"[T]-"+th+":"+result);
 					try {
-						Thread.sleep(random);
+						Thread.sleep(random*100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -216,7 +216,7 @@ public abstract class Test {
 					String result = dfrs.editFlightRecord(server[departure], id+"", ticketType[random%3], book/2+"");
 					System.out.println(server[departure]+"[E]-"+th+":"+result);
 					try {
-						Thread.sleep(random);
+						Thread.sleep(random*1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
