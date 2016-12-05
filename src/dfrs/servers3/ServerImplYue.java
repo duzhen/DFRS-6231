@@ -250,11 +250,16 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 					((planeMap.get(keyManager).business-planeMap.get(keyManager).businessLeft)<=business)&&
 					((planeMap.get(keyManager).firstclass-planeMap.get(keyManager).firstclassLeft)<=firstclass))
 						{
+						System.out.println("old record value:\n"+planeMap.get(keyManager).toString());
+						record.economyLeft = (economy-planeMap.get(keyManager).economy)+planeMap.get(keyManager).economyLeft;
+						record.businessLeft = (business-planeMap.get(keyManager).business)+planeMap.get(keyManager).businessLeft;
+						record.firstclassLeft = (firstclass-planeMap.get(keyManager).firstclass)+planeMap.get(keyManager).firstclassLeft;
 						planeMap.put(keyManager, record);
 						}else{
 							return "false changing"+keyManager;
 						}
 				}
+				System.out.println("new record value:\n"+record.toString());
 				System.out.println("the changing text are economy is "+
 				record.economy+" business is "+record.business+
 				" firstclass is "+record.firstclass);
@@ -330,7 +335,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 						planeMap.get(keyManager).businessLeft++;
 					}else if("firstclass".equals(pasRectrans.flightClass))
 					{
-						planeMap.get(keyManager).businessLeft++;
+						planeMap.get(keyManager).firstclassLeft++;
 					}
 					
 					System.out.println("remove"+6789);
@@ -355,7 +360,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 						planeMap.get(keyManager).businessLeft++;
 					}else if("firstclass".equals(pasRectrans.flightClass))
 					{
-						planeMap.get(keyManager).businessLeft++;
+						planeMap.get(keyManager).firstclassLeft++;
 					}
 					
 					System.out.println("remove"+6791);
@@ -382,7 +387,7 @@ public class ServerImplYue {// extends ServerInterfacePOA  {
 						planeMap.get(keyManager).businessLeft++;
 					}else if("firstclass".equals(pasRectrans.flightClass))
 					{
-						planeMap.get(keyManager).businessLeft++;
+						planeMap.get(keyManager).firstclassLeft++;
 					}
 					
 					System.out.println("remove"+6793);

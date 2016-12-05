@@ -13,4 +13,11 @@ public class managerRecord implements Serializable {
 	public		int firstclass = 15;
 	public		int firstclassLeft = 15;
 	public managerRecord(){}
+	@Override
+	public String toString() {
+		return "managerRecord [managerID=" + managerID + ", destination=" + destination + ", flightDate=" + flightDate
+				+ ", economy=" + economy + ", economyLeft=" + economyLeft + ", business=" + business + ", businessLeft="
+				+ businessLeft + ", firstclass=" + firstclass + ", firstclassLeft=" + firstclassLeft + "]";
+	}
+	
 }
