@@ -326,14 +326,14 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 		Log.i(LOG_PATH, info);
 		result.success = r;
 		result.content=info;
-		Utils.printFlight(server);
+//		Utils.printFlight(server);
 		return result;
 	}
 //	@Override
 	public String getBookedFlightCount(String recordType) {
-		String s = "["+server+"]-"+"get booked flight count, type is: " + recordType;
-		System.out.println("\n"+s);
-		Log.i(LOG_PATH, s);
+		String s = "";//"["+server+"]-"+"get booked flight count, type is: " + recordType;
+//		System.out.println("\n"+s);
+//		Log.i(LOG_PATH, s);
 		int count = getRecordTypeCount(recordType);
 		String value = "";
 		if(ServerImpl22.SERVER_NAME[0].equals(server)) {
@@ -352,7 +352,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 			value += ("," + server + " " +count);
 		}
 		s = "value is: " + value;
-		System.out.println("\n"+"["+server+"]-"+s);
+		System.out.println("\n"+" "+name+"->"+s);
 		Log.i(LOG_PATH, "     -"+s);
 		return value;
 	}
@@ -396,11 +396,11 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 		String info = "Edit Flight Record Success, Thank you!";
 		for(Flight f:flight) {
 			if(f.getRecordID() == recordID) {
-				s="["+server+"]-"+"Find recordID:" + f.getRecordID();
+				s="find id:" + f.getRecordID();
 				System.out.println(s);
 				Log.i(LOG_PATH, s);
 				s="     -"+f.toString();
-				System.out.println(s);
+//				System.out.println(s);
 				Log.i(LOG_PATH, s);
 				find = true;
 				if(Flight.DEPARTURE.equals(fieldName)) {
@@ -452,7 +452,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 					s = "     -"+f.toString();
 					System.out.println(s);
 					Log.i(LOG_PATH, s);
-					Utils.printFlight(this.server);
+//					Utils.printFlight(this.server);
 				}
 				break;
 			}
@@ -486,7 +486,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 		result.success = r;
 		result.content=info;
 		
-		System.out.println("     -"+info);
+//		System.out.println("     -"+info);
 		Log.i(LOG_PATH, "["+server+"]-"+info);
 		return result;
 	}

@@ -267,7 +267,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 				DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(), request.getAddress(),
 						request.getPort());
 				aSocket.send(reply);
-				String s = "receive request: " + receive +" and reply:" + re;
+				String s = "receive:" + receive +":" + re;
 				System.out.print("\n"+s);
 				Log.i(LOG_PATH, s);
 			}
@@ -303,30 +303,30 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 //	@Override
 	public synchronized Result bookFlight(String firstName, String lastName, String address, String phone, String destination,
 			String date, String ticketClass) {
-		String s = "["+server+"]-"+"book flight-firstName:"+firstName+" "
-				+"-lastName:"+lastName +" "
-				+"-address:"+address +" "
-				+"-phone:"+phone +" "
-				+"-destination:"+destination +" "
+		String s = "book flight-f:"+firstName+" "
+				+"-l:"+lastName +" "
+				+"-a:"+address +" "
+				+"-p:"+phone +" "
+				+"-des:"+destination +" "
 				+"-date:"+date +" "
-				+"-ticketClass:"+ticketClass;
+				+"-c:"+ticketClass;
 		System.out.println(s);
 		Log.i(LOG_PATH, s);
 		Result result = new Result();
 		boolean r = false;
-		String info = "Book Success!";
+		String info = "book success";
 		try {
 			Ticket t = new Ticket(firstName, lastName, address, phone, destination, date, ticketClass, this.name);
 			r = TicketData.getInstance().sellTicket(server, t);
 		} catch(TransactionException e) {
-			info = "Book Failed, "+e.getMessage();
+			info = "failed, "+e.getMessage();
 		}
 		s = "     -"+info;
 		System.out.println(s);
 		Log.i(LOG_PATH, s);
 		result.success = r;
 		result.content=info;
-		Utils.printFlight(server);
+//		Utils.printFlight(server);
 		return result;
 	}
 //	@Override
@@ -351,8 +351,8 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl11.UDP_PORT_NUM[1]);
 			value += ("," + server + " " +count);
 		}
-		String s = "Reply Value Is: " + value;
-		System.out.println("\n"+"["+server+"]-"+s);
+		String s = "reply value is: " + value;
+		System.out.println("\n"+""+s);
 		Log.i(LOG_PATH, "     -"+s);
 		return value;
 	}
@@ -393,14 +393,14 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 		Result result = new Result();
 		boolean find = false;
 		boolean r = false;
-		String info = "Edit Flight Record Success, Thank you!";
+		String info = "edit success!";
 		for(Flight f:flight) {
 			if(f.getRecordID() == recordID) {
-				s="Find recordID:" + f.getRecordID();
+				s="have id:" + f.getRecordID();
 				System.out.println(s);
 				Log.i(LOG_PATH, s);
 				s="     -"+f.toString();
-				System.out.println(s);
+//				System.out.println(s);
 				Log.i(LOG_PATH, s);
 				find = true;
 				if(Flight.DEPARTURE.equals(fieldName)) {
@@ -452,7 +452,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 					s = "     -"+f.toString();
 					System.out.println(s);
 					Log.i(LOG_PATH, s);
-					Utils.printFlight(this.server);
+//					Utils.printFlight(this.server);
 				}
 				break;
 			}
@@ -486,7 +486,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 		result.success = r;
 		result.content=info;
 		
-		System.out.println("     -"+info);
+		System.out.println(""+info);
 		Log.i(LOG_PATH, "["+server+"]-"+info);
 		return result;
 	}
