@@ -6,19 +6,19 @@ public class Config {
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "fail";
 	//RM
-	private static final String RM_HOST_1 = "KASHIA";//"JENA";
-	private static final String RM_HOST_2 = "KAWEENAW";//"JICARILLA";
-	private static final String RM_HOST_3 = "KLAMATH";//"KAIBAB";
-	private static final String RM_HOST_4 = "LUMMI";//"KALISPEL";
+	private static final String RM_HOST_1 = "HUALAPAI";//"JENA";
+	private static final String RM_HOST_2 = "INAJA";//"JICARILLA";
+	private static final String RM_HOST_3 = "IONE";//"KAIBAB";
+	private static final String RM_HOST_4 = "JAMUL";//"KALISPEL";
 	//SERVER
 	private static final String SERVER_HOST_1 = RM_HOST_1;//"KASHIA";//"JENA";
 	private static final String SERVER_HOST_2 = RM_HOST_2;//"KAWEENAW";//"JICARILLA";
 	private static final String SERVER_HOST_3 = RM_HOST_3;//"KLAMATH";//"KAIBAB";
 	private static final String SERVER_HOST_4 = RM_HOST_4;//"LUMMI";//"KALISPEL";
 	//FE
-	private static final String FE_HOST = RM_HOST_2;//"KAIBAB";
+	private static final String FE_HOST = RM_HOST_3;//"KAIBAB";
 	//SEQUENCER
-	private static final String SE_HOST = RM_HOST_2;//"KAIBAB";
+	private static final String SE_HOST = RM_HOST_3;//"KAIBAB";
 	public static final int SE_RECEIVER_FE_UDP_PROT = 8888;
 	
 	public static final String FE_CORBA_PORT = "1050";
