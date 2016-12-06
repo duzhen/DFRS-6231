@@ -16,9 +16,9 @@ public class Config {
 	private static final String SERVER_HOST_3 = RM_HOST_3;//"KLAMATH";//"KAIBAB";
 	private static final String SERVER_HOST_4 = RM_HOST_4;//"LUMMI";//"KALISPEL";
 	//FE
-	private static final String FE_HOST = RM_HOST_3;//"KAIBAB";
+	private static final String FE_HOST = RM_HOST_4;//"KAIBAB";
 	//SEQUENCER
-	private static final String SE_HOST = RM_HOST_3;//"KAIBAB";
+	private static final String SE_HOST = RM_HOST_4;//"KAIBAB";
 	public static final int SE_RECEIVER_FE_UDP_PROT = 8888;
 	
 	public static final String FE_CORBA_PORT = "1050";
