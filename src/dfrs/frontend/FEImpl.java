@@ -64,12 +64,22 @@ public class FEImpl  extends ServerInterfacePOA  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-	     try {
-				Thread.sleep(200);
+        int count = 0;
+        for(int i=0;i<100;i++) {
+        	for(int j=0;j<CR.CM.length;j++){
+   	    	 if(!CR.CM[i].equals("")){
+   	    		count++;
+   		     }
+   	     }
+    	if(count >= 3) {
+    		break;
+    	}
+        	try {
+				Thread.sleep(2*60*10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
+        }
 	     for(int i=0;i<CR.CM.length;i++){
 	    	 if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
 		    	 System.out.println("CR.CM"+i+" crash");
@@ -149,11 +159,22 @@ public class FEImpl  extends ServerInterfacePOA  {
 			e.printStackTrace();
 		}
         
-	     try {
-				Thread.sleep(200);
+        int count = 0;
+        for(int i=0;i<100;i++) {
+        	for(int j=0;j<4;j++){
+   	    	 if(CC.recordCount[j][0]!=-1){
+   	    		count++;
+   		     }
+   	     }
+    	if(count >= 3) {
+    		break;
+    	}
+        	try {
+				Thread.sleep(2*60*10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
+        }
 	     
 	     String CM1 = "";
 	     String CM2 = "";
@@ -335,11 +356,22 @@ public class FEImpl  extends ServerInterfacePOA  {
 			e.printStackTrace();
 		}
         
-	     try {
-				Thread.sleep(200);
+        int count = 0;
+        for(int i=0;i<100;i++) {
+        	for(int j=0;j<CR.CM.length;j++){
+   	    	 if(!CR.CM[i].equals("")){
+   	    		count++;
+   		     }
+   	     }
+    	if(count >= 3) {
+    		break;
+    	}
+        	try {
+				Thread.sleep(2*60*10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-		 }
+		}
+        }
 	     //begin to receive
 	     for(int i=0;i<CR.CM.length;i++){
 	    	 if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
@@ -422,11 +454,22 @@ public class FEImpl  extends ServerInterfacePOA  {
 			e.printStackTrace();
 		}
         
-	     try {
-				Thread.sleep(200);
+        int count = 0;
+        for(int i=0;i<100;i++) {
+        	for(int j=0;j<CR.CM.length;j++){
+   	    	 if(!CR.CM[i].equals("")){
+   	    		count++;
+   		     }
+   	     }
+    	if(count >= 3) {
+    		break;
+    	}
+        	try {
+				Thread.sleep(2*60*10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 		}
+        }
 	     for(int i=0;i<CR.CM.length;i++){
 	    	 if(CR.CM[i].equals("")||CR.CM[i].equals("error")){
 		    	 System.out.println("CR.CM"+i+" crash");
