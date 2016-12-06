@@ -14,6 +14,11 @@ public class GenerateID {
 		return ++passengerID;
 	}
 
+	public void clearID() {
+		flightID = 0;
+		passengerID = 0;
+	}
+	
 	public static synchronized GenerateID getInstance() {
 		if (instance == null) {
 			instance = new GenerateID();

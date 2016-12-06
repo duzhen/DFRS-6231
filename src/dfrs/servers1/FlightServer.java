@@ -17,7 +17,9 @@ import java.util.Map.Entry;
 
 import org.omg.CORBA.ORB;
 
-public abstract class FlightServer { //extends ServerInterfacePOA{
+import dfrs.servers.IServerManager;
+
+public abstract class FlightServer implements IServerManager { //extends ServerInterfacePOA{
 	protected FlightRecord flight_record;
 	protected PassengerRecord passenger_record;
 	protected static final int server_ports[] = { 2001, 2002, 2003 };
@@ -28,6 +30,9 @@ public abstract class FlightServer { //extends ServerInterfacePOA{
 	protected static Map<String, Integer> serverPortMap = new HashMap<String, Integer>();
 	protected String format = "yyyy/MM/dd";
 
+	private boolean running = true;
+	DatagramSocket socket;
+	
 	static {
 		serverPortMap.put("MTL", 2001);
 		serverPortMap.put("WDC", 2002);
@@ -163,12 +168,12 @@ public abstract class FlightServer { //extends ServerInterfacePOA{
 	}
 
 	public void UDPServer(int port) {
-		DatagramSocket socket = null;
+//		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket(port);
 			System.out.println("UDP Server Started at port: " + port);
 			System.out.println("Waiting for client...");
-			while (true) {
+			while (running) {
 				byte[] buffer = new byte[100];
 				DatagramPacket request = new DatagramPacket(buffer,
 						buffer.length);
@@ -344,5 +349,14 @@ public abstract class FlightServer { //extends ServerInterfacePOA{
 			e.printStackTrace();
 		}
 	}
+	@Override
+	public void shutdown() {
+		running = false;
+		if(socket!=null)socket.close();
+		GenerateID.getInstance().clearID();
+	}
 
+	@Override
+	public void printAllTicket() {
+	}
 }

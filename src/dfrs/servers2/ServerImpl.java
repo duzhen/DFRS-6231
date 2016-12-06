@@ -85,7 +85,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 			port = ServerImpl22.T_UDP_PORT_NUM[2];
 		}
 		Result result = startTransferTransaction(passengerID, otherCity, "localhost", port);
-		String s = "["+server+"]-ID:"+passengerID+" transfer departure from "+currentCity+" to "+otherCity+"["+result.success+":"+result.content+"]";
+		String s = "transfer "+currentCity+" to "+otherCity+" "+result.success;//+":"+result.content+"]";
 		System.out.println(s);
 		Log.i(LOG_PATH, s);
 		return result;
@@ -267,7 +267,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 				DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(), request.getAddress(),
 						request.getPort());
 				aSocket.send(reply);
-				String s = "["+server+":"+UDP_PORT+"]-"+"Receive Require Request KEY: " + receive +" and Reply:" + re;
+				String s = name + "receive" + receive +"->" + re;
 				System.out.print("\n"+s);
 				Log.i(LOG_PATH, s);
 			}
@@ -303,15 +303,15 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 //	@Override
 	public synchronized Result bookFlight(String firstName, String lastName, String address, String phone, String destination,
 			String date, String ticketClass) {
-		String s = "["+server+"]-"+"Request Book Flight Order Passenger Info Is\n     -FirstName:"+firstName+"\n"
-				+"     -lastName:"+lastName +"\n"
-				+"     -address:"+address +"\n"
-				+"     -phone:"+phone +"\n"
-				+"     -destination:"+destination +"\n"
-				+"     -date:"+date +"\n"
-				+"     -ticketClass:"+ticketClass;
-		System.out.println(s);
-		Log.i(LOG_PATH, s);
+//		String s = "["+server+"]-"+"Request Book Flight Order Passenger Info Is\n     -FirstName:"+firstName+"\n"
+//				+"     -lastName:"+lastName +"\n"
+//				+"     -address:"+address +"\n"
+//				+"     -phone:"+phone +"\n"
+//				+"     -destination:"+destination +"\n"
+//				+"     -date:"+date +"\n"
+//				+"     -ticketClass:"+ticketClass;
+//		System.out.println(s);
+//		Log.i(LOG_PATH, s);
 		Result result = new Result();
 		boolean r = false;
 		String info = "Book Success, Thank you!";
@@ -321,9 +321,9 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 		} catch(TransactionException e) {
 			info = "Book Failed, "+e.getMessage();
 		}
-		s = "     -"+info;
-		System.out.println(s);
-		Log.i(LOG_PATH, s);
+//		s = "     -"+info;
+		System.out.println(info);
+		Log.i(LOG_PATH, info);
 		result.success = r;
 		result.content=info;
 		Utils.printFlight(server);
@@ -331,7 +331,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 	}
 //	@Override
 	public String getBookedFlightCount(String recordType) {
-		String s = "["+server+"]-"+"Receive Get Booked Flight Count Request, RecordType Is: " + recordType;
+		String s = "["+server+"]-"+"get booked flight count, type is: " + recordType;
 		System.out.println("\n"+s);
 		Log.i(LOG_PATH, s);
 		int count = getRecordTypeCount(recordType);
@@ -351,7 +351,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 			value +=getCountFromOtherServers(recordType, "localhost", ServerImpl22.UDP_PORT_NUM[1]);
 			value += ("," + server + " " +count);
 		}
-		s = "Reply Value Is: " + value;
+		s = "value is: " + value;
 		System.out.println("\n"+"["+server+"]-"+s);
 		Log.i(LOG_PATH, "     -"+s);
 		return value;
@@ -386,9 +386,9 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 
 //	@Override
 	public Result editFlightRecord(int recordID, String fieldName, String newValue) {
-		String s = "["+server+"]-"+"Receive Edit Flight Record Request"+" recordID:" + recordID + " fieldName:" + fieldName + " newValue:" + newValue;
-		System.out.println("\n"+s);
-		Log.i(LOG_PATH, s);
+		String s = "";//"["+server+"]-"+"Receive Edit Flight Record Request"+" recordID:" + recordID + " fieldName:" + fieldName + " newValue:" + newValue;
+//		System.out.println("\n"+s);
+//		Log.i(LOG_PATH, s);
 		ArrayList<Flight> flight = (ArrayList<Flight>)FlightData.getInstance().initData(server);
 		Result result = new Result();
 		boolean find = false;
@@ -446,7 +446,7 @@ public class ServerImpl implements IServerManager {//extends ServerInterfacePOA 
 					}
 				}
 				if(r) {
-					s = "["+server+"]-"+"Edit Record Successful New Value Is:";
+					s = "Edit Record Successful New Value Is:";
 					System.out.println(s);
 					Log.i(LOG_PATH, s);
 					s = "     -"+f.toString();

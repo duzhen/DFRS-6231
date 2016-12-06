@@ -2,10 +2,11 @@ package dfrs.servers2;
 
 import dfrs.ServerInterfacePOA;
 import dfrs.servers.BaseServerCluster;
+import dfrs.servers.IServerManager;
 import dfrs.utils.Config;
 import dfrs.utils.Utils;
 
-public class ServerImpl2 extends ServerInterfacePOA {
+public class ServerImpl2 extends ServerInterfacePOA implements IServerManager {
 
 	private BaseObj impl;
 	
@@ -157,5 +158,13 @@ public class ServerImpl2 extends ServerInterfacePOA {
 			return Config.FAIL;
 		}
 	}
+	@Override
+	public void shutdown() {
+		impl.shutdown();
+	}
 
+	@Override
+	public void printAllTicket() {
+		impl.printAllTicket();
+	}
 }

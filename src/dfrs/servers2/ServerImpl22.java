@@ -9,7 +9,7 @@ public class ServerImpl22 extends ServerInterfacePOA implements IServerManager {
 
 	public static final String[] SERVERS = new String[] {"Montreal","Washington","New Delhi"};
 	public static final String[] SERVER_NAME = {"MTL","WST","NDL"};
-	public static final int[] UDP_PORT_NUM = {1111,2222,3333};
+	public static final int[] UDP_PORT_NUM = {1113,2224,3335};
 	public static final int[] T_UDP_PORT_NUM = {1112,2223,3334};
 	
 	private ServerImpl imple;

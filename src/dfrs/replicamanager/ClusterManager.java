@@ -96,21 +96,22 @@ public class ClusterManager {
 		if(crash) {
 			crash = false;
 			reply = params[1]+"$"+"error";
-		}
-        ReliableSocket clientSocket;
-		try {
-			clientSocket = new ReliableSocket(host, port);
+		} else {
+			ReliableSocket clientSocket;
+			try {
+				clientSocket = new ReliableSocket(host, port);
 //				ReliableSocketOutputStream outToServer = (ReliableSocketOutputStream) clientSocket.getOutputStream();
-			PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
-			outputBuffer.println(reply);
-			outputBuffer.flush();
+				PrintWriter outputBuffer = new PrintWriter(clientSocket.getOutputStream());
+				outputBuffer.println(reply);
+				outputBuffer.flush();
 //				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 //	            inFromClient.readLine();
 //				clientSocket.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 //			if(reply.contains("success"))
 		saveRequestLog(input);

@@ -23,7 +23,7 @@ public class MontrealServerObj extends BaseObj {
 
 	private ORB orb;
  
-	private DatagramSocket aSocket;
+//	private DatagramSocket aSocket;
 	private HashMap<Character, ArrayList<PassengerRecord>> passengerRecordsMap;
 //	private ArrayList<FlightRecord> flightRecords;
 	private int bookedCount = 0;
@@ -55,7 +55,7 @@ public class MontrealServerObj extends BaseObj {
 			aSocket = new DatagramSocket(ServerInfo.getServerMaps().get("Montreal"));
 			byte[] incomingData = new byte[1024];
 			System.out.println("UDP Server is up and listening to " + ServerInfo.getServerMaps().get("Montreal"));
-			while (true) {
+			while (running) {
 				DatagramPacket request = new DatagramPacket(incomingData, incomingData.length);
 				aSocket.receive(request);
 				
@@ -391,33 +391,4 @@ public class MontrealServerObj extends BaseObj {
 //				aSocket.close();
 //		}
 //	}
-
-	public String send(Object o, String host, int port) {
-		try {
-
-			aSocket = new DatagramSocket();
-			InetAddress IPAddress = InetAddress.getByName(host);
-			byte[] incomingData = new byte[1024];
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			ObjectOutputStream os = new ObjectOutputStream(outputStream);
-			os.writeObject(o);
-			byte[] data = outputStream.toByteArray();
-			DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, port);
-			aSocket.send(sendPacket);
-			 
-			DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
-			aSocket.receive(incomingPacket);
-			return new String(incomingPacket.getData(), 0, incomingPacket.getLength()).trim();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return null;
-		} catch (SocketException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 }
