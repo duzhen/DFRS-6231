@@ -20,11 +20,15 @@ public class PassengerClient {
 	
 	public static void showMenu() {
 		System.out.println("\n****Welcome to DFRS System****\n");
-		System.out.println("Please select your departure station (1-3) or 4.Exit");
+		System.out.println("Please select your departure station (1-3 or xxx) or 7.Exit");
 		System.out.println("1. Montreal");
 		System.out.println("2. Washington");
 		System.out.println("3. New Delhi");
-		System.out.println("4. Exit");
+		
+		System.out.println(". Book Montreal(1)->Washington(1)New Delhi(2)->First(1)Business(2)Economy(3)");
+		System.out.println(". Book Washington(2)->Montreal(1)New Delhi(2)->First(1)Business(2)Economy(3)");
+		System.out.println(". Book New Delhi(3)->Montreal(1)Washington(2)->First(1)Business(2)Economy(3)");
+		System.out.println("7. Exit");
 	}
 
 	public static void showDestinationMenu(int departure) {
@@ -172,7 +176,7 @@ public class PassengerClient {
 
 		while (true) {
 			if(step == 1) {
-				maxChoice = 4;
+				maxChoice = 323;//4;
 				showMenu();
 			} else if(step == 2) {
 				maxChoice = 3;
@@ -226,9 +230,96 @@ public class PassengerClient {
 
 			// Manage user selection.
 			if(step == 1) {
-				departure = userChoice;
-				if(manageInput(userChoice, keyboard))
-					step++;
+				if(userChoice>100) {
+					if(initConnection(Config.FE_CORBA_PORT)) {
+						String depar = "Montreal";
+						String desti = "Washington";
+						String type = "First";
+						if(userChoice == 111) {
+							depar = "Montreal";
+							desti = "Washington";
+							type = "First";
+						} else if(userChoice == 112) {
+							depar = "Montreal";
+							desti = "Washington";
+							type = "Business";
+						} else if(userChoice == 113) {
+							depar = "Montreal";
+							desti = "Washington";
+							type = "Economy";
+						} else if(userChoice == 121) {
+							depar = "Montreal";
+							desti = "New Delhi";
+							type = "First";
+						} else if(userChoice == 122) {
+							depar = "Montreal";
+							desti = "New Delhi";
+							type = "Business";
+						} else if(userChoice == 123) {
+							depar = "Montreal";
+							desti = "New Delhi";
+							type = "Economy";
+						} else if(userChoice == 211) {
+							depar = "Washington";
+							desti = "Montreal";
+							type = "First";
+						} else if(userChoice == 212) {
+							depar = "Washington";
+							desti = "Montreal";
+							type = "Business";
+						} else if(userChoice == 213) {
+							depar = "Washington";
+							desti = "Montreal";
+							type = "Economy";
+						} else if(userChoice == 221) {
+							depar = "Washington";
+							desti = "New Delhi";
+							type = "First";
+						} else if(userChoice == 222) {
+							depar = "Washington";
+							desti = "New Delhi";
+							type = "Business";
+						} else if(userChoice == 223) {
+							depar = "Washington";
+							desti = "New Delhi";
+							type = "Economy";
+						} else if(userChoice == 311) {
+							depar = "New Delhi";
+							desti = "Montreal";
+							type = "First";
+						} else if(userChoice == 312) {
+							depar = "New Delhi";
+							desti = "Montreal";
+							type = "Business";
+						} else if(userChoice == 313) {
+							depar = "New Delhi";
+							desti = "Montreal";
+							type = "Economy";
+						} else if(userChoice == 321) {
+							depar = "New Delhi";
+							desti = "Washington";
+							type = "First";
+						} else if(userChoice == 322) {
+							depar = "New Delhi";
+							desti = "Washington";
+							type = "Business";
+						} else if(userChoice == 323) {
+							depar = "New Delhi";
+							desti = "Washington";
+							type = "Economy";
+						}
+						if(dfrsImpl!=null) {
+							Ticket ticket = new Ticket("Zhen", "Du", "1819", "55667788", desti, "2016/12/25", type, depar);
+							String success = dfrsImpl.bookFlight(ticket.getDeparture(), ticket.getFirstName(), ticket.getLastName(), ticket.getAddress(),
+									ticket.getPhone(), ticket.getDestination(), ticket.getDepartureDate(), ticket.getTicketClass());
+							System.out.println("BookFlight "+success);
+						}
+					}
+				} else {
+					departure = userChoice;
+					if(manageInput(userChoice, keyboard))
+						step++;
+				}
 			} else if(step == 2) {
 				if (manageDesInput(userChoice, departure))
 					step++;

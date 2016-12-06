@@ -95,7 +95,7 @@ public class ClusterManager {
 		}
 		if(crash) {
 			crash = false;
-			return "error";
+			reply = params[1]+"$"+"error";
 		}
         ReliableSocket clientSocket;
 		try {
