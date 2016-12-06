@@ -180,7 +180,7 @@ public abstract class BaseRM {
 				result = countingErrorTimes(params[0], n);
 			} else if("crash".equals(params[2*(n-1)])) {
 				System.out.println("RM"+n+":Receive crash");
-				if(Config.TEST||STATE_TERMINATED.equals(checkAlive())) {
+				if(true||STATE_TERMINATED.equals(checkAlive())) {
 					System.out.println("RM"+n+":Is crashed, restart now");
 					result = recoveringServer();
 				} else {
@@ -519,7 +519,8 @@ public abstract class BaseRM {
 				cluster.demoFailure();
 			} else if(choose == 2) {
 				System.out.println("************!!Replica Manager Shutdown The Servers!!************");
-				sendCommandToServer(BaseServerCluster.CRASH);
+//				sendCommandToServer(BaseServerCluster.CRASH);
+				cluster.demoCrash();
 			} else if(choose == 3) {
 				if(!"3".equals(getRMName())) {
 					sendCommandToServer(BaseServerCluster.PRINT);

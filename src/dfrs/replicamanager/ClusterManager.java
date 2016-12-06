@@ -17,6 +17,7 @@ public class ClusterManager {
 	private CorbaClient corba;
 	private int expectID;
 	private boolean test = false;
+	private boolean crash = false;
 	
 	public ClusterManager(BaseRM rm, String[] args) {
 		this.rm = rm;
@@ -55,6 +56,10 @@ public class ClusterManager {
 		test = true;
 	}
 	
+	public void demoCrash() {
+		crash = true;
+	}
+	
 	public String processRequest(String input, String host, int port) {
 		String reply = "error";
 		if(input == null)
@@ -87,6 +92,10 @@ public class ClusterManager {
 		if(test) {
 			test = false;
 			System.out.println("************!!Replica Manager Close DEMO Model!!************");
+		}
+		if(crash) {
+			crash = false;
+			return "error";
 		}
         ReliableSocket clientSocket;
 		try {
